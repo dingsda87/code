@@ -193,7 +193,7 @@ class PDOHandler extends AbstractDatabaseHandler implements DatabaseConnection {
     * @param string $statement
     * @param bool $logStatement
     *
-    * @return PDOStatement
+    * @return PDOStatementHandler
     * @throws DatabaseHandlerException
     */
    protected function execute($statement, $logStatement = false) {
@@ -229,7 +229,7 @@ class PDOHandler extends AbstractDatabaseHandler implements DatabaseConnection {
       $this->affectedRows = 0;
       $t->stop(__METHOD__);
 
-      return new PDOResult($pdoResult);
+      return new PDOResultHandler($pdoResult);
    }
 
    /**
@@ -237,7 +237,7 @@ class PDOHandler extends AbstractDatabaseHandler implements DatabaseConnection {
     * @param array $params
     * @param bool $logStatement
     *
-    * @return PDOStatement
+    * @return PDOStatementHandler
     * @throws DatabaseHandlerException
     */
    protected function prepare($statement, array $params, $logStatement = false) {
@@ -263,7 +263,7 @@ class PDOHandler extends AbstractDatabaseHandler implements DatabaseConnection {
       }
       $t->stop(__METHOD__);
 
-      return new PDOStatement($preparedStatement, $params);
+      return new PDOStatementHandler($preparedStatement, $params);
    }
 
    /**

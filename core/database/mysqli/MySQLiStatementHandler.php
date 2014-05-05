@@ -27,7 +27,7 @@ use APF\core\database\Statement;
  * @package APF\core\database\mysqli
  * @class MySQLiStatement
  */
-class MySQLiStatement implements Statement {
+class MySQLiStatementHandler implements Statement {
 
    protected $paramType = array(
          self::PARAM_BLOB    => 'b',
@@ -60,7 +60,7 @@ class MySQLiStatement implements Statement {
     * @param array $params [optional] binds the values of the array to the prepared statement. See Statement::bindValues()
     *
     * @throws DatabaseHandlerException
-    * @return MySQLiResult
+    * @return MySQLiResultHandler
     */
    public function execute(array $params = array()) {
       if (!empty($params)) {
@@ -77,7 +77,7 @@ class MySQLiStatement implements Statement {
       $this->reallyBindParams();
       $this->statementObject->execute();
       if ($this->statementObject->field_count !== 0) {
-         $result = new MySQLiResult($this->getStoredResult());
+         $result = new MySQLiResultHandler($this->getStoredResult());
 
          return $result;
       }

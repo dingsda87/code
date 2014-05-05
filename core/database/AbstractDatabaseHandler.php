@@ -39,7 +39,7 @@ use APF\core\singleton\Singleton;
  * <code>
  * [news-store-db]
  * servicetype = "SINGLETON"
- * class = "APF\core\database\MySQLiHandler"
+ * class = "APF\core\database\mysqli\MySQLiHandler"
  * setupmethod = "setup"
  *
  * conf.host.method = "setHost"

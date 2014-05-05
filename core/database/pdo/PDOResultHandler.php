@@ -27,7 +27,7 @@ use APF\core\database\Result;
  * @package APF\core\database\pdo
  * @class PDOResult
  */
-class PDOResult implements Result {
+class PDOResultHandler implements Result {
 
    /* @var $resultObject \PDOStatement */
    protected $resultObject = null;

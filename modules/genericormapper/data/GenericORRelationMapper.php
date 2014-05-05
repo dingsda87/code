@@ -117,7 +117,7 @@ class GenericORRelationMapper extends GenericORMapper {
       // get compositions
       $compositionTable = $this->relationTable[$compositionName]['Table'];
       $sql = 'SELECT * FROM `' . $compositionTable . '`';
-      $resultCursor = $this->dbDriver->executeTextStatement($sql, $this->logStatements);
+      $resultCursor = $this->dbDriver->executeTextStatement($sql, array(), $this->logStatements);
       $compositions = array();
       while ($row = $this->dbDriver->fetchData($resultCursor)) {
          $compositions[] = $row;
@@ -696,7 +696,7 @@ class GenericORRelationMapper extends GenericORMapper {
          $select = 'SELECT COUNT(`Source_' . $targetObject['ID'] . '`) AS multiplicity FROM `' . $relationTable['Table'] . '`
                         WHERE `Target_' . $sourceObject['ID'] . '` = \'' . $object->getObjectId() . '\';';
       }
-      $result = $this->dbDriver->executeTextStatement($select, $this->logStatements);
+      $result = $this->dbDriver->executeTextStatement($select, array(), $this->logStatements);
       $data = $this->dbDriver->fetchData($result);
 
       // bug 453: explicitly cast to integer to avoid type save check errors.
@@ -781,14 +781,14 @@ class GenericORRelationMapper extends GenericORMapper {
                              WHERE `' . $objectID . '` = \'' . $id . '\'
                              AND `' . $relObjectIdPkName . '` = \'' . $relatedObjectID . '\';';
 
-               $result = $this->dbDriver->executeTextStatement($select, $this->logStatements);
+               $result = $this->dbDriver->executeTextStatement($select, array(), $this->logStatements);
                $relationCount = $this->dbDriver->getNumRows($result);
 
                // create relation if necessary
                if ($relationCount == 0) {
                   $insert = 'INSERT INTO `' . $this->relationTable[$relationKey]['Table'] . '`
                                 (`' . $relObjectIdPkName . '`,`' . $objectID . '`) VALUES (\'' . $relatedObjectID . '\',\'' . $id . '\');';
-                  $this->dbDriver->executeTextStatement($insert, $this->logStatements);
+                  $this->dbDriver->executeTextStatement($insert, array(), $this->logStatements);
                }
             }
          }
@@ -836,7 +836,7 @@ class GenericORRelationMapper extends GenericORMapper {
 
             $select = 'SELECT * FROM `' . $targetCompositions[$i]['Table'] . '`
                           WHERE `Source_' . $objectID . '` = \'' . $object->getObjectId() . '\';';
-            $result = $this->dbDriver->executeTextStatement($select, $this->logStatements);
+            $result = $this->dbDriver->executeTextStatement($select, array(), $this->logStatements);
 
             if ($this->dbDriver->getNumRows($result) > 0) {
                throw new GenericORMapperException('[GenericORRelationMapper::deleteObject()] '
@@ -859,7 +859,7 @@ class GenericORRelationMapper extends GenericORMapper {
 
          $delete = 'DELETE FROM `' . $associations[$i]['Table'] . '`
                        WHERE `' . $SourceOrTarget . '_' . $objectID . '` = \'' . $object->getObjectId() . '\';';
-         $this->dbDriver->executeTextStatement($delete, $this->logStatements);
+         $this->dbDriver->executeTextStatement($delete, array(), $this->logStatements);
       }
 
       // 4. delete object itself
@@ -873,7 +873,7 @@ class GenericORRelationMapper extends GenericORMapper {
 
          $delete = 'DELETE FROM `' . $sourceCompositions[$i]['Table'] . '`
                        WHERE `Target_' . $objectID . '` = \'' . $object->getObjectId() . '\';';
-         $this->dbDriver->executeTextStatement($delete, $this->logStatements);
+         $this->dbDriver->executeTextStatement($delete, array(), $this->logStatements);
       }
 
       return $ID;
@@ -931,7 +931,7 @@ class GenericORRelationMapper extends GenericORMapper {
                     (`' . $sourceObjectId . '`,`' . $targetObjectId . '`)
                     VALUES
                     (\'' . $sourceObject->getObjectId() . '\',\'' . $targetObject->getObjectId() . '\');';
-      $this->dbDriver->executeTextStatement($insert, $this->logStatements);
+      $this->dbDriver->executeTextStatement($insert, array(), $this->logStatements);
 
       return true;
    }
@@ -982,7 +982,7 @@ class GenericORRelationMapper extends GenericORMapper {
                        `' . $sourceObjectId . '` = \'' . $sourceObject->getObjectId() . '\'
                        AND
                        `' . $targetObjectId . '` = \'' . $targetObject->getObjectId() . '\';';
-      $this->dbDriver->executeTextStatement($delete, $this->logStatements);
+      $this->dbDriver->executeTextStatement($delete, array(), $this->logStatements);
 
       return true;
    }
@@ -1027,7 +1027,7 @@ class GenericORRelationMapper extends GenericORMapper {
       $delete = 'DELETE FROM `' . $this->relationTable[$relationName]['Table'] . '`
                     WHERE
                        `' . $sourceObjectId . '` = \'' . $sourceObject->getObjectId() . '\';';
-      $this->dbDriver->executeTextStatement($delete, $this->logStatements);
+      $this->dbDriver->executeTextStatement($delete, array(), $this->logStatements);
    }
 
    /**
@@ -1074,7 +1074,7 @@ class GenericORRelationMapper extends GenericORMapper {
                        `' . $sourceObjectId . '` = \'' . $sourceObject->getObjectId() . '\'
                        AND
                        `' . $targetObjectId . '` = \'' . $targetObject->getObjectId() . '\';';
-      $result = $this->dbDriver->executeTextStatement($select, $this->logStatements);
+      $result = $this->dbDriver->executeTextStatement($select, array(), $this->logStatements);
 
       // return if objects are associated
       return ($this->dbDriver->getNumRows($result) > 0) ? true : false;
@@ -1137,7 +1137,7 @@ class GenericORRelationMapper extends GenericORMapper {
                        `' . $fatherObjectId . '` = \'' . $father->getObjectId() . '\'
                        AND
                        `' . $childObjectId . '` = \'' . $child->getObjectId() . '\';';
-      $result = $this->dbDriver->executeTextStatement($select, $this->logStatements);
+      $result = $this->dbDriver->executeTextStatement($select, array(), $this->logStatements);
 
       // return if objects are composed
       return ($this->dbDriver->getNumRows($result) > 0) ? true : false;
@@ -1379,7 +1379,7 @@ class GenericORRelationMapper extends GenericORMapper {
 
       // load count
       $data = $this->dbDriver->fetchData(
-         $this->dbDriver->executeTextStatement($select, $this->logStatements)
+         $this->dbDriver->executeTextStatement($select, array(), $this->logStatements)
       );
       return (int)$data[$countColumnName];
    }

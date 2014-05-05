@@ -159,7 +159,7 @@ class MySQLiHandler extends AbstractDatabaseHandler {
                $e->getCode(), $e);
       }
 
-      return new MySQLiStatement($preparedStatement, $params);
+      return new MySQLiStatementHandler($preparedStatement, $params);
    }
 
    protected function execute($statement, $logStatement = false) {
@@ -179,7 +179,7 @@ class MySQLiHandler extends AbstractDatabaseHandler {
       }
 
       if ($this->dbConn->field_count) {
-         return new MySQLiResult($this->dbConn->store_result());
+         return new MySQLiResultHandler($this->dbConn->store_result());
       }
 
       return null;

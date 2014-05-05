@@ -26,7 +26,7 @@ use APF\core\database\Result;
  * @package APF\core\database\mysqli
  * @class MySQLiResult
  */
-class MySQLiResult implements Result {
+class MySQLiResultHandler implements Result {
 
    /* @var $resultObject \mysqli_result */
    protected $resultObject = null;

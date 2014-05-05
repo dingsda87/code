@@ -27,7 +27,7 @@ use APF\core\database\Statement;
  * @package APF\core\database\pdo
  * @class PDOStatement
  */
-class PDOStatement implements Statement {
+class PDOStatementHandler implements Statement {
 
    /**
     * @var $statementObject \PDOStatement
@@ -57,7 +57,7 @@ class PDOStatement implements Statement {
       }
       $this->statementObject->execute();
 
-      return new PDOResult($this->statementObject);
+      return new PDOResultHandler($this->statementObject);
    }
 
    /**

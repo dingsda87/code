@@ -67,7 +67,7 @@ class GenericORMapper extends BaseMapper {
     */
    public function loadObjectList($objectName) {
       $statement = 'SELECT * FROM `' . $this->mappingTable[$objectName]['Table'] . '`';
-      $result = $this->dbDriver->executeTextStatement($statement, $this->logStatements);
+      $result = $this->dbDriver->executeTextStatement($statement, array(), $this->logStatements);
       return $this->loadObjectListByStatementResult($objectName, $result);
    }
 
@@ -138,7 +138,7 @@ class GenericORMapper extends BaseMapper {
     * Version 0.1, 11.05.2008<br />
     */
    public function loadObjectListByTextStatement($objectName, $statement) {
-      return $this->loadObjectListByStatementResult($objectName, $this->dbDriver->executeTextStatement($statement, $this->logStatements));
+      return $this->loadObjectListByStatementResult($objectName, $this->dbDriver->executeTextStatement($statement, array(), $this->logStatements));
    }
 
    /**
@@ -179,7 +179,7 @@ class GenericORMapper extends BaseMapper {
     * Version 0.2, 25.05.2008 (Corrected the call of the executeTextStatement() method)<br />
     */
    public function loadObjectByTextStatement($objectName, $statement) {
-      $result = $this->dbDriver->executeTextStatement($statement, $this->logStatements);
+      $result = $this->dbDriver->executeTextStatement($statement, array(), $this->logStatements);
       $data = $this->dbDriver->fetchData($result);
       if ($data === false) {
          return null;
@@ -210,7 +210,7 @@ class GenericORMapper extends BaseMapper {
       $delete = 'DELETE FROM `' . $this->mappingTable[$objectName]['Table'] . '`';
       $delete .= ' WHERE `' . $objectID . '` = \'' . $ID . '\';';
 
-      $this->dbDriver->executeTextStatement($delete, $this->logStatements);
+      $this->dbDriver->executeTextStatement($delete, array(), $this->logStatements);
 
       return $ID;
 
@@ -300,7 +300,7 @@ class GenericORMapper extends BaseMapper {
          $insert .= ' (' . implode(', ', $names) . ')';
          $insert .= ' VALUES (' . implode(', ', $values) . ');';
 
-         $this->dbDriver->executeTextStatement($insert, $this->logStatements);
+         $this->dbDriver->executeTextStatement($insert, array(), $this->logStatements);
          $id = $this->dbDriver->getLastID();
 
       } else {
@@ -347,7 +347,7 @@ class GenericORMapper extends BaseMapper {
 
          // execute update, only if the update is necessary
          if (count($queryParams) > 0) {
-            $this->dbDriver->executeTextStatement($update, $this->logStatements);
+            $this->dbDriver->executeTextStatement($update, array(), $this->logStatements);
          }
 
       }
@@ -391,9 +391,9 @@ class GenericORMapper extends BaseMapper {
 
       $query = 'SELECT * FROM `' . $this->mappingTable[$objectName]['Table'] . '`
                    WHERE `' . $this->mappingTable[$objectName]['ID'] . '` = \'' . $objectId . '\';';
-      $result = $this->dbDriver->executeTextStatement($query, $this->logStatements);
+      $result = $this->dbDriver->executeTextStatement($query, array(), $this->logStatements);
 
-      return $this->mapResult2DomainObject($objectName, $this->dbDriver->fetchData($result));
+      return $this->mapResult2DomainObject($objectName, array(), $this->dbDriver->fetchData($result));
 
    }
 
