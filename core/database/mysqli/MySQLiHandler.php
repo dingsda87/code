@@ -103,9 +103,6 @@ class MySQLiHandler extends AbstractDatabaseHandler {
       return $this->dbConn->insert_id;
    }
 
-   /**
-    *
-    */
    protected function connect() {
       // switch error mode of MySQLi to exceptions
       $driver = new \mysqli_driver();

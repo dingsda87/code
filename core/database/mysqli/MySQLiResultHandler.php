@@ -32,6 +32,10 @@ class MySQLiResultHandler implements Result {
    /* @var $resultObject \mysqli_result */
    protected $resultObject = null;
    protected $defaultFetchMode = DatabaseConnection::FETCH_ASSOC;
+   /**
+    * @var null|\mysqli $dbConn
+    */
+   protected $dbConn=null;
 
    /**
     * @param \mysqli_result $resource
@@ -129,6 +133,10 @@ class MySQLiResultHandler implements Result {
     */
    public function getNumRows() {
       return $this->result->num_rows;
+   }
+
+   public function nextRowset(){
+      $this->dbConn->
    }
 
 }

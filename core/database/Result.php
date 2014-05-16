@@ -79,4 +79,6 @@ interface Result {
     */
    public function freeResult();
 
+   public function nextRowset();
+
 }

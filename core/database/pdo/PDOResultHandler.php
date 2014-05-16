@@ -47,13 +47,7 @@ class PDOResultHandler implements Result {
    }
 
    /**
-    * @public
-    *
-    * Fetches all records from the database .
-    *
-    * @param int $type The type the returned data should have. Use the static FETCH_* constants.
-    *
-    * @return array An multidimensional result array.
+    * @inheritdoc
     *
     * @author dingsda
     * @version
@@ -64,13 +58,7 @@ class PDOResultHandler implements Result {
    }
 
    /**
-    * @public
-    *
-    * Fetches a record from the database.
-    *
-    * @param int $type The type the returned data should have. Use the static FETCH_* constants.
-    *
-    * @return mixed The result array. Returns false if no row was found.
+    * @inheritdoc
     *
     * @author Christian Achatz
     * @version
@@ -89,13 +77,7 @@ class PDOResultHandler implements Result {
 
 
    /**
-    * @public
-    *
-    * Returns the number of selected rows by a select Statement.
-    * Some databases do not support this so you should not relied on
-    * this behavior for portable applications.
-    *
-    * @return int The number of selected rows.
+    * @inheritdoc
     *
     * @author Tobias Lückel (megger)
     * @version
@@ -106,11 +88,20 @@ class PDOResultHandler implements Result {
    }
 
    /**
-    * @public
-    * frees up the connection so that a new statement can be executed
+    * @inheritdoc
     */
    public function freeResult() {
       $this->resultObject->closeCursor();
    }
 
+   /**
+    * @inheritdoc
+    *
+    * @return bool
+    */
+   public function nextRowset(){
+
+      return $this->resultObject->nextRowset();
+
+   }
 }
