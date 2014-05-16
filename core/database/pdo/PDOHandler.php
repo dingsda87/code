@@ -24,8 +24,11 @@ use APF\core\benchmark\BenchmarkTimer;
 use APF\core\database\AbstractDatabaseHandler;
 use APF\core\database\DatabaseConnection;
 use APF\core\database\DatabaseHandlerException;
+use APF\core\database\Result;
+use APF\core\database\Statement;
 use APF\core\logging\LogEntry;
 use APF\core\singleton\Singleton;
+use string;
 
 /**
  * @package APF\core\database\pdo
@@ -232,39 +235,6 @@ class PDOHandler extends AbstractDatabaseHandler implements DatabaseConnection {
       return new PDOResultHandler($pdoResult);
    }
 
-   /**
-    * @param string $statement
-    * @param array $params
-    * @param bool $logStatement
-    *
-    * @return PDOStatementHandler
-    * @throws DatabaseHandlerException
-    */
-   protected function prepare($statement, array $params, $logStatement = false) {
-      /* @var $t BenchmarkTimer */
-      $t =& Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
-      $t->start(__METHOD__);
-      if ($this->dbDebug === true || $logStatement === true) {
-         $this->dbLog->logEntry($this->dbLogTarget, '[PDOHandler::prepare()] Current statement: ' . $statement, LogEntry::SEVERITY_DEBUG);
-      }
-      try {
-         $preparedStatement = $this->dbConn->prepare($statement);
-      } catch (\PDOException $e) {
-         $errorNumber = $e->errorInfo[1];
-         if ($errorNumber === 2014) {
-            throw new DatabaseHandlerException('Cannot execute queries while other unbuffered queries are active. ' .
-                  'Use PDOResult->freeResult to free up the connection.', $errorNumber, $e);
-         }
-         throw new DatabaseHandlerException(
-               $e->getMessage() . '
-               (Statement: ' . $statement . ')'
-               , $errorNumber, $e
-         );
-      }
-      $t->stop(__METHOD__);
-
-      return new PDOStatementHandler($preparedStatement, $params);
-   }
 
    /**
     * @protected
@@ -351,4 +321,84 @@ class PDOHandler extends AbstractDatabaseHandler implements DatabaseConnection {
       return $dsn;
    }
 
+   /**
+    *
+    * Executes a statement, located within a statement file. The place holders contained in the
+    * file are replaced by the given values.
+    *
+    * @param string $namespace Namespace of the statement file.
+    * @param string $statementName Name of the statement file (file body!).
+    * @param string[] $params A list of statement parameters.
+    * @param bool $logStatement Indicates, if the statement is logged for debug purposes.
+    * @param bool $emulatePrepare Emulates statement preparation.
+    *
+    * @internal param int $placeHolderType Type of place holder used within this statement (see PLACE_HOLDER_* for details).
+    *
+    * @return Result The database result resource.
+    *
+    * @author Christian Achatz
+    * @version
+    * Version 0.1, 10.02.2008<br />
+    */
+   public function executeStatement($namespace, $statementName, array $params = array(), $logStatement = false, $emulatePrepare = null) {
+      // TODO: Implement executeStatement() method.
+   }
+
+   /**
+    *
+    * Executes a statement applied as a string to the method and returns the
+    * result pointer.
+    *
+    * @param string $statement The statement string.
+    * @param string[] $params A list of statement parameters.
+    * @param boolean $logStatement Indicates, whether the given statement should be logged for debug purposes.
+    * @param bool $emulatePrepare Emulates statement preparation.
+    *
+    * @return Result The database result resource.
+    *
+    * @author Christian Achatz
+    * @version
+    * Version 0.1, 10.02.2008<br />
+    */
+   public function executeTextStatement($statement, array $params = array(), $logStatement = false, $emulatePrepare = null) {
+      // TODO: Implement executeTextStatement() method.
+   }
+
+   /**
+    *
+    * Prepares a statement statement, located within a statement file and returns a Statement object
+    *
+    * @param string $namespace Namespace of the statement file.
+    * @param string $fileName Name of the statement file (with the .sql ending).
+    * @param bool $logStatement Indicates, if the statement is logged for debug purposes.
+    * @param int $placeHolderType Type of place holder used within this statement (see PLACE_HOLDER_* for details).
+    *
+    * @return Statement A StatementObject object to work with
+    *
+    * @author Tobias Lückel (megger)
+    * @version
+    * Version 0.1, 11.04.2012<br />
+    */
+   public function prepareStatement($namespace, $fileName, $logStatement = false, $emulate = null) {
+      // TODO: Implement prepareStatement() method.
+   }
+
+   /**
+    *
+    * Prepares a statement for execution and returns a statement object.
+    *
+    * @param string $statement The statement string.
+    * @param bool $logStatement Indicates, if the statement is logged for debug purposes.
+    * @param int $placeHolderType Type of place holder used within this statement (see PLACE_HOLDER_* for details).
+    *
+    * @return Statement A statement object to work with.
+    *
+    * @author Tobias Lückel (megger)
+    * @version
+    * Version 0.1, 11.04.2012<br />
+    */
+   public function prepareTextStatement($statement, $logStatement = false, $emulate = null) {
+
+      return new PDOStatementHandler($statement,$this->dbConn,$this,$emulate);
+   }
 }

@@ -20,133 +20,103 @@ namespace APF\core\database\mysqli;
  * along with the APF. If not, see http://www.gnu.org/licenses/lgpl-3.0.txt.
  * -->
  */
+use APF\core\benchmark\BenchmarkTimer;
+use APF\core\database\DatabaseConnection;
 use APF\core\database\DatabaseHandlerException;
+use APF\core\database\AbstractStatementHandler;
 use APF\core\database\Statement;
+use APF\core\singleton\Singleton;
+
 
 /**
  * @package APF\core\database\mysqli
  * @class MySQLiStatement
  */
-class MySQLiStatementHandler implements Statement {
+class MySQLiStatementHandler extends AbstractStatementHandler implements Statement {
 
-   protected $paramType = array(
-         self::PARAM_BLOB    => 'b',
-         self::PARAM_FLOAT   => 'd',
-         self::PARAM_INTEGER => 'i',
-         self::PARAM_STRING  => 's'
+   /** @var $wrappedConnection MySQLiHandler */
+   protected $wrappedConnection = null;
+
+   /** @var $dbConn \mysqli */
+   protected $dbConn = null;
+
+   /** @var $dbStmt \mysqli_stmt */
+   protected $dbStmt = null;
+
+   protected $paramTypeMap = array(
+         DatabaseConnection::PARAM_BLOB    => 'b',
+         DatabaseConnection::PARAM_FLOAT   => 's',
+         DatabaseConnection::PARAM_INTEGER => 's',
+         DatabaseConnection::PARAM_STRING  => 's'
    );
 
-   protected $paramsToBind = array(0 => null);
-   protected $typesToBind = array();
-   /** @var $statementObject \mysqli_stmt */
-   protected $statementObject = null;
-   protected $sortedParams = array();
 
-   /**
-    * @param \mysqli_stmt $resource
-    * @param array $sortedParams
-    *
-    * @internal param array $params
-    */
-   public function __construct(\mysqli_stmt $resource, $sortedParams = array()) {
-      $this->sortedParams = $sortedParams;
-      $this->statementObject = $resource;
+   protected function bindValues() {
+      if ($this->emulate === true) {
+         return;
+      }
+      /** @var BenchmarkTimer $t */
+      $t =& Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+      $t->start(__METHOD__);
+
+      $sortedParams = array(0 => null);
+      foreach ($this->params as $key => $attribute) {
+         $sortedParams[0] .= $this->paramTypeMap[$attribute['type']];
+         $sortedParams[$attribute['position']] = $attribute['value'];
+      }
+
+      sort($sortedParams, SORT_NUMERIC);
+
+      $reflectionMethod = new \ReflectionMethod('mysqli_stmt', 'bind_param');
+      $reflectionMethod->invokeArgs($this->dbStmt, $sortedParams);
+      $t->stop(__METHOD__);
+
    }
 
+
    /**
-    * @public
-    * Executes a prepared Statement
+    * @inheritdoc
     *
-    * @param array $params [optional] binds the values of the array to the prepared statement. See Statement::bindValues()
-    *
-    * @throws DatabaseHandlerException
     * @return MySQLiResultHandler
     */
-   public function execute(array $params = array()) {
-      if (!empty($params)) {
-         $this->bindValues($params);
-      }
-      $paramStatementCount = $this->statementObject->param_count;
-      $paramCount = count($this->paramsToBind) - 1;
-      if ($paramStatementCount !== $paramCount) {
-         throw new DatabaseHandlerException('Number '
-               . 'of given params (' . $paramCount . ') does not match number of bind params '
-               . 'within the statement (' . $paramStatementCount . ')! '
-               , E_USER_ERROR);
-      }
-      $this->reallyBindParams();
-      $this->statementObject->execute();
-      if ($this->statementObject->field_count !== 0) {
-         $result = new MySQLiResultHandler($this->getStoredResult());
+   public function execute(array $input_params = array()) {
+      parent::execute($input_params);
 
-         return $result;
-      }
-
-      return null;
-   }
-
-   /**
-    * @public
-    * Binds the values of an associative or numeric array to placeholders in a prepared statement
-    *
-    * @param array $params Use an associative array if you have used named placeholders, numeric for question marks
-    *
-    * @return $this
-    */
-   public function bindValues(array $params) {
-      if (isset($params[0])) {
-         foreach ($params as $key => $value) {
-            $this->bindValue($key + 1, $value);
+      if ($this->emulate === true) {
+         try {
+            // execute the statement with use of the current connection!
+            $this->dbConn->real_query($this->preparedStatement);
+         } catch (\Exception $e) {
+            throw new DatabaseHandlerException(
+                  'SQLSTATE[' . $this->dbConn->sqlstate . ']: ' .
+                  $e->getMessage() . ' (Statement: ' . $this->preparedStatement . ')',
+                  $e->getCode(), $e);
          }
-      } else {
-         foreach ($params as $key => $value) {
-            $this->bindValue($key, $value);
+
+         if ($this->dbConn->field_count) {
+            return new MySQLiResultHandler($this->dbConn->store_result());
          }
+
+         return null;
       }
 
-      return $this;
-   }
+      if ($this->dbStmt === null) {
 
-   public function bindValue($param, $value, $dataType = self::PARAM_STRING) {
-      return $this->bindParam($param, $value, $dataType);
-   }
-
-   public function bindParam($param, &$value, $dataType = self::PARAM_STRING) {
-      if (!isset($this->paramType[$dataType])) {
-         throw new DatabaseHandlerException('Undefined constant ' . $dataType, E_USER_ERROR);
-      }
-      if (!empty($this->sortedParams)) {
-         $paramKeys = array_keys($this->sortedParams, $param);
-         if (empty($paramKeys)) {
-            throw new DatabaseHandlerException('Unknown parameter ' . $param);
+         try {
+            $preparedStatement = $this->dbConn->prepare($this->preparedStatement);
+         } catch (\mysqli_sql_exception $e) {
+            throw new DatabaseHandlerException(
+                  'SQLSTATE[' . $this->dbConn->sqlstate . ']: ' . $e->getMessage() .
+                  ' (Statement: ' . $this->statement . ' )',
+                  $e->getCode(), $e);
          }
-         foreach ($paramKeys as $key) {
-            unset($this->paramsToBind[$key]);
-            $this->paramsToBind[$key] = & $value;
-            $this->typesToBind[$key] = $this->paramType[$dataType];
-         };
-      } else {
-         unset($this->paramsToBind[$param]);
-         $this->paramsToBind[$param] = & $value;
-         $this->typesToBind[$param] = $this->paramType[$dataType];
+         $this->dbStmt = $this->dbConn->prepare($this->preparedStatement);
       }
 
-      return $this;
-   }
+      $this->bindValues();
+      $this->dbStmt->execute();
 
-   protected function reallyBindParams() {
-      $reflectionMethod = new \ReflectionMethod('mysqli_stmt', 'bind_param');
-
-      $this->paramsToBind[0] = implode('', $this->typesToBind);
-      ksort($this->paramsToBind);
-      $reflectionMethod->invokeArgs($this->statementObject, $this->paramsToBind);
-   }
-
-   /**
-    * @return bool|\mysqli_result
-    */
-   protected function getStoredResult() {
-      return $this->statementObject->get_result();
+      return new MySQLiResultHandler($this->dbStmt->get_result());
    }
 
 }

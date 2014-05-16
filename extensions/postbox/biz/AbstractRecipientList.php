@@ -20,7 +20,6 @@ namespace APF\extensions\postbox\biz;
  * along with the APF. If not, see http://www.gnu.org/licenses/lgpl-3.0.txt.
  * -->
  */
-use APF\core\database\mysqlx\MySQLxHandler;
 use APF\modules\genericormapper\data\GenericDomainObject;
 use APF\modules\genericormapper\data\GenericORMapperDataObject;
 

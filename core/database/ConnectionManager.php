@@ -49,7 +49,7 @@ use APF\core\service\APFService;
  * User = ""
  * Pass = ""
  * Name = ""
- * Type = "APF\core\database\MySQLxHandler|APF\core\database\SQLiteHandler|..."
+ * Type = "APF\core\database\MySQLiHandler|APF\core\database\SQLiteHandler|..."
  * [DebugMode = "true|false"]
  * [Charset = ""]
  * [Collation = ""]

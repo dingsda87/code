@@ -1,5 +1,5 @@
 <?php
-namespace APF\core\database;
+namespace APF\core\database\sqlite;
 
 /**
  * <!--
@@ -20,12 +20,41 @@ namespace APF\core\database;
  * along with the APF. If not, see http://www.gnu.org/licenses/lgpl-3.0.txt.
  * -->
  */
+use APF\core\database\Result;
+
 
 /**
- * @package APF\core\database
- * @class Result
+ * @package APF\core\database\sqlite
+ * @class SQLiteResultHandler
  */
-interface Result {
+class SQLite3ResultHandler implements Result {
+
+   /* @var $resultObject \SQLiteResult */
+   protected $resultObject = null;
+
+   /**
+    * @var array
+    */
+   protected $FetchMode = array(
+         self::FETCH_ASSOC   => SQLITE_ASSOC,
+         self::FETCH_NUMERIC => SQLITE_NUM
+   );
+
+   public function __construct($result) {
+      $this->resultObject = $result;
+   }
+
+   public function fetchAll($type = self::FETCH_ASSOC) {
+      if ($type === self::FETCH_OBJECT) {
+         $return=array();
+         while($rowObject=$this->resultObject->fetchObject('stdClass')){
+            $return[]=$rowObject;
+         }
+         return $return;
+      }
+
+      return $this->resultObject->fetchAll($this->FetchMode[$type]);
+   }
 
    /**
     * @public
@@ -41,22 +70,15 @@ interface Result {
     * Version 0.1, 20.09.2009<br />
     * Version 0.2, 08.08.2010 (Added optional second parameter)<br />
     */
-   public function fetchData($type = DatabaseConnection::FETCH_ASSOC);
+   public function fetchData($type = self::FETCH_ASSOC) {
 
-   /**
-    * @public
-    *
-    * Fetches all records from the database.
-    *
-    * @param int $type The type the returned data should have. Use the static FETCH_* constants.
-    *
-    * @return array A multi-dimensional result array.
-    *
-    * @author dingsda
-    * @version
-    * Version 0.1, 08.04.2014<br />
-    */
-   public function fetchAll($type = DatabaseConnection::FETCH_ASSOC);
+      if ($type === self::FETCH_OBJECT) {
+         return $this->resultObject->fetchObject('stdClass');
+      }
+
+      return $this->resultObject->fetch($this->FetchMode[$type]);
+
+   }
 
    /**
     * @public
@@ -70,13 +92,16 @@ interface Result {
     * @version
     * Version 0.1, 11.04.2012<br />
     */
-   public function getNumRows();
+   public function getNumRows() {
+      return $this->resultObject->numRows();
+   }
 
    /**
     * @public
     *
     * Frees up the connection so that a new statement can be executed.
     */
-   public function freeResult();
+   public function freeResult() {
 
+   }
 }

@@ -20,6 +20,7 @@ namespace APF\core\database\mysqli;
  * along with the APF. If not, see http://www.gnu.org/licenses/lgpl-3.0.txt.
  * -->
  */
+use APF\core\database\DatabaseConnection;
 use APF\core\database\Result;
 
 /**
@@ -30,12 +31,27 @@ class MySQLiResultHandler implements Result {
 
    /* @var $resultObject \mysqli_result */
    protected $resultObject = null;
+   protected $defaultFetchMode = DatabaseConnection::FETCH_ASSOC;
 
    /**
     * @param \mysqli_result $resource
     */
    public function __construct(\mysqli_result $resource) {
       $this->result = $resource;
+   }
+
+   /**
+    * @return int
+    */
+   public function getDefaultFetchMode() {
+      return $this->defaultFetchMode;
+   }
+
+   /**
+    * @param int $defaultFetchMode
+    */
+   public function setDefaultFetchMode($defaultFetchMode) {
+      $this->defaultFetchMode = $defaultFetchMode;
    }
 
    /**
@@ -59,8 +75,10 @@ class MySQLiResultHandler implements Result {
     * @version
     * Version 0.1, 08.04.2014<br />
     */
-   public function fetchAll($type = self::FETCH_ASSOC) {
-      if (!method_exists($this->result, 'fetch_all') || $type == self::FETCH_OBJECT) {
+   public function fetchAll($type = null) {
+
+
+      if (!method_exists($this->result, 'fetch_all') || $type == DatabaseConnection::FETCH_OBJECT) {
          $data = array();
          while ($row = $this->fetchData($type)) {
             $data[] = $row;
@@ -68,7 +86,7 @@ class MySQLiResultHandler implements Result {
 
          return $data;
       }
-      if ($type === self::FETCH_ASSOC) {
+      if ($type === DatabaseConnection::FETCH_ASSOC) {
          return $this->result->fetch_all(MYSQLI_ASSOC);
       } else {
          return $this->result->fetch_all(MYSQLI_NUM);
@@ -76,30 +94,22 @@ class MySQLiResultHandler implements Result {
    }
 
    /**
-    * @public
     *
-    * Fetches a record from the database.
-    *
-    * @param int $type The type the returned data should have. Use the static FETCH_* constants.
-    *
-    * @return mixed The result array. Returns false if no row was found.
+    * @inheritdoc
     *
     * @author Christian Achatz
     * @version
     * Version 0.1, 20.09.2009<br />
     * Version 0.2, 08.08.2010 (Added optional second parameter) <br />
     */
-   public function fetchData($type = self::FETCH_ASSOC) {
+   public function fetchData($type = null) {
       switch ($type) {
-         case self::FETCH_ASSOC:
+         case DatabaseConnection::FETCH_ASSOC:
             return $this->result->fetch_assoc();
-            break;
-         case self::FETCH_NUMERIC:
+         case DatabaseConnection::FETCH_NUMERIC:
             return $this->result->fetch_row();
-            break;
-         case self::FETCH_OBJECT;
+         case DatabaseConnection::FETCH_OBJECT;
             return $this->result->fetch_object();
-            break;
       }
       return false;
    }

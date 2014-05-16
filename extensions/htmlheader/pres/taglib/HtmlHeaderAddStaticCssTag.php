@@ -30,7 +30,7 @@ use APF\extensions\htmlheader\biz\StaticCssNode;
  *
  * Taglib for adding static stylesheets to the html header.
  *
- * @example
+ * @example HtmlHeaderAddStaticCssTag.php
  * <core:addtaglib class="APF\extensions\htmlheader\pres\taglib\HtmlHeaderAddStaticCssTag" prefix="htmlheader" name="addstaticcss" />
  * <htmlheader:addstaticcss file="..." [media=""]/>
  * <ul>

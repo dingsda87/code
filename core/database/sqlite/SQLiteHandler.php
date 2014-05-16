@@ -21,8 +21,10 @@ namespace APF\core\database\sqlite;
  * -->
  */
 use APF\core\database\AbstractDatabaseHandler;
+use APF\core\database\DatabaseConnection;
 use APF\core\database\DatabaseHandlerException;
 use APF\core\database\Result;
+use APF\core\database\Statement;
 use APF\core\logging\LogEntry;
 
 /**
@@ -36,7 +38,7 @@ use APF\core\logging\LogEntry;
  * Version 0.1, 23.02.2008<br />
  * Version 0.2, 03.05.2014 (Adapted to new interface scheme)<br />
  */
-class SQLiteHandler extends AbstractDatabaseHandler {
+class SQLiteHandler extends AbstractDatabaseHandler implements DatabaseConnection {
 
    /**
     * @protected
@@ -49,6 +51,11 @@ class SQLiteHandler extends AbstractDatabaseHandler {
     * @var string Error tracking container for SQLite errors.
     */
    protected $dbError = null;
+   /**
+    * @var null|\SQLiteDatabase $dbConn
+    */
+   protected $dbConn = null;
+
 
    public function __construct() {
       $this->dbLogTarget = 'sqlite';
@@ -56,16 +63,17 @@ class SQLiteHandler extends AbstractDatabaseHandler {
 
    protected function connect() {
 
-      $this->dbConn = @sqlite_open($this->dbName, $this->dbMode, $this->dbError);
+      $this->dbConn = @new \SQLiteDatabase($this->dbName, $this->dbMode, $this->dbError);
 
-      if (!is_resource($this->dbConn)) {
+
+      if (!is_object($this->dbConn)) {
          throw new DatabaseHandlerException('[SQLiteHandler->connect()] Database "'
                . $this->dbName . '" cannot be opened! Message: ' . $this->dbError, E_USER_ERROR);
       }
+
    }
 
    protected function close() {
-      @sqlite_close($this->dbConn);
       $this->dbConn = null;
    }
 
@@ -75,21 +83,21 @@ class SQLiteHandler extends AbstractDatabaseHandler {
          $this->dbLog->logEntry($this->dbLogTarget, '[SQLiteHandler::executeTextStatement()] Current statement: ' . $statement, LogEntry::SEVERITY_DEBUG);
       }
 
-      $result = sqlite_query($this->dbConn, $statement);
+      $result = $this->dbConn->query($statement);
 
       if ($result === false) {
-         $message = sqlite_error_string(sqlite_last_error($this->dbConn));
+         $message = sqlite_error_string($this->dbConn->lastError());
          $message .= ' (Statement: ' . $statement . ')';
          $this->dbLog->logEntry($this->dbLogTarget, $message, LogEntry::SEVERITY_ERROR);
       }
 
       // remember last insert id for further usage
-      $this->lastInsertId = sqlite_last_insert_rowid($this->dbConn);
+      $this->lastInsertId = $this->dbConn->lastInsertRowid();
 
       return $result;
    }
 
-   public function executeStatement($namespace, $statementName, array $params = array(), $logStatement = false, $emulatePrepare = null, $placeHolderType = null) {
+   public function executeStatement($namespace, $statementName, array $params = array(), $logStatement = false, $emulatePrepare = null) {
 
       $statement = $this->getPreparedStatement($namespace, $statementName, $params);
 
@@ -97,53 +105,36 @@ class SQLiteHandler extends AbstractDatabaseHandler {
          $this->dbLog->logEntry($this->dbLogTarget, '[SQLiteHandler::executeTextStatement()] Current statement: ' . $statement, LogEntry::SEVERITY_DEBUG);
       }
 
-      $result = sqlite_query($this->dbConn, $statement);
+      $result = $this->dbConn->query($statement);
 
       if ($result === false) {
-         $message = sqlite_error_string(sqlite_last_error($this->dbConn));
+         $errorCode = $this->dbConn->lastError();
+         $message = sqlite_error_string($errorCode);
          $message .= ' (Statement: ' . $statement . ')';
-         $this->dbLog->logEntry($this->dbLogTarget, $message, LogEntry::SEVERITY_DEBUG);
+         throw new DatabaseHandlerException($message, $errorCode);
       }
 
       // remember last insert id for further usage
-      $this->lastInsertId = sqlite_last_insert_rowid($this->dbConn);
+      $this->lastInsertId = $this->dbConn->lastInsertRowid();
 
       return $result;
    }
 
    /**
-    * @public
     *
-    * Fetches a record from the database using the given result resource.
-    *
-    * @param resource $resultCursor The result resource returned by executeStatement() or executeTextStatement().
-    * @param int $type The type the returned data should have. Use the static *_FETCH_MODE constants.
-    *
-    * @return string[] The associative result array.
+    * @inheritdoc
     *
     * @author Christian Achatz
     * @version
     * Version 0.1, 20.09.2009<br />
     * Version 0.2, 08.08.2010 (Added optional second parameter) <br />
     */
-   public function fetchData($resultCursor, $type = self::ASSOC_FETCH_MODE) {
-      if ($type === self::ASSOC_FETCH_MODE) {
-         return sqlite_fetch_array($resultCursor, SQLITE_ASSOC);
-      } elseif ($type === self::OBJECT_FETCH_MODE) {
-         return sqlite_fetch_object($resultCursor);
-      } else {
-         return sqlite_fetch_array($resultCursor, SQLITE_NUM);
-      }
+   public function fetchData(Result $resultCursor, $type = DatabaseConnection::FETCH_ASSOC) {
+      return $resultCursor->fetchData($type);
    }
 
    /**
-    * @public
-    *
-    * Escapes given values to be SQL injection save.
-    *
-    * @param string $value The un-escaped value.
-    *
-    * @return string The escaped string.
+    * @inheritdoc
     *
     * @author Christian Achatz
     * @version
@@ -154,65 +145,87 @@ class SQLiteHandler extends AbstractDatabaseHandler {
    }
 
    /**
-    * @public
-    *
-    * Returns the amount of rows, that are affected by a previous update or delete call.
-    *
-    * @param resource $unusedParam The result resource pointer.
-    *
-    * @return int The number of affected rows.
+    * @inheritdoc
     *
     * @author Christian Achatz
     * @version
     * Version 0.1, 24.02.2008<br />
     */
    public function getAffectedRows($unusedParam = null) {
-      return sqlite_num_rows($unusedParam);
+      return $this->dbConn->changes();
    }
 
    /**
-    * @public
-    *
-    * Returns the number of selected rows by the given result resource.
-    *
-    * @param Result $result The sqlite result resource.
-    *
-    * @return int The number of selected rows.
-    *
-    * @author Christian Achatz
-    * @version
-    * Version 0.1, 12.03.2011 (Added missing method.)<br />
+    * @inheritdoc
     */
    public function getNumRows(Result $result) {
-      return sqlite_num_rows($result);
+      return $result->getNumRows();
    }
 
-   protected function execute($statement, $logStatement = false) {
-      // TODO: Implement execute() method.
-   }
-
-   protected function prepare($statement, array $params, $logStatement) {
-      // TODO: Implement prepare() method.
-   }
-
+   /**
+    * @inheritdoc
+    */
    public function getLastID() {
-      // TODO: Implement getLastID() method.
+      return $this->dbConn->lastInsertRowid();
    }
 
+   /**
+    * @inheritdoc
+    */
    public function quoteValue($value) {
-      // TODO: Implement quoteValue() method.
+      return '\''. sqlite_escape_string($value) .'\'';
    }
 
+   /**
+    * @inheritdoc
+    */
    public function beginTransaction() {
-      // TODO: Implement beginTransaction() method.
+      $this->dbConn->queryExec('BEGIN TRANSACTION');
    }
 
+   /**
+    * @inheritdoc
+    */
    public function commit() {
-      // TODO: Implement commit() method.
+      $this->dbConn->queryExec('COMMIT TRANSACTION');
+
+      // TODO: Implement commit method.
    }
 
+   /**
+    * @inheritdoc
+    */
    public function rollback() {
-      // TODO: Implement rollback() method.
+      $this->dbConn->queryExec('ROLLBACK TRANSACTION');
    }
 
+   /**
+    *
+    * @inheritdoc
+    *
+    * @return SQLiteStatementHandler
+    *
+    * @author Tobias Lückel (megger)
+    * @version
+    * Version 0.1, 11.04.2012<br />
+    */
+   public function prepareStatement($namespace, $fileName, $logStatement = false, $emulate = null) {
+      $statement = $this->getPreparedStatement($namespace, $fileName);
+
+      return new SQLiteStatementHandler($statement, $this->dbConn, $this, true);
+   }
+
+   /**
+    *
+    * @inheritdoc
+    *
+    * @return SQLiteStatementHandler
+    *
+    * @author Tobias Lückel (megger)
+    * @version
+    * Version 0.1, 11.04.2012<br />
+    */
+   public function prepareTextStatement($statement, $logStatement = false, $emulate = null) {
+      return new SQLiteStatementHandler($statement, $this->dbConn, $this, true);
+   }
 }

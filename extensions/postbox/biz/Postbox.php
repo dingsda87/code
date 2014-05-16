@@ -196,7 +196,7 @@ class Postbox extends APFObject {
     */
    public function countChannelsWithoutFolder() {
       $result = $this->ORM->getDBDriver()->executeStatement('extensions::postbox', 'Postbox_countChannelsWithoutFolder.sql', array(
-         'UserID' => (int)$this->User->getObjectId()
+            'UserID' => (int) $this->User->getObjectId()
       ));
       return (int)$this->ORM->getDBDriver()->getNumRows($result);
    }

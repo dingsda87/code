@@ -20,7 +20,7 @@ namespace APF\extensions\postbox\biz;
  * along with the APF. If not, see http://www.gnu.org/licenses/lgpl-3.0.txt.
  * -->
  */
-use APF\core\database\mysqlx\MySQLxHandler;
+use APF\core\database\DatabaseConnection;
 use APF\modules\genericormapper\data\GenericCriterionObject;
 use APF\modules\genericormapper\data\GenericDomainObject;
 
@@ -42,14 +42,12 @@ class AbstractPostboxFolder extends GenericDomainObject {
     * @return bool Returns true if the folder contains at least 1 new message.
     */
    public function hasUnreadMessages() {
-      /* @var $DBDriver MySQLxHandler */
+      /* @var $DBDriver DatabaseConnection */
       $DBDriver = $this->getDataComponent()->getDbDriver();
       $result = $DBDriver->executeStatement(
-         'postbox',
-         'PostboxFolder_hasUnreadMessages.sql',
-         array(
-            'PostboxFolderID' => (int)$this->getObjectId()
-         )
+            'postbox', 'PostboxFolder_hasUnreadMessages.sql', array(
+                  'PostboxFolderID' => (int) $this->getObjectId()
+            )
       );
       // limit is 1 - just convert 0 or 1 to a boolean
       return (bool)$DBDriver->getNumRows($result);

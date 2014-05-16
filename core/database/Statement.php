@@ -27,11 +27,6 @@ namespace APF\core\database;
  */
 interface Statement {
 
-   const PARAM_STRING = 1;
-   const PARAM_INTEGER = 2;
-   const PARAM_BLOB = 3;
-   const PARAM_FLOAT = 4;
-
    /**
     * @public
     *
@@ -44,7 +39,7 @@ interface Statement {
     * @throws DatabaseHandlerException
     * @return $this
     */
-   public function bindParam($parameter, &$variable, $dataType = self::PARAM_STRING);
+   public function bindParam($parameter, &$variable, $dataType = DatabaseConnection::PARAM_STRING);
 
    /**
     * @public
@@ -58,18 +53,8 @@ interface Statement {
     * @throws DatabaseHandlerException
     * @return $this
     */
-   public function bindValue($parameter, $value, $dataType = self::PARAM_STRING);
+   public function bindValue($parameter, $value, $dataType = DatabaseConnection::PARAM_STRING);
 
-   /**
-    * @public
-    *
-    * Binds the values of an associative or numeric array to placeholders in a prepared statement.
-    *
-    * @param array $params Use an associative array if you have used named placeholders, numeric for question marks
-    *
-    * @return $this
-    */
-   public function bindValues(array $params);
 
    /**
     * @public

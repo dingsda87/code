@@ -20,6 +20,7 @@ namespace APF\core\database\pdo;
  * along with the APF. If not, see http://www.gnu.org/licenses/lgpl-3.0.txt.
  * -->
  */
+use APF\core\database\DatabaseConnection;
 use APF\core\database\Result;
 
 
@@ -36,9 +37,9 @@ class PDOResultHandler implements Result {
     * @var array
     */
    protected $FetchMode = array(
-         self::FETCH_ASSOC   => \PDO::FETCH_ASSOC,
-         self::FETCH_OBJECT  => \PDO::FETCH_OBJ,
-         self::FETCH_NUMERIC => \PDO::FETCH_NUM
+         DatabaseConnection::FETCH_ASSOC   => \PDO::FETCH_ASSOC,
+         DatabaseConnection::FETCH_OBJECT  => \PDO::FETCH_OBJ,
+         DatabaseConnection::FETCH_NUMERIC => \PDO::FETCH_NUM
    );
 
    public function __construct(\PDOStatement $pdoResult) {
@@ -58,7 +59,7 @@ class PDOResultHandler implements Result {
     * @version
     * Version 0.1, 08.04.2014<br />
     */
-   public function fetchAll($type = self::FETCH_ASSOC) {
+   public function fetchAll($type = DatabaseConnection::FETCH_ASSOC) {
       return $this->resultObject->fetchAll($this->FetchMode[$type]);
    }
 
@@ -76,7 +77,7 @@ class PDOResultHandler implements Result {
     * Version 0.1, 20.09.2009<br />
     * Version 0.2, 08.08.2010 (Added optional second parameter) <br />
     */
-   public function fetchData($type = self::FETCH_ASSOC) {
+   public function fetchData($type = DatabaseConnection::FETCH_ASSOC) {
       $return = null;
       $return = $this->resultObject->fetch($this->FetchMode[$type]);
       if ($return === null) {

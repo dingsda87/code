@@ -20,7 +20,7 @@ namespace APF\extensions\postbox\biz;
  * along with the APF. If not, see http://www.gnu.org/licenses/lgpl-3.0.txt.
  * -->
  */
-use APF\core\database\mysqlx\MySQLxHandler;
+use APF\core\database\DatabaseConnection;
 use APF\modules\genericormapper\data\GenericCriterionObject;
 use APF\modules\genericormapper\data\GenericDomainObject;
 use APF\modules\genericormapper\data\GenericORMapperDataObject;
@@ -90,15 +90,13 @@ abstract class AbstractMessageChannel extends GenericDomainObject {
     * @return AbstractMessageChannel Returns itself (fluent-interface)
     */
    public function setReadForUser(GenericORMapperDataObject &$User) {
-      /* @var $DBDriver MySQLxHandler */
+      /* @var $DBDriver DatabaseConnection */
       $DBDriver = $this->getDataComponent()->getDbDriver();
       $DBDriver->executeStatement(
-         'APF\extensions\postbox',
-         'MessageChannel_setReadForUser.sql',
-         array(
-            'MessageChannelID' => (int)$this->getObjectId(),
-            'UserID' => (int)$User->getObjectId()
-         )
+            'APF\extensions\postbox', 'MessageChannel_setReadForUser.sql', array(
+                  'MessageChannelID' => (int) $this->getObjectId(),
+                  'UserID'           => (int) $User->getObjectId()
+            )
       );
       $this->deleteAssociation('User2UnreadMessageChannel', $User);
       return $this;

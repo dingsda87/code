@@ -184,19 +184,12 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    protected $dbCharset = null;
 
    /**
-    * @var array Default values for various statement execution methods.
-    */
-   protected $defaultPlaceholder = array(
-         'executeStatement'     => self::PLACE_HOLDER_APF,
-         'executeTextStatement' => self::PLACE_HOLDER_QUESTION_MARKS,
-         'prepareStatement'     => self::PLACE_HOLDER_APF,
-         'prepareTextStatement' => self::PLACE_HOLDER_QUESTION_MARKS
-   );
-
-   /**
     * @var bool
     */
    protected $emulate = false;
+
+   protected $defaultFetchMode = DatabaseConnection::FETCH_ASSOC;
+
 
    /**
     * @public
@@ -452,39 +445,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    abstract protected function connect();
 
    /**
-    * @param null $statementType
-    *
-    * @return array|string
-    *
-    * TODO streamline API to not return two different data types!
-    */
-   public function getDefaultPlaceholder($statementType = null) {
-      if ($statementType === null) {
-         return $this->defaultPlaceholder;
-      } else {
-         return $this->defaultPlaceholder[$statementType];
-      }
-   }
-
-   /**
-    * @param string $method Name of the method to set the default place holder type for.
-    * @param int $placeHolderType The desired place holder type (see <em>DatabaseConnection::PLACE_HOLDER_*</em>).
-    */
-   public function setDefaultPlaceholder($method, $placeHolderType) {
-      $this->defaultPlaceholder[$method] = $placeHolderType;
-   }
-
-   public function executeStatement($namespace, $statementName, array $params = array(), $logStatement = false, $emulatePrepare = null, $placeHolderType = null) {
-      $statement = $this->getPreparedStatement($namespace, $statementName);
-      if ($placeHolderType === null) {
-         $placeHolderType = $this->defaultPlaceholder['executeStatement'];
-      }
-
-      // execute the statement with use of the current connection!
-      return $this->executeTextStatement($statement, $params, $logStatement, $emulatePrepare, $placeHolderType);
-   }
-
-   /**
     * @protected
     *
     * Loads a statement file.
@@ -509,155 +469,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
       /* @var $config StatementConfiguration */
 
       return $config->getStatement();
-   }
-
-   public function executeTextStatement($statement, array $params = array(), $logStatement = false, $emulatePrepare = null, $placeHolderType = null) {
-      if (empty($params)) {
-         return $this->execute($statement, $logStatement);
-      }
-      if ($placeHolderType === null) {
-         $placeHolderType = $this->defaultPlaceholder['executeTextStatement'];
-      }
-
-      $emulatePrepare = $emulatePrepare === null ? : $this->emulate;
-
-      if ($emulatePrepare === false) {
-         $prepare = $this->prepareTextStatement($statement, $logStatement, $placeHolderType);
-
-         return $prepare->execute($params);
-      }
-      if ($placeHolderType === self::PLACE_HOLDER_QUESTION_MARKS) {
-         $statement = $this->replaceQuestionMarks($statement, $params);
-      } else {
-         $statement = $this->replaceParams($this->splitStatement($statement, $placeHolderType), $params);
-      }
-
-      return $this->execute($statement, $logStatement);
-   }
-
-   /**
-    * @param $statement
-    * @param bool $logStatement
-    *
-    * @return mixed
-    */
-   abstract protected function execute($statement, $logStatement = false);
-
-   public function prepareTextStatement($statement, $logStatement = false, $placeHolderType = null) {
-      $params = array();
-      if ($placeHolderType === null) {
-         $placeHolderType = $this->defaultPlaceholder['prepareTextStatement'];
-      }
-      if ($placeHolderType !== self::PLACE_HOLDER_QUESTION_MARKS) {
-         $statement = $this->replaceParamsWithPlaceholder($this->splitStatement($statement, $placeHolderType), $params);
-      }
-
-      return $this->prepare($statement, $params, $logStatement);
-   }
-
-   /**
-    * @param string $statement The statement to split up.
-    * @param int $placeholderStyle The desired place holder style.
-    *
-    * @return array The split statement.
-    * @throws DatabaseHandlerException
-    */
-   protected function splitStatement($statement, $placeholderStyle) {
-      switch ($placeholderStyle) {
-         case self::PLACE_HOLDER_APF:
-            $pregString = '/\[([A-Za-z0-9_]+)\]/u';
-            break;
-         case self::PLACE_HOLDER_PDO:
-            $pregString = '/:([A-Za-z0-9_]+)/u';
-            break;
-         default:
-            throw new DatabaseHandlerException('Wrong Parameter given');
-      }
-      return preg_split($pregString, $statement, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
-   }
-
-   /**
-    * @param array $parts Parts of a statement returned from <em>splitStatement()</em>.
-    * @param array $params The parameters for the statement.
-    *
-    * @return string Statement with question marks for prepare.
-    * @throws DatabaseHandlerException If parameter is not given.
-    */
-   protected function replaceParamsWithPlaceholder(array $parts, &$params) {
-      $statement = '';
-      $params[] = null;
-      foreach ($parts as $key => $value) {
-         if ($key % 2 === 0) {
-            $statement .= $value;
-         } else {
-            $statement .= '?';
-            $params[] = $value;
-         }
-      }
-
-      return $statement;
-   }
-
-   /**
-    * @param $statement
-    * @param array $params The parameters for the statement.
-    * @param $logStatement
-    *
-    * @return mixed
-    */
-   protected abstract function prepare($statement, array $params, $logStatement);
-
-   /**
-    * @param string $statement
-    * @param array $params The parameters for the statement.
-    *
-    * @return string
-    */
-   protected function replaceQuestionMarks($statement, array $params) {
-      $parts = explode('?', $statement);
-      $statement = '';
-      foreach ($parts as $key => $value) {
-         if ($key !== 0) {
-            if ($params[$key - 1] === null) {
-               $statement .= 'NULL';
-            } else {
-               $statement .= $this->quoteValue($params[$key - 1]);
-            }
-         }
-         $statement .= $value;
-      }
-
-      return $statement;
-   }
-
-   /**
-    * @param array $parts Parts of a statement returned from <em>splitStatement()</em>.
-    * @param array $params the parameters for the Statement
-    *
-    * @return string The prepared statement.
-    * @throws DatabaseHandlerException In case of unknown params.
-    */
-   protected function replaceParams(array $parts, array $params) {
-      $statement = '';
-      foreach ($parts as $key => $value) {
-         if ($key % 2 === 0) {
-            $statement .= $value;
-         } elseif (isset($params[$value])) {
-            if ($value === '__limit__') {
-               $statement .= (int) $params[$value];
-            } else {
-               $statement .= $this->quoteValue($params[$value]);
-            }
-         } else {
-            throw new DatabaseHandlerException('Unknown param "' . $value . '" for statement parts "' . implode(', ', $parts) . '"!');
-         }
-      }
-
-      return $statement;
-   }
-
-   public function prepareStatement($namespace, $fileName, $logStatement = false, $placeHolderType = null) {
-      return $this->prepareTextStatement($this->getPreparedStatement($namespace, $fileName), $logStatement, $placeHolderType);
    }
 
    /**
@@ -714,7 +525,7 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
     * @return array
     */
    public function executeBindStatement($namespace, $statementFile, array $params = array(), $logStatement = false) {
-      $result = $this->executeStatement($namespace, $statementFile, $params, $logStatement);
+      $result = $this->executeStatement($namespace, $statementFile, $params, $logStatement, false);
 
       return $result->fetchAll(Result::FETCH_ASSOC);
    }
@@ -732,7 +543,7 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
     * @return array
     */
    public function executeTextBindStatement($statement, array $params = array(), $logStatement = false) {
-      $result = $this->executeTextStatement($statement, $params, $logStatement);
+      $result = $this->executeTextStatement($statement, $params, $logStatement, false);
 
       return $result->fetchAll();
    }
@@ -754,8 +565,13 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
     * Version 0.1, 20.09.2009<br />
     * Version 0.2, 08.08.2010 (Added optional second parameter) <br />
     */
-   public function fetchData(Result $result, $type = self::ASSOC_FETCH_MODE) {
-      return $result->fetchData($type);
+   public function fetchData(Result $result, $fetchMode = null) {
+
+      if($fetchMode===null){
+         $fetchMode=$this->defaultFetchMode;
+      }
+
+      return $result->fetchData($fetchMode);
    }
 
    /**
@@ -776,6 +592,14 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
     */
    public function getNumRows(Result $result) {
       return $result->getNumRows();
+   }
+
+   public function setDefaultFetchMode($fetchMode) {
+      $this->defaultFetchMode = $fetchMode;
+   }
+
+   public function getDefaultFetchMode() {
+      return $this->defaultFetchMode;
    }
 
 }

@@ -20,92 +20,115 @@ namespace APF\core\database\pdo;
  * along with the APF. If not, see http://www.gnu.org/licenses/lgpl-3.0.txt.
  * -->
  */
+use APF\core\benchmark\BenchmarkTimer;
+use APF\core\database\DatabaseConnection;
 use APF\core\database\DatabaseHandlerException;
 use APF\core\database\Statement;
+use APF\core\database\AbstractStatementHandler;
+use APF\core\singleton\Singleton;
 
 /**
  * @package APF\core\database\pdo
  * @class PDOStatement
  */
-class PDOStatementHandler implements Statement {
+class PDOStatementHandler extends AbstractStatementHandler implements Statement {
 
    /**
-    * @var $statementObject \PDOStatement
+    * @var $dbStmt \PDOStatement
     */
-   protected $statementObject = null;
+   protected $dbStmt = null;
+   /**
+    * @var null|\PDO $dbConn
+    */
+   protected $dbConn = null;
 
-   protected $sortedParams = array();
-   protected $paramType = array(
-         self::PARAM_STRING  => \PDO::PARAM_STR,
-         self::PARAM_INTEGER => \PDO::PARAM_INT,
-         self::PARAM_BLOB    => \PDO::PARAM_LOB,
-         self::PARAM_FLOAT   => \PDO::PARAM_STR
+   protected $paramTypeMap = array(
+         DatabaseConnection::PARAM_STRING  => \PDO::PARAM_STR,
+         DatabaseConnection::PARAM_INTEGER => \PDO::PARAM_INT,
+         DatabaseConnection::PARAM_BLOB    => \PDO::PARAM_LOB,
+         DatabaseConnection::PARAM_FLOAT   => \PDO::PARAM_STR
    );
 
    /**
-    * @param \PDOStatement $statementObject
-    * @param array $sortedParams
+    * @param string $statement
+    * @param PDOHandler $wrappedConnection
+    * @param \PDO $dbConn
+    * @param bool $emulate
     */
-   public function __construct(\PDOStatement $statementObject, $sortedParams = array()) {
-      $this->sortedParams = $sortedParams;
-      $this->statementObject = $statementObject;
+   public function __construct($statement, \PDO $dbConn, PDOHandler $wrappedConnection, $emulate = false) {
+      parent::__construct($statement, $dbConn, $wrappedConnection, $emulate);
    }
 
    public function execute(array $params = array()) {
-      if (!empty($parameters)) {
-         $this->bindValues($parameters);
-      }
-      $this->statementObject->execute();
+      parent::execute($params);
 
-      return new PDOResultHandler($this->statementObject);
-   }
+      /** @var BenchmarkTimer $t */
+      $t=Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
 
-   /**
-    * @public
-    * Binds the values of an associative or numeric array to placeholders in a prepared statement
-    *
-    * @param array $params Use an associative array if you have used named placeholders, numeric for question marks
-    *
-    * @return $this
-    */
-   public function bindValues(array $params) {
-      if (isset($params[0])) {
-         foreach ($params as $key => $value) {
-            $this->bindValue($key + 1, $value);
+      if ($this->emulate === true) {
+         $t->start('emulate');
+         try {
+            $pdoResult = $this->dbConn->query($this->preparedStatement);
+         } catch (\PDOException $e) {
+            $errorNumber = $e->errorInfo[1];
+            if ($errorNumber === 2014) {
+               throw new DatabaseHandlerException('Cannot execute queries while other unbuffered queries are active. ' .
+                     'Use PDOResult->freeResult to free up the connection.', $errorNumber, $e);
+            }
+            throw new DatabaseHandlerException(
+                  $e->getMessage() . '
+               (Statement: ' . $this->preparedStatement . ')'
+                  , $errorNumber, $e
+            );
          }
-      } else {
-         foreach ($params as $key => $value) {
-            $this->bindValue($key, $value);
+         if ($pdoResult->columnCount() === 0) {
+            $this->affectedRows = $pdoResult->rowCount();
+
+            return null;
          }
+         $t->stop('emulate');
+
+         return new PDOResultHandler($pdoResult);
       }
 
+      if ($this->dbStmt === null) {
+         $t->start('first-prepare');
 
-      return $this;
-   }
-
-   public function bindValue($param, $value, $dataType = self::PARAM_STRING) {
-      $this->bindParam($param, $value, $dataType);
-
-      return $this;
-   }
-
-   public function bindParam($param, &$value, $dataType = self::PARAM_STRING) {
-      if (!isset($this->paramType[$dataType])) {
-         throw new DatabaseHandlerException('Undefined constant ' . $dataType, E_USER_ERROR);
-      }
-      if (!empty($this->sortedParams)) {
-         $paramkeys = array_keys($this->sortedParams, $param);
-         if (empty($paramkeys)) {
-            throw new DatabaseHandlerException('unknown Parameter ' . $param);
+         try {
+            $this->dbStmt = $this->dbConn->prepare($this->preparedStatement);
+         } catch (\PDOException $e) {
+            $errorNumber = $e->errorInfo[1];
+            if ($errorNumber === 2014) {
+               throw new DatabaseHandlerException('Cannot execute queries while other unbuffered queries are active. ' .
+                     'Use PDOResult->freeResult to free up the connection.', $errorNumber, $e);
+            }
+            throw new DatabaseHandlerException(
+                  $e->getMessage() . '
+               (Statement: ' . $this->statement . ')'
+                  , $errorNumber, $e
+            );
          }
-         foreach ($paramkeys as $key) {
-            $this->statementObject->bindParam($key, $value, $this->paramType[$dataType]);
-         };
-      } else {
-         $this->statementObject->bindParam($param, $value, $this->paramType[$dataType]);
+         $t->stop('first-prepare');
       }
 
-      return $this;
+      $this->bindValues();
+      $this->dbStmt->execute();
+
+      return new PDOResultHandler($this->dbStmt);
+
    }
 
+   protected function bindValues() {
+      /** @var BenchmarkTimer $t */
+      $t=Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+      $t->start();
+      foreach ($this->params as $attributes) {
+         $this->dbStmt->bindValue(
+               $attributes['position'],
+               $attributes['value'],
+               $this->paramTypeMap[$attributes['type']]
+         );
+      }
+      $t->stop();
+   }
 }
