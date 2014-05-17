@@ -73,11 +73,15 @@ abstract class AbstractStatementHandler implements Statement {
       return $this->defaultFetchMode;
    }
 
-
-   public function __construct($statement, $connection, DatabaseConnection $wrappedConnection, $emulate, $logStatement) {
+   /**
+    * @param $statement
+    * @param $connection
+    * @param $emulate
+    * @param $logStatement
+    */
+   public function __construct($statement, $connection, $emulate, $logStatement) {
       $this->statement = $statement;
       $this->dbConn = $connection;
-      $this->wrappedConnection = $wrappedConnection;
       $this->emulate = $emulate;
       $this->dbDebug=$logStatement;
    }

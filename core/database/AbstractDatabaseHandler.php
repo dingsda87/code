@@ -426,8 +426,8 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
     * Version 0.1, 07.05.2012<br />
     */
    public function setup() {
-      $this->dbLog = & Singleton::getInstance('APF\core\logging\Logger');
       $this->connect();
+      $this->dbConn->setLogger(& Singleton::getInstance('APF\core\logging\Logger'));
    }
 
    /**

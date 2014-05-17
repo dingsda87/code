@@ -34,10 +34,7 @@ use APF\core\singleton\Singleton;
  */
 class MySQLiStatementHandler extends AbstractStatementHandler implements Statement {
 
-   /** @var $wrappedConnection MySQLiHandler */
-   protected $wrappedConnection = null;
-
-   /** @var $dbConn \mysqli */
+   /** @var $dbConn MySQLiConnection */
    protected $dbConn = null;
 
    /** @var $dbStmt \mysqli_stmt */
@@ -50,6 +47,39 @@ class MySQLiStatementHandler extends AbstractStatementHandler implements Stateme
          DatabaseConnection::PARAM_STRING  => 's'
    );
 
+   /**
+    * @param $statement
+    * @param $connection
+    * @param $emulate
+    * @param $logStatement
+    */
+   public function __construct($statement, MySQLiConnection $connection, $emulate, $logStatement) {
+      parent::__construct($statement, $connection, $emulate, $logStatement);
+   }
+
+   /**
+    * @inheritdoc
+    *
+    * @return MySQLiResultHandler
+    */
+   public function execute(array $input_params = array()) {
+      parent::execute($input_params);
+
+      if ($this->emulate === true) {
+         $this->dbConn->query($this->preparedStatement,$this->dbDebug);
+      }
+
+      if ($this->dbStmt === null) {
+
+         $this->dbStmt = $this->dbConn->prepare($this->preparedStatement, $this->dbDebug);
+      }
+
+      $this->bindValues();
+      $this->dbStmt->execute();
+      if($this->de)
+
+      return new MySQLiResultHandler($this->dbStmt->get_result());
+   }
 
    protected function bindValues() {
       if ($this->emulate === true) {
@@ -72,50 +102,4 @@ class MySQLiStatementHandler extends AbstractStatementHandler implements Stateme
       $t->stop(__METHOD__);
 
    }
-
-
-   /**
-    * @inheritdoc
-    *
-    * @return MySQLiResultHandler
-    */
-   public function execute(array $input_params = array()) {
-      parent::execute($input_params);
-
-      if ($this->emulate === true) {
-         try {
-            // execute the statement with use of the current connection!
-            $this->dbConn->real_query($this->preparedStatement);
-         } catch (\Exception $e) {
-            throw new DatabaseHandlerException(
-                  'SQLSTATE[' . $this->dbConn->sqlstate . ']: ' .
-                  $e->getMessage() . ' (Statement: ' . $this->preparedStatement . ')',
-                  $e->getCode(), $e);
-         }
-
-         if ($this->dbConn->field_count) {
-            return new MySQLiResultHandler($this->dbConn->store_result());
-         }
-
-         return null;
-      }
-
-      if ($this->dbStmt === null) {
-
-         try {
-            $preparedStatement = $this->dbConn->prepare($this->preparedStatement);
-         } catch (\mysqli_sql_exception $e) {
-            throw new DatabaseHandlerException(
-                  'SQLSTATE[' . $this->dbConn->sqlstate . ']: ' . $e->getMessage() .
-                  ' (Statement: ' . $this->statement . ' )',
-                  $e->getCode(), $e);
-         }
-      }
-
-      $this->bindValues();
-      $this->dbStmt->execute();
-
-      return new MySQLiResultHandler($this->dbStmt->get_result());
-   }
-
 }

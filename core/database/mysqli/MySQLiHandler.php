@@ -40,7 +40,7 @@ class MySQLiHandler extends AbstractDatabaseHandler {
 
    /**
     *
-    * @var \mysqli $dbConn
+    * @var MySQLiConnection $dbConn
     */
    protected $dbConn = null;
 
@@ -144,32 +144,17 @@ class MySQLiHandler extends AbstractDatabaseHandler {
     * @version
     * Version 0.1, 10.02.2008<br />
     */
-   public function executeTextStatement($statement, array $params = array(), $logStatement = false, $emulatePrepare = null) {
-      // log statements in debug mode or when requested explicitly
-      if ($this->dbDebug === true || $logStatement === true) {
-         $this->dbLog->logEntry($this->dbLogTarget, '[MySQLiHandler::executeTextStatement()] Current statement: ' . $statement, LogEntry::SEVERITY_DEBUG);
-      }
+   public function executeTextStatement($statement, array $params = array(), $logStatement = false, $emulate = null) {
+
+      $logStatement=($this->dbLog||$logStatement);
 
       if (empty($params)) {
-
-         try {
-            // execute the statement with use of the current connection!
-            $this->dbConn->real_query($statement);
-         } catch (\Exception $e) {
-            throw new DatabaseHandlerException(
-                  'SQLSTATE[' . $this->dbConn->sqlstate . ']: ' .
-                  $e->getMessage() . ' (Statement: ' . $statement . ')',
-                  $e->getCode(), $e);
-         }
-
-         if ($this->dbConn->field_count) {
-            return new MySQLiResultHandler($this->dbConn->store_result());
-         }
-
-         return null;
+         return $this->dbConn->query($statement,$logStatement);
       }
 
-      $stmt = $this->prepareTextStatement($statement, $logStatement, $emulatePrepare);
+      $emulate = ($emulate === null) ? $this->emulate : $emulate;
+
+      $stmt= new MySQLiStatementHandler($statement, $this->dbConn, $logStatement, $emulate);
 
       return $stmt->execute($params);
 
@@ -182,13 +167,12 @@ class MySQLiHandler extends AbstractDatabaseHandler {
     * @return MySQLiStatementHandler
     */
    public function prepareTextStatement($statement, $logStatement = false, $emulate = null) {
+
       $emulate = ($emulate === null) ? $this->emulate : $emulate;
 
-      if ($this->dbDebug === true || $logStatement === true) {
-         $this->dbLog->logEntry($this->dbLogTarget, '[MySQLiHandler::prepareTextStatement()] Current statement: ' . $statement, LogEntry::SEVERITY_DEBUG);
-      }
+      $logStatement=($this->dbLog||$logStatement);
 
-      return new MySQLiStatementHandler($statement, $this->dbConn, $this, $emulate);
+      return new MySQLiStatementHandler($statement, $this->dbConn, $logStatement, $emulate);
    }
 
    /**
@@ -208,10 +192,7 @@ class MySQLiHandler extends AbstractDatabaseHandler {
     * @return MySQLiResultHandler
     */
    public function executeStatement($namespace, $statementName, array $params = array(), $logStatement = false, $emulatePrepare = null) {
-      $statement = $this->getPreparedStatement($namespace, $statementName);
-
-      // execute the statement with use of the current connection!
-      return $this->executeTextStatement($statement, $params, $logStatement, $emulatePrepare);
+      return $this->executeTextStatement($this->getPreparedStatement($namespace, $statementName), $params, $logStatement, $emulatePrepare);
    }
 
 }
