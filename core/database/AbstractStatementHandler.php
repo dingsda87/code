@@ -21,6 +21,7 @@ namespace APF\core\database;
  * -->
  */
 use APF\core\benchmark\BenchmarkTimer;
+use APF\core\logging\Logger;
 use APF\core\singleton\Singleton;
 use APF\core\database\DatabaseConnection;
 
@@ -42,6 +43,8 @@ abstract class AbstractStatementHandler implements Statement {
     * @var string the Statement
     */
    protected $statement = null;
+
+   protected $dbDebug=null;
 
    /** @var string $preparedStatement */
    protected $preparedStatement = null;
@@ -71,11 +74,12 @@ abstract class AbstractStatementHandler implements Statement {
    }
 
 
-   public function __construct($statement, $connection, DatabaseConnection $wrappedConnection, $emulate) {
+   public function __construct($statement, $connection, DatabaseConnection $wrappedConnection, $emulate, $logStatement) {
       $this->statement = $statement;
       $this->dbConn = $connection;
       $this->wrappedConnection = $wrappedConnection;
       $this->emulate = $emulate;
+      $this->dbDebug=$logStatement;
    }
 
    /**

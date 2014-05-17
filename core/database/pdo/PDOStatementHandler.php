@@ -121,7 +121,7 @@ class PDOStatementHandler extends AbstractStatementHandler implements Statement 
    protected function bindValues() {
       /** @var BenchmarkTimer $t */
       $t=Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
-      $t->start();
+      $t->start(__METHOD__);
       foreach ($this->params as $attributes) {
          $this->dbStmt->bindValue(
                $attributes['position'],
@@ -129,6 +129,6 @@ class PDOStatementHandler extends AbstractStatementHandler implements Statement 
                $this->paramTypeMap[$attributes['type']]
          );
       }
-      $t->stop();
+      $t->stop(__METHOD__);
    }
 }

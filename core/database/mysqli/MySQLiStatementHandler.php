@@ -110,7 +110,6 @@ class MySQLiStatementHandler extends AbstractStatementHandler implements Stateme
                   ' (Statement: ' . $this->statement . ' )',
                   $e->getCode(), $e);
          }
-         $this->dbStmt = $this->dbConn->prepare($this->preparedStatement);
       }
 
       $this->bindValues();

@@ -175,8 +175,8 @@ class SQLite3Handler extends AbstractDatabaseHandler {
     * @version
     * Version 0.1, 24.02.2008<br />
     */
-   public function getAffectedRows($unusedParam = null) {
-      return sqlite_num_rows($unusedParam);
+   public function getAffectedRows() {
+      return $this->dbConn->changes();
    }
 
    /**

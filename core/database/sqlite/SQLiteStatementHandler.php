@@ -38,7 +38,7 @@ class SQLiteStatementHandler extends AbstractStatementHandler implements Stateme
     */
    protected $dbConn = null;
 
-   protected $dbStmt=null;
+   protected $dbStmt = null;
 
 
    /**
@@ -47,30 +47,15 @@ class SQLiteStatementHandler extends AbstractStatementHandler implements Stateme
     * @param SQLiteHandler $dbConn
     * @param bool $emulate
     */
-   public function __construct($statement, $dbConn, SQLiteHandler $wrappedConnection, $emulate = false) {
-      parent::__construct($statement, $dbConn, $wrappedConnection, $emulate);
+   public function __construct($statement, SQLiteHandler $wrappedConnection, $logStatement) {
+      parent::__construct($statement, null, $wrappedConnection, true, $logStatement);
    }
 
    public function execute(array $params = array()) {
       parent::execute($params);
 
-      /** @var BenchmarkTimer $t */
-      $t = Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+      return $this->wrappedConnection->executeTextStatement($this->preparedStatement,array(),$this->dbDebug);
 
-      $t->start('emulate');
-
-      $result = @$this->dbConn->query($this->preparedStatement);
-
-      if ($result === false) {
-         $errorCode=$this->dbConn->lastError();
-         $message = sqlite_error_string($errorCode);
-         $message .= ' (Statement: ' . $this->preparedStatement . ')';
-         throw new DatabaseHandlerException( $message, $errorCode);
-      }
-
-      $t->stop('emulate');
-
-      return new SQLiteResultHandler($result);
 
    }
 

@@ -119,13 +119,7 @@ class MySQLiResultHandler implements Result {
    }
 
    /**
-    * @public
-    *
-    * Returns the number of selected rows by a select Statement.
-    * Some databases do not support this so you should not relied on
-    * this behavior for portable applications.
-    *
-    * @return int The number of selected rows.
+    * @inheritdoc
     *
     * @author Tobias Lückel (megger)
     * @version
@@ -136,7 +130,8 @@ class MySQLiResultHandler implements Result {
    }
 
    public function nextRowset(){
-      $this->dbConn->
+      return($this->dbConn->more_results() && $this->dbConn->next_result());
+
    }
 
 }

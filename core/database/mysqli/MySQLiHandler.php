@@ -84,7 +84,7 @@ class MySQLiHandler extends AbstractDatabaseHandler {
    /**
     * @inheritdoc
     */
-   public function getAffectedRows($unusedParam = null) {
+   public function getAffectedRows() {
       return $this->dbConn->affected_rows;
    }
 

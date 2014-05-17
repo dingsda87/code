@@ -234,6 +234,6 @@ interface DatabaseConnection extends APFDIService {
     * @version
     * Version 0.1, 24.02.2008<br />
     */
-   public function getAffectedRows($unusedParam = null);
+   public function getAffectedRows();
 
 }

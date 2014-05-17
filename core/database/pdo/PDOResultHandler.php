@@ -94,11 +94,6 @@ class PDOResultHandler implements Result {
       $this->resultObject->closeCursor();
    }
 
-   /**
-    * @inheritdoc
-    *
-    * @return bool
-    */
    public function nextRowset(){
 
       return $this->resultObject->nextRowset();

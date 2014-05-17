@@ -108,4 +108,8 @@ class SQLiteResultHandler implements Result {
    public function freeResult() {
 
    }
+
+   public function nextRowset(){
+
+   }
 }
