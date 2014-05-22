@@ -63,6 +63,8 @@ interface DatabaseConnection extends APFDIService {
    const PARAM_INTEGER = 2;
    const PARAM_BLOB = 3;
    const PARAM_FLOAT = 4;
+    const PARAM_IDENTIFIER = 5;
+    const PARAM_BIT=6;
 
    /**
     * Setups the connection using the DIServiceManager.

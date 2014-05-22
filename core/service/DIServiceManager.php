@@ -128,6 +128,7 @@ final class DIServiceManager {
     * Version 0.5, 10.07.2012 Jan Wiese (Improvements in code quality and removed bugs from v0.3/v0.4)<br />
     */
    public static function &getServiceObject($configNamespace, $sectionName, $context, $language) {
+       var_dump(self::$SERVICE_OBJECT_CACHE);
 
       // build cache key. because configuration-file path includes context, include context (and language) in cache key
       // In 2.0 language has been removed from the instance id since within multi-language applications

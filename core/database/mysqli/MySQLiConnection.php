@@ -1,9 +1,10 @@
 <?php
 namespace APF\core\database\mysqli;
 
+use APF\core\database\DatabaseConnection;
 use APF\core\logging\LogEntry;
 use APF\core\logging\Logger;
-
+use APF\core\database\DatabaseHandlerException;
 /**
  * <!--
  * This file is part of the adventure php framework (APF) published under
@@ -30,15 +31,29 @@ class MySQLiConnection extends \mysqli {
    /** @var null|Logger $dbLog */
    protected $dbLog = null;
 
-   public function quoteValue($value) {
-      return '\'' . parent::real_escape_string($value) . '\'';
+    protected $dbLogTarget='mysqli';
+
+
+
+   public function quote($value, $dataType=DatabaseConnection::PARAM_STRING) {
+       switch ($dataType){
+           case DatabaseConnection::PARAM_IDENTIFIER:
+               return '`'.str_replace('`','``',$value).'`';
+           case DatabaseConnection::PARAM_BIT:
+               return '\b\''. $this->real_escape_string($value) . '\'';
+           case DatabaseConnection::PARAM_INTEGER:
+           case DatabaseConnection::PARAM_FLOAT:
+               return (is_numeric($value))?$value:'\'' . $this->real_escape_string($value) . '\'';
+           case DatabaseConnection::PARAM_STRING:
+               return '\'' . $this->real_escape_string($value) . '\'';
+       }
    }
 
    public function setLogger(&$logger) {
       $this->dbLog = $logger;
    }
 
-   public function query($statement, $logStatement) {
+   public function query($statement, $logStatement=false) {
 
       // log statements in debug mode or when requested explicitly
       if ($logStatement) {
@@ -48,24 +63,24 @@ class MySQLiConnection extends \mysqli {
       try {
          // execute the statement with use of the current connection!
          parent::real_query($statement);
-      } catch (\Exception $e) {
+      } catch (\mysqli_sql_exception $e) {
          throw new DatabaseHandlerException(
-               'SQLSTATE[' . parent::sqlstate . ']: ' .
+               'SQLSTATE[' . $this->sqlstate . ']: ' .
                $e->getMessage() . ' (Statement: ' . $statement . ')',
                $e->getCode(), $e);
       }
 
-      if (parent::field_count) {
+      if ($this->field_count) {
          $this->lastInsertID=$this->insert_id;
          $this->logWarnings($logStatement);
-         return parent::store_result();
+         return new MySQLiResultHandler(parent::store_result());
       }
 
       $this->logWarnings($logStatement);
       return null;
    }
 
-   public function prepare($statement, $logStatement) {
+   public function prepare($statement, $logStatement=false) {
 
       // log statements in debug mode or when requested explicitly
       if ($logStatement) {
@@ -76,7 +91,7 @@ class MySQLiConnection extends \mysqli {
          $stmt = parent::prepare($statement);
       } catch (\mysqli_sql_exception $e) {
          throw new DatabaseHandlerException(
-               'SQLSTATE[' . parent::sqlstate . ']: ' . $e->getMessage() .
+               'SQLSTATE[' . $this->sqlstate . ']: ' . $e->getMessage() .
                ' (Statement: ' . $statement . ' )',
                $e->getCode(), $e);
       }
@@ -87,7 +102,7 @@ class MySQLiConnection extends \mysqli {
 
    public function logWarnings($debug) {
 
-      if (parent::$warning_count&&$debug) {
+      if ($debug && parent::$warning_count) {
          $warning = parent::get_warnings();
 
          do {

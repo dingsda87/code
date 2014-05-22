@@ -20,6 +20,7 @@ namespace APF\modules\genericormapper\data;
  * along with the APF. If not, see http://www.gnu.org/licenses/lgpl-3.0.txt.
  * -->
  */
+use APF\core\database\DatabaseConnection;
 use APF\modules\genericormapper\data\GenericORMapperDataObject;
 use APF\modules\genericormapper\data\BaseMapper;
 use APF\modules\genericormapper\data\GenericDomainObject;
@@ -247,109 +248,42 @@ class GenericORMapper extends BaseMapper {
       }
       $pkName = $this->mappingTable[$objectName]['ID'];
       $attrExceptions = array(
-         $pkName,
-         'ModificationTimestamp',
-         'CreationTimestamp'
+         $pkName=>null,
+         'ModificationTimestamp'=>null,
+         'CreationTimestamp'=>null
       );
 
+       $properties=array_diff_key($object->getProperties(),$attrExceptions);
+       $dataTypes=array_intersect_key($this->mappingTable[$objectName],$properties);
 
       // check if object must be saved or updated
       $id = $object->getProperty($pkName);
       if ($id === null) {
 
-         // do an INSERT
-         $insert = 'INSERT INTO ' . $this->mappingTable[$objectName]['Table'];
+          $insert='insert into :tableName (:columns) values (:values)';
 
-         $names = array();
-         $values = array();
-         foreach ($object->getProperties() as $propertyName => $propertyValue) {
+          $stmt=$this->dbDriver->prepareTextStatement($insert,false,true);
+          $stmt->bindValue('tableName',$this->mappingTable[$objectName]['Table'],DatabaseConnection::PARAM_IDENTIFIER);
+          $stmt->bindValue('columns',array_keys($properties),DatabaseConnection::PARAM_IDENTIFIER);
+          $stmt->bindValue('values',array_values($properties),array_values($dataTypes));
 
-            if (!in_array($propertyName, $attrExceptions)) {
-
-               // Surround property names with ticks to avoid issues with reserved names!
-               $names[] = '`' . $propertyName . '`';
-
-               // escape value to avoid SQL injections
-               $propertyValue = $this->dbDriver->escapeValue($propertyValue);
-
-               // Check, whether the desired property is a BIT field. If yes, prepend with
-               // the binary marker! Details can be read about under
-               // http://forum.adventure-php-framework.org/viewtopic.php?f=8&t=234.
-               if (stripos($this->mappingTable[$objectName][$propertyName], self::$BIT_FIELD_IDENTIFIER) === false) {
-
-                  // check, whether the field is a null value and translate PHP null values into
-                  // MySQL NULL value
-                  if (stripos($this->mappingTable[$objectName][$propertyName], self::$NULL_FIELD_IDENTIFIER) === false) {
-                     $values[] = '\'' . $propertyValue . '\'';
-                  } else {
-                     if (empty($propertyValue)) {
-                        $values[] = 'NULL';
-                     } else {
-                        $values[] = '\'' . $propertyValue . '\'';
-                     }
-                  }
-
-               } else {
-                  $values[] = 'b\'' . $propertyValue . '\'';
-               }
-
-            }
-
-         }
-
-         $insert .= ' (' . implode(', ', $names) . ')';
-         $insert .= ' VALUES (' . implode(', ', $values) . ');';
-
-         $this->dbDriver->executeTextStatement($insert, array(), $this->logStatements);
-         $id = $this->dbDriver->getLastID();
+          $stmt->execute();
+          $id = $this->dbDriver->getLastID();
 
       } else {
+          $countProperties=count($properties);
 
-         // UPDATE object in database
-         $update = 'UPDATE ' . $this->mappingTable[$objectName]['Table'];
-
-         $queryParams = array();
-         foreach ($object->getProperties() as $propertyName => $propertyValue) {
-
-            if (!in_array($propertyName, $attrExceptions)) {
-
-               // escape value to avoid SQL injections
-               $propertyValue = $this->dbDriver->escapeValue($propertyValue);
-
-               // Check, whether the desired property is a BIT field. If yes, prepend with
-               // the binary marker! Details can be read about under
-               // http://forum.adventure-php-framework.org/viewtopic.php?f=8&t=234.
-               if (stripos($this->mappingTable[$objectName][$propertyName], self::$BIT_FIELD_IDENTIFIER) === false) {
-
-                  // check, whether the field is a null value and translate PHP null values into
-                  // MySQL NULL value
-                  if (stripos($this->mappingTable[$objectName][$propertyName], self::$NULL_FIELD_IDENTIFIER) === false) {
-                     $value = '\'' . $propertyValue . '\'';
-                  } else {
-                     if (empty($propertyValue)) {
-                        $value = 'NULL';
-                     } else {
-                        $value = '\'' . $propertyValue . '\'';
-                     }
-                  }
-                  $queryParams[] = '`' . $propertyName . '` = ' . $value;
-
-               } else {
-                  $queryParams[] = '`' . $propertyName . '` = b\'' . $propertyValue . '\'';
-               }
-
-            }
-
-         }
-
-         $update .= ' SET ' . implode(', ', $queryParams) . ', ModificationTimestamp = NOW()';
-         $update .= ' WHERE ' . $pkName . '= \'' . $id . '\';';
-
-         // execute update, only if the update is necessary
-         if (count($queryParams) > 0) {
-            $this->dbDriver->executeTextStatement($update, array(), $this->logStatements);
-         }
-
+          $update='update ? set ' . str_repeat('? = ?, ',$countProperties) . 'ModificationTimestamp = NOW() where ? = ?';
+          $stmt=$this->dbDriver->prepareTextStatement($update);
+          $nr=0;
+          $stmt->bindValue(++$nr,$this->mappingTable[$objectName]['Table'],DatabaseConnection::PARAM_IDENTIFIER);
+          foreach($properties as $columnName => $value){
+              $stmt->bindParam(++$nr,$columnName,DatabaseConnection::PARAM_IDENTIFIER);
+              $stmt->bindParam(++$nr,$value,$this->mappingTable[$objectName][$columnName]);
+          }
+          $stmt->bindParam(++$nr,$pkName,DatabaseConnection::PARAM_IDENTIFIER);
+          $stmt->bindParam(++$nr,$id,$this->mappingTable[$objectName][$columnName]);
+          $stmt->execute();
       }
 
       // initialize the object id, to enable the developer to directly

@@ -427,7 +427,8 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
     */
    public function setup() {
       $this->connect();
-      $this->dbConn->setLogger(& Singleton::getInstance('APF\core\logging\Logger'));
+       $logger=& Singleton::getInstance('APF\core\logging\Logger');
+      $this->dbConn->setLogger($logger);
    }
 
    /**
@@ -545,7 +546,7 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    public function executeTextBindStatement($statement, array $params = array(), $logStatement = false) {
       $result = $this->executeTextStatement($statement, $params, $logStatement, false);
 
-      return $result->fetchAll();
+      return ($result!==null)?$result->fetchAll():null;
    }
 
    /**

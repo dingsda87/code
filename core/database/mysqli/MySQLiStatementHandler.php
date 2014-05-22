@@ -53,8 +53,8 @@ class MySQLiStatementHandler extends AbstractStatementHandler implements Stateme
     * @param $emulate
     * @param $logStatement
     */
-   public function __construct($statement, MySQLiConnection $connection, $emulate, $logStatement) {
-      parent::__construct($statement, $connection, $emulate, $logStatement);
+   public function __construct($statement, MySQLiConnection $connection, $logStatement,$emulate) {
+      parent::__construct($statement, $connection, $logStatement,$emulate);
    }
 
    /**
@@ -63,10 +63,12 @@ class MySQLiStatementHandler extends AbstractStatementHandler implements Stateme
     * @return MySQLiResultHandler
     */
    public function execute(array $input_params = array()) {
+       var_dump($this->emulate);
       parent::execute($input_params);
 
       if ($this->emulate === true) {
-         $this->dbConn->query($this->preparedStatement,$this->dbDebug);
+         return $this->dbConn->query($this->preparedStatement,$this->dbDebug);
+
       }
 
       if ($this->dbStmt === null) {
@@ -76,7 +78,7 @@ class MySQLiStatementHandler extends AbstractStatementHandler implements Stateme
 
       $this->bindValues();
       $this->dbStmt->execute();
-      if($this->de)
+      $this->dbConn->logWarnings($this->dbDebug);
 
       return new MySQLiResultHandler($this->dbStmt->get_result());
    }
@@ -92,7 +94,8 @@ class MySQLiStatementHandler extends AbstractStatementHandler implements Stateme
       $sortedParams = array(0 => null);
       foreach ($this->params as $key => $attribute) {
          $sortedParams[0] .= $this->paramTypeMap[$attribute['type']];
-         $sortedParams[$attribute['position']] = $attribute['value'];
+         $position=(isset($attribute['position']))?$attribute['position']:$key+1;
+         $sortedParams[$position] = $attribute['value'];
       }
 
       sort($sortedParams, SORT_NUMERIC);

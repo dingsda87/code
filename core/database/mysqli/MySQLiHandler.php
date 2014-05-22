@@ -109,11 +109,13 @@ class MySQLiHandler extends AbstractDatabaseHandler {
       $driver->report_mode = MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT;
       // initiate connection
       try {
-         $this->dbConn = new \mysqli();
+         $this->dbConn = new MySQLiConnection();
          $this->dbConn->real_connect($this->dbHost, $this->dbUser, $this->dbPass, $this->dbName, $this->dbPort, $this->dbSocket);
       } catch (\Exception $e) {
          throw new DatabaseHandlerException($e->getMessage(), $e->getCode(), $e);
       }
+
+       $this->dbConn->setLogger($this->dbLog);
 
       // configure client connection
       if ($this->dbCharset !== null) {
@@ -171,7 +173,6 @@ class MySQLiHandler extends AbstractDatabaseHandler {
       $emulate = ($emulate === null) ? $this->emulate : $emulate;
 
       $logStatement=($this->dbLog||$logStatement);
-
       return new MySQLiStatementHandler($statement, $this->dbConn, $logStatement, $emulate);
    }
 
