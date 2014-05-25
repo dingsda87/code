@@ -47,7 +47,6 @@ class PDOHandler extends AbstractDatabaseHandler implements DatabaseConnection {
    protected $dbConn = null;
 
    /**
-    * @protected
     * @var string Database type for pdo connection
     */
    protected $dbPDO = null;
@@ -57,7 +56,6 @@ class PDOHandler extends AbstractDatabaseHandler implements DatabaseConnection {
    protected $affectedRows = 0;
 
    /**
-    * @public
     *
     * @author Tobias Lückel (megger)
     * @version
@@ -149,7 +147,6 @@ class PDOHandler extends AbstractDatabaseHandler implements DatabaseConnection {
    }
 
    /**
-    * @protected
     *
     * Provides internal service to close a database connection.
     *
@@ -206,7 +203,6 @@ class PDOHandler extends AbstractDatabaseHandler implements DatabaseConnection {
 
 
    /**
-    * @protected
     *
     * Provides internal service to open a database connection.
     *
@@ -243,7 +239,6 @@ class PDOHandler extends AbstractDatabaseHandler implements DatabaseConnection {
    }
 
    /**
-    * @protected
     *
     * Returns the data source name (DSN) for the database connection.
     * The string is build bases on the configuration parameter 'PDO'

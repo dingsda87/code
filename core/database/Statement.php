@@ -28,7 +28,6 @@ namespace APF\core\database;
 interface Statement {
 
    /**
-    * @public
     *
     * Binds a variable to a corresponding named or question mark placeholder in the prepared SQL statement.
     *
@@ -42,7 +41,6 @@ interface Statement {
    public function bindParam($parameter, &$variable, $dataType = DatabaseConnection::PARAM_STRING);
 
    /**
-    * @public
     *
     * Binds a value to a corresponding named or question mark placeholder in the prepared SQL statement.
     *
@@ -57,7 +55,6 @@ interface Statement {
 
 
    /**
-    * @public
     *
     * Executes a prepared statement.
     *

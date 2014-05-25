@@ -59,7 +59,6 @@ class MySQLiResultHandler implements Result {
    }
 
    /**
-    * @public
     * frees up the connection so that a new statement can be executed
     */
    public function freeResult() {
@@ -67,7 +66,6 @@ class MySQLiResultHandler implements Result {
    }
 
    /**
-    * @public
     *
     * Fetches all records from the database .
     *

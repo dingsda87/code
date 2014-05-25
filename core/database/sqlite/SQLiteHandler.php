@@ -38,13 +38,11 @@ use APF\core\logging\LogEntry;
 class SQLiteHandler extends AbstractDatabaseHandler {
 
    /**
-    * @protected
     * @var int File system permission mode of the database.
     */
    protected $dbMode = 0666;
 
    /**
-    * @protected
     * @var string Error tracking container for SQLite errors.
     */
    protected $dbError = null;
@@ -54,7 +52,6 @@ class SQLiteHandler extends AbstractDatabaseHandler {
    }
 
    /**
-    * @protected
     *
     * Implements the connect method to create a connection to the desired sqlite database.
     *
@@ -75,7 +72,6 @@ class SQLiteHandler extends AbstractDatabaseHandler {
    }
 
    /**
-    * @protected
     *
     * Implements the close method for the sqlite database.
     *
@@ -132,7 +128,6 @@ class SQLiteHandler extends AbstractDatabaseHandler {
    }
 
    /**
-    * @public
     *
     * Executes a statement, located within a statement file. The place holders contained in the
     * file are replaced by the given values.
@@ -173,7 +168,6 @@ class SQLiteHandler extends AbstractDatabaseHandler {
    }
 
    /**
-    * @public
     *
     * Fetches a record from the database using the given result resource.
     *

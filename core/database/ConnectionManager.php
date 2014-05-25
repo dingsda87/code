@@ -65,14 +65,12 @@ use APF\core\service\APFService;
 final class ConnectionManager extends APFObject {
 
    /**
-    * @private
     * @var AbstractDatabaseHandler[] Cache for existing database connections.
     */
    private $connections = array();
    private static $STATEMENT_FILE_EXTENSION = 'sql';
 
    /**
-    * @public
     *
     * Initializes the configuration provider for file based statements.
     *
@@ -89,7 +87,6 @@ final class ConnectionManager extends APFObject {
    }
 
    /**
-    * @public
     *
     * Returns the initialized handler for the desired connection key. Caches connections, that
     * were created previously.
@@ -151,7 +148,6 @@ final class ConnectionManager extends APFObject {
    }
 
    /**
-    * @public
     *
     * Let's you clear/close a dedicated connection.
     * <p/>

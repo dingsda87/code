@@ -28,7 +28,6 @@ namespace APF\core\database;
 interface Result {
 
    /**
-    * @public
     *
     * Fetches a record from the database.
     *
@@ -44,7 +43,6 @@ interface Result {
    public function fetchData($type = DatabaseConnection::FETCH_ASSOC);
 
    /**
-    * @public
     *
     * Fetches all records from the database.
     *
@@ -59,7 +57,6 @@ interface Result {
    public function fetchAll($type = DatabaseConnection::FETCH_ASSOC);
 
    /**
-    * @public
     *
     * Returns the number of selected rows by a select statement. Some databases do not support this so
     * you should not relied on this behavior for portable applications.
@@ -73,7 +70,6 @@ interface Result {
    public function getNumRows();
 
    /**
-    * @public
     *
     * Frees up the connection so that a new statement can be executed.
     */

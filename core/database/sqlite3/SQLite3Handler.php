@@ -42,13 +42,11 @@ class SQLite3Handler extends AbstractDatabaseHandler {
    protected $dbConn=null;
 
    /**
-    * @protected
     * @var int File system permission mode of the database.
     */
    protected $dbMode = 0666;
 
    /**
-    * @protected
     * @var string Error tracking container for SQLite errors.
     */
    protected $dbError = null;
@@ -121,7 +119,6 @@ class SQLite3Handler extends AbstractDatabaseHandler {
    }
 
    /**
-    * @public
     *
     * Fetches a record from the database using the given result resource.
     *
@@ -146,7 +143,6 @@ class SQLite3Handler extends AbstractDatabaseHandler {
    }
 
    /**
-    * @public
     *
     * Escapes given values to be SQL injection save.
     *
@@ -163,7 +159,6 @@ class SQLite3Handler extends AbstractDatabaseHandler {
    }
 
    /**
-    * @public
     *
     * Returns the amount of rows, that are affected by a previous update or delete call.
     *
@@ -180,7 +175,6 @@ class SQLite3Handler extends AbstractDatabaseHandler {
    }
 
    /**
-    * @public
     *
     * Returns the number of selected rows by the given result resource.
     *

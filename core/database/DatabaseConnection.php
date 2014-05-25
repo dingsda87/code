@@ -182,7 +182,6 @@ interface DatabaseConnection extends APFDIService {
    public function prepareTextStatement($statement, $logStatement = false, $emulate = null);
 
    /**
-    * @public
     *
     * Turns off autocommit mode! Changes to the database via PDO are not committed until calling <em>commit()</em>.
     * <em>rollBack()</em> will roll back all changes and turns on the autocommit mode!
@@ -196,7 +195,6 @@ interface DatabaseConnection extends APFDIService {
    public function beginTransaction();
 
    /**
-    * @public
     *
     * Commits a transaction and turns on the autocommit mode!
     *
@@ -209,7 +207,6 @@ interface DatabaseConnection extends APFDIService {
    public function commit();
 
    /**
-    * @public
     *
     * Rolls back the current transaction
     *
@@ -222,7 +219,6 @@ interface DatabaseConnection extends APFDIService {
    public function rollback();
 
    /**
-    * @public
     *
     * Returns the amount of rows, that are affected by a previous update, insert or delete call.
     *

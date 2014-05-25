@@ -57,7 +57,6 @@ class SQLite3ResultHandler implements Result {
    }
 
    /**
-    * @public
     *
     * Fetches a record from the database.
     *
@@ -81,7 +80,6 @@ class SQLite3ResultHandler implements Result {
    }
 
    /**
-    * @public
     *
     * Returns the number of selected rows by a select statement. Some databases do not support this so
     * you should not relied on this behavior for portable applications.
@@ -97,7 +95,6 @@ class SQLite3ResultHandler implements Result {
    }
 
    /**
-    * @public
     *
     * Frees up the connection so that a new statement can be executed.
     */
