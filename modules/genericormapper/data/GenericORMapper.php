@@ -55,7 +55,6 @@ class GenericORMapper extends BaseMapper {
    private static $NULL_FIELD_IDENTIFIER = 'NULL DEFAULT NULL';
 
    /**
-    * @public
     *
     * Loads an object list.
     *
@@ -73,7 +72,6 @@ class GenericORMapper extends BaseMapper {
    }
 
    /**
-    * @public
     *
     * Loads an object list by a special statement. The statement must return the desired
     * object properties.
@@ -97,7 +95,6 @@ class GenericORMapper extends BaseMapper {
    }
 
    /**
-    * @public
     *
     * Loads an object list by a list of object ids.<br />
     *
@@ -125,7 +122,6 @@ class GenericORMapper extends BaseMapper {
    }
 
    /**
-    * @public
     *
     * Loads an object list by a special statement. The statement must return the desired
     * object properties.
@@ -143,7 +139,6 @@ class GenericORMapper extends BaseMapper {
    }
 
    /**
-    * @public
     *
     * Loads an object by a special statement. The statement must return the desired object properties.
     *
@@ -165,7 +160,6 @@ class GenericORMapper extends BaseMapper {
    }
 
    /**
-    * @public
     *
     * Loads an object by a special statement. The statement must return the desired
     * object properties.
@@ -189,7 +183,6 @@ class GenericORMapper extends BaseMapper {
    }
 
    /**
-    * @public
     *
     * Deletes an Object.
     *
@@ -218,7 +211,6 @@ class GenericORMapper extends BaseMapper {
    }
 
    /**
-    * @public
     *
     * Saves an Object.
     *
@@ -254,7 +246,9 @@ class GenericORMapper extends BaseMapper {
       );
 
        $properties=array_diff_key($object->getProperties(),$attrExceptions);
+       $properties=array_intersect_kex($properties,$this->mappingTable[$objectName]);
        $dataTypes=array_intersect_key($this->mappingTable[$objectName],$properties);
+
 
       // check if object must be saved or updated
       $id = $object->getProperty($pkName);
@@ -300,7 +294,6 @@ class GenericORMapper extends BaseMapper {
    }
 
    /**
-    * @public
     *
     * Returns an object by name and id.
     *
@@ -332,7 +325,6 @@ class GenericORMapper extends BaseMapper {
    }
 
    /**
-    * @protected
     *
     * Loads an object list by a statement resource.
     *
@@ -356,7 +348,6 @@ class GenericORMapper extends BaseMapper {
    }
 
    /**
-    * @protected
     *
     * Creates an domain object by name and properties.
     *

@@ -93,80 +93,67 @@ use APF\core\singleton\Singleton;
 abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConnection {
 
    /**
-    * @protected
     * @var boolean Indicates, whether the handler is already initialized or not.
     */
    protected $isInitialized = false;
 
    /**
-    * @protected
     * @var string Database server.
     */
    protected $dbHost = null;
 
    /**
-    * @protected
     * @var string Database user.
     */
    protected $dbUser = null;
 
    /**
-    * @protected
     * @var string Password for the database.
     */
    protected $dbPass = null;
 
    /**
-    * @protected
     * @var string Name of the database.
     */
    protected $dbName = null;
 
    /**
-    * @protected
     * @var string Port for connection.
     */
    protected $dbPort = null;
 
    /**
-    * @protected
     * @var string Socket for connection.
     */
    protected $dbSocket = null;
 
    /**
-    * @protected
     * @var boolean Indicates, if the handler runs in debug mode. This means, that all
     * statements executed are written into a dedicated logfile.
     */
    protected $dbDebug = false;
 
    /**
-    * @protected
     * @var resource Database connection resource.
     */
    protected $dbConn = null;
 
    /**
-    * @protected
     * @var Logger Instance of the logger.
     */
    protected $dbLog = null;
 
    /**
-    * @protected
     * @var string Name of the log target. Must be defined within the implementation class!
     */
    protected $dbLogTarget;
 
    /**
-    * @protected
     * @var int Auto increment id of the last insert.
     */
    protected $lastInsertId;
 
    /**
-    * @protected
     * @var string Indicates the charset of the database connection.
     *
     * For mysql databases, see http://dev.mysql.com/doc/refman/5.0/en/charset-connection.html
@@ -175,7 +162,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    protected $dbCollation = null;
 
    /**
-    * @protected
     * @var string Indicates the collation of the database connection.
     *
     * For mysql databases, see http://dev.mysql.com/doc/refman/5.0/en/charset-connection.html
@@ -192,7 +178,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
 
 
    /**
-    * @public
     *
     * Defines the name of the log target for the debugging feature.
     * <p/>
@@ -209,7 +194,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    }
 
    /**
-    * @public
     *
     * Implements the init() method, so that the derived classes can be initialized
     * by the service manager. Initializes the handler only one time.
@@ -263,7 +247,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    }
 
    /**
-    * @public
     *
     * Defines the database host to connect to.
     * <p/>
@@ -280,7 +263,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    }
 
    /**
-    * @public
     *
     * Defines the user that is used to connect to the database.
     * <p/>
@@ -297,7 +279,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    }
 
    /**
-    * @public
     *
     * Defines the password used to connect to the database.
     * <p/>
@@ -314,7 +295,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    }
 
    /**
-    * @public
     *
     * Defines the database name to connect to.
     * <p/>
@@ -331,7 +311,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    }
 
    /**
-    * @public
     *
     * Defines the database port to connect to.
     * <p/>
@@ -348,7 +327,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    }
 
    /**
-    * @public
     *
     * Defines the socket to connect to.
     * <p/>
@@ -365,7 +343,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    }
 
    /**
-    * @public
     *
     * Enables (true) or disables (false) the internal debugging feature (=statement logging).
     * <p/>
@@ -382,7 +359,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    }
 
    /**
-    * @public
     *
     * Defines the character set of the database connection.
     * <p/>
@@ -399,7 +375,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    }
 
    /**
-    * @public
     *
     * Defines the collation of the database connection.
     * <p/>
@@ -416,7 +391,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    }
 
    /**
-    * @public
     *
     * Implements an initializer method to setup derived classes using the
     * DIServiceManager.
@@ -427,12 +401,10 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
     */
    public function setup() {
       $this->connect();
-       $logger=& Singleton::getInstance('APF\core\logging\Logger');
-      $this->dbConn->setLogger($logger);
+      $this->dbLog=& Singleton::getInstance('APF\core\logging\Logger');
    }
 
    /**
-    * @protected
     * @abstract
     *
     * Provides internal service to open a database connection.
@@ -446,7 +418,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    abstract protected function connect();
 
    /**
-    * @protected
     *
     * Loads a statement file.
     *
@@ -473,7 +444,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    }
 
    /**
-    * @protected
     * @abstract
     *
     * Provides internal service to close a database connection.
@@ -487,7 +457,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    abstract protected function close();
 
    /**
-    * @protected
     *
     * Configures the client connection's charset and collation.
     *
@@ -514,7 +483,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
 
 
    /**
-    * @public
     *
     * @deprecated Use executeStatement() with fetchAll() instead.
     *
@@ -533,7 +501,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
 
 
    /**
-    * @public
     *
     * @deprecated  Use executeTextStatement with fetchAll instead
     *
@@ -550,7 +517,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    }
 
    /**
-    * @public
     *
     * @deprecated Use Result->fetchData() instead.
     *
@@ -576,7 +542,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    }
 
    /**
-    * @public
     *
     * @deprecated Use Result->getNumRows() instead.
     *

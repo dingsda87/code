@@ -41,14 +41,12 @@ abstract class AbstractStatementHandler implements Statement
 {
 
     /**
-     * @protected
-     * @var string the Statement
+      * @var string the Statement
      */
     protected $statement = null;
 
     /** @var MySQLiConnection $dbConn */
     protected $dbConn = null;
-    protected $dbDebug = null;
 
     /** @var string $preparedStatement */
     protected $preparedStatement = null;
@@ -59,7 +57,17 @@ abstract class AbstractStatementHandler implements Statement
     /** @var array $params */
     protected $params = array();
 
+    /**
+      * @var string Name of the log target. Must be defined within the implementation class!
+     */
+    protected $dbLogTarget;
+
     protected $position = 1;
+
+    /**
+     * @var Logger Instance of the logger.
+     */
+    protected $dbLog = null;
 
     protected $defaultFetchMode = DatabaseConnection::FETCH_ASSOC;
 
@@ -71,13 +79,13 @@ abstract class AbstractStatementHandler implements Statement
      * @param $emulate
      * @param $logStatement
      */
-    public function __construct($statement, $connection, $logStatement,$emulate)
+    public function __construct($statement, $connection, $emulate, $dbLogger, $logTarget)
     {
         $this->statement = $statement;
         $this->dbConn = $connection;
         $this->emulate = $emulate;
-        $this->dbDebug = $logStatement;
-        var_dump($emulate);
+        $this->dbLog = $dbLogger;
+        $this->dbLogTarget = $logTarget;
     }
 
     /**
@@ -97,8 +105,7 @@ abstract class AbstractStatementHandler implements Statement
     }
 
     /**
-     * @public
-     *
+      *
      * Binds a value to a corresponding named or question mark placeholder in the prepared SQL statement.
      *
      * @param mixed $parameter name of the parameter if you used named placeholder or the position of the placeholder
@@ -108,14 +115,13 @@ abstract class AbstractStatementHandler implements Statement
      * @throws DatabaseHandlerException
      * @return $this
      */
-    public function bindValue($parameter, $value, $dataType = DatabaseConnection::PARAM_STRING)
+    public function bindValue($parameter, $value, $dataType = DatabaseConnection::PARAM_STRING, $paramArray = false)
     {
         return $this->bindParam($parameter, $value, $dataType);
     }
 
     /**
-     * @public
-     *
+      *
      * Binds a variable to a corresponding named or question mark placeholder in the prepared SQL statement.
      *
      * @param mixed $parameter Name of the parameter if you used named placeholder or the position of the place holder.
@@ -125,18 +131,34 @@ abstract class AbstractStatementHandler implements Statement
      * @throws DatabaseHandlerException
      * @return $this
      */
-    public function bindParam($parameter, &$variable, $dataType = DatabaseConnection::PARAM_STRING)
+    public function bindParam($parameter, &$variable, $dataType = DatabaseConnection::PARAM_STRING, $paramArray = false)
     {
+        if(!$paramArray && (is_array($variable) || is_array($dataType))){
+            throw new DatabaseHandlerException(/** todo */);
+        }
 
         $this->params[$parameter]['value'] = & $variable;
-        $this->params[$parameter]['type'] = $dataType;
+
+        if (!$paramArray) {
+
+            $this->params[$parameter]['type'] = $dataType;
+
+            return $this;
+        }
+
+        $this->params[$parameter]['value']= &$variable;
+
+        if(!is_array($dataType)){
+            foreach($variable as $key => $dummy){
+                $this->params[$parameter]['type'][$key]=$dataType;
+            }
+        }
 
         return $this;
     }
 
     /**
-     * @public
-     *
+      *
      * Executes a prepared statement.
      *
      * @param array $params Binds the values of the array to the prepared statement (optional). See Statement::bindValues().
@@ -191,7 +213,7 @@ abstract class AbstractStatementHandler implements Statement
         $this->position = 0;
 
         $this->preparedStatement = preg_replace_callback('#' . $token . '#uxs', array($this, 'replacePlaceholder'), $this->statement);
-var_dump($this->preparedStatement);
+        var_dump($this->preparedStatement);
         $t->stop(__METHOD__);
     }
 
@@ -217,59 +239,12 @@ var_dump($this->preparedStatement);
             throw new DatabaseHandlerException('No value provided for parameter ' . $paramName, E_USER_ERROR);
         }
 
-        if ($this->emulate) {
-            if (is_array($this->params[$paramName]['value'])) {
-                if (is_array($this->params[$paramName]['type'])) {
-                    $quoted = array_map(function ($value, $type) {
-                        return $this->dbConn->quote($value, $type);
-                    }, $this->params[$paramName]['value'], $this->params[$paramName]['type']);
-                } else {
-                    $type = $this->params[$paramName]['type'];
-                    $quoted = array_map(function ($value) use ($type) {
-                        return $this->dbConn->quote($value, $type);
-                    }, $this->params[$paramName]['value']);
-                }
-                $quoted = implode(',', $quoted);
-            } else {
-                $quoted = $this->dbConn->quote($this->params[$paramName]['value'], $this->params[$paramName]['type']);
-            }
-            return $quoted;
-        }
-
-
         if ($this->params[$paramName]['type'] === DatabaseConnection::PARAM_IDENTIFIER) {
-
-            if (is_array($this->params[$paramName]['value'])) {
-                return '`' . implode(',', $this->params[$paramName]['value']) . '`';
-
-            }
-            return '`' . $this->params[$paramName]['value'] . '`';
+            if ()
         }
 
         if ($this->emulate === true) {
-
-            $paramValue = $this->params[$paramName]['value'];
-            $paramType = $this->params[$paramName]['type'];
-
-            if ($paramValue === null) {
-                return 'NULL';
-            }
-
-            switch ($paramType) {
-                case DatabaseConnection::PARAM_STRING:
-                case DatabaseConnection::PARAM_BLOB:
-                    $value = $this->dbConn->quoteValue($paramValue);
-                    break;
-                case DatabaseConnection::PARAM_INTEGER:
-                    $value = (is_int($paramValue)) ? $paramValue : $this->dbConn->quoteValue($paramValue);
-                    break;
-                case DatabaseConnection::PARAM_FLOAT:
-                    $value = (is_float($paramValue)) ? $paramValue : $this->dbConn->quoteValue($paramValue);
-                    break;
-            }
-
-            return $value;
-
+            return $this->quote($this->params[$paramName]['value'], $this->params[$paramName][])
         }
 
         $this->params[$paramName]['position'] = $this->position++;
@@ -277,4 +252,10 @@ var_dump($this->preparedStatement);
         return '?';
 
     }
+
+    abstract protected function quote($value, $type);
+
+    abstract protected function quoteIdentifier($identifier);
+
+
 }
