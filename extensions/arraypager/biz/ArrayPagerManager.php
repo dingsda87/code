@@ -42,7 +42,8 @@ final class ArrayPagerManager extends APFObject {
    private $anchorName = NULL;
 
    /**
-    * @public
+    *
+    * @inheritdoc
     *
     * Initializes the pager. Loads the desired config section.
     *

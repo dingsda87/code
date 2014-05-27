@@ -46,7 +46,10 @@ class ArticleCommentManager extends APFObject {
     */
    protected $categoryKey;
 
-   public function init($initParam) {
+    /**
+     * @inheritdoc
+     */
+    public function init($initParam) {
       $this->categoryKey = $initParam;
    }
 

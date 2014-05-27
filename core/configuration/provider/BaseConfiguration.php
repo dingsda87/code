@@ -32,7 +32,7 @@ use APF\core\configuration\Configuration;
  * @version
  * Version 0.1, 30.10.2010<br />
  */
-abstract class BaseConfiguration {
+abstract class BaseConfiguration implements Configuration{
 
    /**
     * @var array Stores the values of the current configuration/section.

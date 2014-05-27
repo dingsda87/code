@@ -65,10 +65,10 @@ class PDOHandler extends AbstractDatabaseHandler implements DatabaseConnection {
       $this->dbLogTarget = 'pdo';
    }
 
-   /**
-    * @param array|string $initParam
-    */
-   public function init($initParam) {
+    /**
+     * @inheritdoc
+     */
+    public function init($initParam) {
 
       // set database type for pdo connection
       if (isset($initParam['PDO'])) {

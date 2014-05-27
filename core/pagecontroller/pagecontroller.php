@@ -335,7 +335,11 @@ abstract class APFObject implements APFDIService {
       return $this->isInitialized;
    }
 
-   public function init($initParam) {
+    /**
+     * @deprecated use diservice
+     *
+     */
+    public function init($initParam) {
    }
 
    public function setContext($context) {

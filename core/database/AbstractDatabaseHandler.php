@@ -93,41 +93,6 @@ use APF\core\singleton\Singleton;
 abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConnection {
 
    /**
-    * @var boolean Indicates, whether the handler is already initialized or not.
-    */
-   protected $isInitialized = false;
-
-   /**
-    * @var string Database server.
-    */
-   protected $dbHost = null;
-
-   /**
-    * @var string Database user.
-    */
-   protected $dbUser = null;
-
-   /**
-    * @var string Password for the database.
-    */
-   protected $dbPass = null;
-
-   /**
-    * @var string Name of the database.
-    */
-   protected $dbName = null;
-
-   /**
-    * @var string Port for connection.
-    */
-   protected $dbPort = null;
-
-   /**
-    * @var string Socket for connection.
-    */
-   protected $dbSocket = null;
-
-   /**
     * @var boolean Indicates, if the handler runs in debug mode. This means, that all
     * statements executed are written into a dedicated logfile.
     */
@@ -154,22 +119,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    protected $lastInsertId;
 
    /**
-    * @var string Indicates the charset of the database connection.
-    *
-    * For mysql databases, see http://dev.mysql.com/doc/refman/5.0/en/charset-connection.html
-    * for more details.
-    */
-   protected $dbCollation = null;
-
-   /**
-    * @var string Indicates the collation of the database connection.
-    *
-    * For mysql databases, see http://dev.mysql.com/doc/refman/5.0/en/charset-connection.html
-    * for more details.
-    */
-   protected $dbCharset = null;
-
-   /**
     * @var bool
     */
    protected $emulate = false;
@@ -193,58 +142,16 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
       $this->dbLogTarget = $logTarget;
    }
 
-   /**
-    *
-    * Implements the init() method, so that the derived classes can be initialized
-    * by the service manager. Initializes the handler only one time.
-    *
-    * @param array $initParam Associative configuration array.
-    *
-    * @author Christian Achatz
-    * @version
-    * Version 0.1, 10.02.2008<br />
-    */
-   public function init($initParam) {
+/*
+    public function init($initParam) {
 
       if ($this->isInitialized == false) {
 
-         if (isset($initParam['Host'])) {
-            $this->setHost($initParam['Host']);
-         }
-
-         if (isset($initParam['User'])) {
-            $this->setUser($initParam['User']);
-         }
-
-         if (isset($initParam['Pass'])) {
-            $this->setPass($initParam['Pass']);
-         }
-
-         $this->setDatabaseName($initParam['Name']);
-
-         if (isset($initParam['Port'])) {
-            $this->setPort($initParam['Port']);
-         }
-
-         if (isset($initParam['Socket'])) {
-            $this->setSocket($initParam['Socket']);
-         }
-
-         if (isset($initParam['DebugMode'])) {
-            $this->setDebug($initParam['DebugMode']);
-         }
-
-         if (isset($initParam['Charset'])) {
-            $this->setCharset($initParam['Charset']);
-         }
-         if (isset($initParam['Collation'])) {
-            $this->setCollation($initParam['Collation']);
-         }
 
          $this->isInitialized = true;
          $this->setup();
       }
-   }
+   }*/
 
    /**
     *
@@ -376,22 +283,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
 
    /**
     *
-    * Defines the collation of the database connection.
-    * <p/>
-    * Can be used for manual or DI configuration.
-    *
-    * @param string $collation The desired collation.
-    *
-    * @author Christian Achatz
-    * @version
-    * Version 0.1, 07.05.2012<br />
-    */
-   public function setCollation($collation) {
-      $this->dbCollation = $collation;
-   }
-
-   /**
-    *
     * Implements an initializer method to setup derived classes using the
     * DIServiceManager.
     *
@@ -403,19 +294,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
       $this->connect();
       $this->dbLog=& Singleton::getInstance('APF\core\logging\Logger');
    }
-
-   /**
-    * @abstract
-    *
-    * Provides internal service to open a database connection.
-    *
-    * @throws DatabaseHandlerException In case of connection issues.
-    *
-    * @author Christian Achatz
-    * @version
-    * Version 0.1, 10.02.2008<br />
-    */
-   abstract protected function connect();
 
    /**
     *
@@ -442,45 +320,6 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
 
       return $config->getStatement();
    }
-
-   /**
-    * @abstract
-    *
-    * Provides internal service to close a database connection.
-    *
-    * @throws DatabaseHandlerException In case of connection issues.
-    *
-    * @author Christian Achatz
-    * @version
-    * Version 0.1, 10.02.2008<br />
-    */
-   abstract protected function close();
-
-   /**
-    *
-    * Configures the client connection's charset and collation.
-    *
-    * @see http://dev.mysql.com/doc/refman/5.0/en/charset-connection.html
-    *
-    * @author Christian Achatz
-    * @version
-    * Version 0.1, 08.02.2010<br />
-    */
-   protected function initCharsetAndCollation() {
-      if ($this->dbCharset !== null || $this->dbCollation !== null) {
-         $setArray = array();
-         if ($this->dbCharset !== null) {
-            $setArray[] = ' NAMES \'' . $this->dbCharset . '\'';
-         }
-         if ($this->dbCollation !== null) {
-            $setArray[] = ' collation_connection = \'' . $this->dbCollation . '\'';
-            $setArray[] = ' collation_database = \'' . $this->dbCollation . '\'';
-         }
-         $statement = 'SET' . implode(',', $setArray);
-         $this->executeTextStatement($statement);
-      }
-   }
-
 
    /**
     *

@@ -120,18 +120,4 @@ interface APFService {
     */
    public function getServiceType();
 
-   /**
-    * Interface definition of the init() method. This function is used to initialize a service
-    * object with the service manager. It must be implemented by derived classes.
-    *
-    * @deprecated Initialization of services should be done with the DIServiceManager.
-    *
-    * @param string $initParam The initializing value of the service object. Data type may also be array or object.
-    *
-    * @author Christian Schäfer
-    * @version
-    * Version 0.1, 30.03.2007<br />
-    */
-   public function init($initParam);
-
 }
