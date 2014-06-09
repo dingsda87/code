@@ -346,9 +346,13 @@ final class DIServiceManager {
     * Version 0.2, 15.07.2012 Jan Wiese (Introduced configuration cache and $cacheKey parameter)<br />
     */
    private static function getServiceConfiguration($configNamespace, $sectionName, $context, $language, $cacheKey) {
+//      /** @var BenchmarkTimer $t */
+      $t = & Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+      $t->start(__METHOD__);
 
       // return cached version as much as possible to gain performance
       if (isset(self::$SERVICE_CONFIG_CACHE[$cacheKey])) {
+         $t->stop(__METHOD__);
          return self::$SERVICE_CONFIG_CACHE[$cacheKey];
       }
 
@@ -360,6 +364,7 @@ final class DIServiceManager {
          'serviceobjects.ini')
             ->getSection($sectionName);
 
+      $t->stop(__METHOD__);
       return self::$SERVICE_CONFIG_CACHE[$cacheKey];
    }
 }
