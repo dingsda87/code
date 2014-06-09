@@ -141,6 +141,7 @@ class UmgtManager extends APFObject {
          }
       }
 
+      $this->markAsInitialized();
    }
 
    /**
