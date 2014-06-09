@@ -20,6 +20,7 @@ namespace APF\core\database;
  * along with the APF. If not, see http://www.gnu.org/licenses/lgpl-3.0.txt.
  * -->
  */
+use APF\core\benchmark\BenchmarkTimer;
 use APF\core\configuration\ConfigurationException;
 use APF\core\database\config\StatementConfiguration;
 use APF\core\logging\Logger;
@@ -367,6 +368,7 @@ abstract class AbstractDatabaseHandler extends APFObject implements DatabaseConn
    public function setup() {
       $this->dbLog = & Singleton::getInstance('APF\core\logging\Logger');
       $this->connect();
+      $this->markAsInitialized();
    }
 
    /**

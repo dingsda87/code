@@ -92,6 +92,29 @@ class MySQLiHandler extends AbstractDatabaseHandler {
       $this->dbConn = null;
    }
 
+   function __sleep() {
+      return array(
+            'dbHost',
+            'dbUser',
+            'dbPass',
+            'dbName',
+            'dbPort',
+            'dbSocket',
+            'dbDebug',
+            'dbLogTarget',
+            'dbCollation',
+            'dbCharset',
+            'context',
+            'language',
+            'serviceType',
+            'isInitialized'
+      );
+   }
+
+   function __wakeup() {
+      $this->setup();
+   }
+
    /**
     * @public
     *
