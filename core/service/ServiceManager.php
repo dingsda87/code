@@ -70,9 +70,6 @@ final class ServiceManager {
     * Version 0.9, 23.07.2013 (Added "APPLICATIONSINGLETON" object creation mechanism.)<br />
     */
    public static function &getServiceObject($class, $context, $language, $type = APFService::SERVICE_TYPE_SINGLETON, $instanceId = null) {
-      /** @var BenchmarkTimer $t */
-      $t = & Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
-      $t->start(__METHOD__);
 
       // Introduce generated instance key to create services with respect to the context.
       // In 1.15, creating instances of the same service implementation within different contexts
@@ -114,7 +111,6 @@ final class ServiceManager {
          . 'now created object (' . $class . ') does not implement the APFService interface! '
          . 'So context, language and service type cannot be set correctly!', E_USER_WARNING);
       }
-      $t->stop(__METHOD__);
       return $service;
    }
 
