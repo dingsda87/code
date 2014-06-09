@@ -216,6 +216,7 @@ class BaseMapper extends APFObject {
     * Version 0.1, 16.03.2010 (Introduced due to bug 299)<br />
     */
    protected function createDatabaseConnection() {
+      var_dump('hier');
       $cM = & $this->getServiceObject('APF\core\database\ConnectionManager');
       /* @var $cM ConnectionManager */
       $this->dbDriver = & $cM->getConnection($this->connectionName);
@@ -231,7 +232,7 @@ class BaseMapper extends APFObject {
     * Version 0.1, 27.08.2011<br />
     */
    public function setup() {
-
+var_dump(__METHOD__);
       // ID#102: Only create database connection in case no connection name has been specified or
       // driver instance has been injected. This allows usage of DIServiceManager and
       // classic usage to create database connections via the ConnectionManager.

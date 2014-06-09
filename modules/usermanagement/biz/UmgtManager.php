@@ -164,27 +164,6 @@ class UmgtManager extends APFObject {
       return $this->getConfiguration('APF\modules\usermanagement\biz', 'umgtconfig.ini')->getSection(self::CONFIG_SECTION_NAME);
    }
 
-   /**
-    * @public
-    *
-    * When serialising in session, password hash providers need to be imported
-    * to avoid incomplete object bug. Thus, "isInitialized" is not serialized.
-    *
-    * @return array The list of object properties to serialize.
-    *
-    * @author Ralf Schubert
-    * @version
-    * Version 0.1, 14.07.2011 <br />
-    */
-   public function __sleep() {
-      return array(
-            'language',
-            'context',
-            'serviceType',
-            'applicationId',
-            'passwordHashProviderList'
-      );
-   }
 
    /**
     * @protected

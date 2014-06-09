@@ -1290,55 +1290,6 @@ class GenericORRelationMapper extends GenericORMapper {
    /**
     * @public
     *
-    * Implements php's magic __sleep() method to indicate, which class vars have to be serialized.<br />
-    *
-    * @return string[] List of serializable properties.
-    *
-    * @author Christian Achatz
-    * @version
-    * Version 0.1, 14.05.2008<br />
-    * Version 0.2, 25.06.2008 (Removed "ApplicationID" from sleep list)<br />
-    * Version 0.3, 26.10.2008 (Added "importedConfigCache")<br />
-    * Version 0.4, 16.03.2010 (Added missing attributes due to bug 299)<br />
-    */
-   public function __sleep() {
-      return array(
-         'mappingTable',
-         'relationTable',
-         'domainObjectsTable',
-         'context',
-         'language',
-         'serviceType',
-         'isInitialized',
-         'importedConfigCache',
-         'connectionName',
-         'logStatements',
-         'configNamespace',
-         'configNameAffix');
-   }
-
-   /**
-    * @public
-    *
-    * Implements the wake-up function to re-initialize the database connection after
-    * de-serialization.
-    *
-    * @author Christian Achatz
-    * @version
-    * Version 0.1, 16.03.2010<br />
-    */
-   public function __wakeup() {
-      // ID#102: Only re-create database connection in case a connection name has been
-      // specified (classic usage of the GORM with database connection created
-      // by the ConnectionManager.
-      if(!empty($this->connectionName)){
-         $this->createDatabaseConnection();
-      }
-   }
-
-   /**
-    * @public
-    *
     * Loads the amount of objects stored in the database. Additionally, the result can be
     * influenced by the applied criterion.
     * <p/>

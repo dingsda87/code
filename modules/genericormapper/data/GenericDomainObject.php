@@ -526,22 +526,6 @@ class GenericDomainObject implements GenericORMapperDataObject {
    /**
     * @public
     *
-    * Implements php's magic __sleep() method to indicate, which class vars have to be serialized.
-    *
-    * @return string[] List of serializable properties.
-    *
-    * @author Christian Achatz
-    * @version
-    * Version 0.1, 04.09.2009<br />
-    * Version 0.2, 10.06.2010 (Bug-fix: corrected serialization)<br />
-    */
-   public function __sleep() {
-      return array('objectName', 'properties', 'relatedObjects');
-   }
-
-   /**
-    * @public
-    *
     * Implement event functions
     *
     * @author Ralf Schubert
