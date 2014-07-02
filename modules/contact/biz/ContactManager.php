@@ -57,7 +57,7 @@ class ContactManager extends APFObject {
 
       // set up the mail sender
       /* @var $mail mailSender */
-      $mail = & $this->getAndInitServiceObject('APF\tools\mail\mailSender', 'ContactForm');
+      $mail = $this->getAndInitServiceObject('APF\tools\mail\mailSender', 'ContactForm');
 
       /* @var $recipient ContactFormRecipient */
       $recipient = $this->getMapper()->loadRecipientById($formData->getRecipientId());
@@ -127,7 +127,7 @@ class ContactManager extends APFObject {
    /**
     * @return ContactMapper
     */
-   private function &getMapper() {
+   private function getMapper() {
       return $this->getServiceObject('APF\modules\contact\data\ContactMapper');
    }
 

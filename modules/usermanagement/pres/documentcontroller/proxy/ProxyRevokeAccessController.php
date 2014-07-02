@@ -38,7 +38,7 @@ class ProxyRevokeAccessController extends UmgtBaseController {
 
    public function transformContent() {
 
-      $uM = & $this->getManager();
+      $uM = $this->getManager();
 
       $objectId = RequestHandler::getValue('objectid');
       $objectType = RequestHandler::getValue('objecttype');
@@ -52,8 +52,8 @@ class ProxyRevokeAccessController extends UmgtBaseController {
       /* @var $object UmgtUser|UmgtGroup */
       $object->setObjectId($objectId);
 
-      $formYes = & $this->getForm('RevokeYes');
-      $formNo = & $this->getForm('RevokeNo');
+      $formYes = $this->getForm('RevokeYes');
+      $formNo = $this->getForm('RevokeNo');
 
       if ($formYes->isSent()) {
 
@@ -66,7 +66,7 @@ class ProxyRevokeAccessController extends UmgtBaseController {
       } elseif ($formNo->isSent()) {
       } else {
 
-         $label = & $this->getLabel('intro-text');
+         $label = $this->getLabel('intro-text');
 
          $labels = $this->getConfiguration('APF\modules\usermanagement\pres', 'labels.ini')
                ->getSection($this->getLanguage());

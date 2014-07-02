@@ -151,7 +151,7 @@ class Document extends APFObject {
     * Version 0.1, 20.02.2010<br />
     */
    public function setParentObject(Document &$parentObject) {
-      $this->parentObject = & $parentObject;
+      $this->parentObject = $parentObject;
    }
 
    /**
@@ -368,8 +368,8 @@ class Document extends APFObject {
     * Version 0.1, 11.12.2011<br />
     * Version 0.2, 09.02.2013 (Now public access since DocumentController is now derived from APFObject instead of Document)<br />
     */
-   public function &getChildNode($attributeName, $value, $tagLibClass) {
-      $children = & $this->getChildren();
+   public function getChildNode($attributeName, $value, $tagLibClass) {
+      $children = $this->getChildren();
       if (count($children) > 0) {
          foreach ($children as $objectId => $DUMMY) {
             if ($children[$objectId] instanceof $tagLibClass) {
@@ -404,15 +404,15 @@ class Document extends APFObject {
     * Version 0.1, 14.07.2012<br />
     * Version 0.2, 09.02.2013 (Now public access since DocumentController is now derived from APFObject instead of Document)<br />
     */
-   public function &getChildNodes($attributeName, $value, $tagLibClass) {
-      $children = & $this->getChildren();
+   public function getChildNodes($attributeName, $value, $tagLibClass) {
+      $children = $this->getChildren();
 
       if (count($children) > 0) {
          $result = array();
          foreach ($children as $objectId => $DUMMY) {
             if ($children[$objectId] instanceof $tagLibClass) {
                if ($children[$objectId]->getAttribute($attributeName) == $value) {
-                  $result[] = & $children[$objectId];
+                  $result[] = $children[$objectId];
                }
             }
          }
@@ -445,7 +445,7 @@ class Document extends APFObject {
     * Version 0.3, 07.02.2013 (Moved to Document to avoid multiple implementations)<br />
     * Version 0.4, 05.08.2013 (Added support to append content to place holders)<br />
     */
-   public function &setPlaceHolder($name, $value, $append = false) {
+   public function setPlaceHolder($name, $value, $append = false) {
       $count = 0;
       foreach ($this->children as $objectId => $DUMMY) {
          if ($this->children[$objectId] instanceof PlaceHolderTag
@@ -531,7 +531,7 @@ class Document extends APFObject {
     * Version 0.1, 03.10.2012<br />
     */
    public function &setStringPlaceHolder($name, $key, $value) {
-      $nodes = & $this->getChildNodes('name', $name, 'APF\core\pagecontroller\PlaceHolderTag');
+      $nodes = $this->getChildNodes('name', $name, 'APF\core\pagecontroller\PlaceHolderTag');
       /* @var $nodes PlaceHolderTag[] */
       foreach ($nodes as $node) {
          $node->setStringReplacement($key, $value);
@@ -819,7 +819,7 @@ class Document extends APFObject {
       $count = 0;
 
       /* @var $t BenchmarkTimer */
-      $t = & Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+      $t = Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
 
       $benchId = '(' . get_class($this) . ') ' . $this->getObjectId() . '::onParseTime()';
       $t->start($benchId);
@@ -1278,7 +1278,7 @@ class Document extends APFObject {
     */
    public function transform() {
 
-      $t = & Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+      $t = Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
       /* @var $t BenchmarkTimer */
       $t->start('(' . get_class($this) . ') ' . $this->getObjectId() . '::transform()');
 

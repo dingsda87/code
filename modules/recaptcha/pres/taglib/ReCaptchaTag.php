@@ -75,7 +75,7 @@ class ReCaptchaTag extends AbstractFormControl {
     * @version
     * Version 0.1, 22.09.2012<br />
     */
-   public function addFilter(AbstractFormFilter &$filter) {
+   public function addFilter(AbstractFormFilter$filter) {
       // Ignore adding filters to the reCaptcha control. This is because
       // reCaptcha form controls are validated externally. Hence, there
       // is no need to filter input.

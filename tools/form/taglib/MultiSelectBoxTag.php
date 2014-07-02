@@ -71,7 +71,7 @@ class MultiSelectBoxTag extends SelectBoxTag {
       // that we can address the element with it's plain name in the template.
       $name = $this->getAttribute('name');
       if (substr_count($name, '[') > 0 || substr_count($name, ']') > 0) {
-         $doc = & $this->getParentObject()->getParentObject();
+         $doc = $this->getParentObject()->getParentObject();
          $docCon = $doc->getDocumentController();
          throw new FormException('[MultiSelectBoxTag::onParseTime()] The attribute "name" of the '
                . '&lt;form:multiselect /&gt; tag with name "' . $this->attributes['name']
@@ -132,7 +132,7 @@ class MultiSelectBoxTag extends SelectBoxTag {
     * @version
     * Version 0.1, 08.06.2008<br />
     */
-   public function &getSelectedOptions() {
+   public function getSelectedOptions() {
 
       // call presetting lazy if we have dynamic field
       if ($this->isDynamicField === true) {
@@ -143,13 +143,13 @@ class MultiSelectBoxTag extends SelectBoxTag {
       foreach ($this->children as $objectId => $DUMMY) {
 
          if ($this->children[$objectId] instanceof SelectBoxGroupTag) {
-            $options = & $this->children[$objectId]->getSelectedOptions();
+            $options = $this->children[$objectId]->getSelectedOptions();
             foreach ($options as $id => $INNER_DUMMY) {
-               $selectedOptions[] = & $options[$id];
+               $selectedOptions[] = $options[$id];
             }
          } else {
             if ($this->children[$objectId]->getAttribute('selected') === 'selected') {
-               $selectedOptions[] = & $this->children[$objectId];
+               $selectedOptions[] = $this->children[$objectId];
             }
          }
 

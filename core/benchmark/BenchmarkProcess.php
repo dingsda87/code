@@ -118,15 +118,15 @@ final class BenchmarkProcess {
       return $this->processStopTime;
    }
 
-   public function setParentProcess(BenchmarkProcess &$process) {
-      $this->parentProcess = & $process;
+   public function setParentProcess(BenchmarkProcess $process) {
+      $this->parentProcess =$process;
    }
 
-   public function &getParentProcess() {
+   public function getParentProcess() {
       return $this->parentProcess;
    }
 
-   public function appendProcess(BenchmarkProcess &$process) {
+   public function appendProcess(BenchmarkProcess $process) {
       $processId = $process->getProcessID();
       $this->processes[$processId] = $process;
    }

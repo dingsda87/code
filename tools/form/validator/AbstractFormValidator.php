@@ -96,9 +96,9 @@ abstract class AbstractFormValidator extends APFObject {
     * @version
     * Version 0.1, 24.08.2009<br />
     */
-   public function __construct(AbstractFormControl &$control, AbstractFormControl &$button, $type = null) {
-      $this->control = & $control;
-      $this->button = & $button;
+   public function __construct(AbstractFormControl $control, AbstractFormControl $button, $type = null) {
+      $this->control = $control;
+      $this->button = $button;
       $this->type = $type;
    }
 

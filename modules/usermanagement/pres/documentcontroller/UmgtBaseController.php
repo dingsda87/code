@@ -66,7 +66,7 @@ abstract class UmgtBaseController extends BaseDocumentController {
     * @version
     * Version 0.1, 30.04.2010<br />
     */
-   protected function &getManager() {
+   protected function getManager() {
       return $this->getDIServiceObject('APF\modules\usermanagement\biz', 'UmgtManager');
    }
 
@@ -81,8 +81,8 @@ abstract class UmgtBaseController extends BaseDocumentController {
     * @version
     * Version 0.1, 05.06.2010<br />
     */
-   protected function &getIcon(TemplateTag $template) {
-      $children = & $template->getChildren();
+   protected function getIcon(TemplateTag $template) {
+      $children = $template->getChildren();
       foreach ($children as $objectId => $DUMMY) {
          if ($children[$objectId] instanceof UmgtMediaInclusionTag) {
             return $children[$objectId];

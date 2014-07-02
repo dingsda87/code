@@ -47,7 +47,7 @@ class NewsManager extends APFObject {
     *
     * @return Postbox Returns itself.
     */
-   public function setORM(GenericORRelationMapper &$ORM) {
+   public function setORM(GenericORRelationMapper$ORM) {
       $this->ORM = $ORM;
 
       return $this;

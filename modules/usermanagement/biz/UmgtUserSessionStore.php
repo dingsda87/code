@@ -31,7 +31,7 @@ use InvalidArgumentException;
  * In order to use the store within your application, please retrieve the store
  * using the service manager:
  * <pre>
- * $store = &$this->getServiceObject(
+ * $store = $this->getServiceObject(
  *             'APF\modules\usermanagement\biz\UmgtUserSessionStore',
  *             APFService::SERVICE_TYPE_SESSION_SINGLETON);
  * </pre>

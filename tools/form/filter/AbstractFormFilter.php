@@ -59,9 +59,9 @@ abstract class AbstractFormFilter extends AbstractFilter {
     * @version
     * Version 0.1, 28.08.2009<br />
     */
-   public function __construct(AbstractFormControl &$control, AbstractFormControl &$button) {
-      $this->control = & $control;
-      $this->button = & $button;
+   public function __construct(AbstractFormControl $control, AbstractFormControl $button) {
+      $this->control = $control;
+      $this->button = $button;
    }
 
    /**

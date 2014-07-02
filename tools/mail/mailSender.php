@@ -424,7 +424,7 @@ class mailSender extends APFObject {
 
       $header = $this->generateHeader();
       /* @var $log Logger */
-      $log = & Singleton::getInstance('APF\core\logging\Logger');
+      $log = Singleton::getInstance('APF\core\logging\Logger');
       $sentEmails = array();
 
       for ($i = 0; $i < count($this->recipients); $i++) {

@@ -166,8 +166,8 @@ class GenericDomainObject implements GenericORMapperDataObject {
     * @version
     * Version 0.1, 11.10.2009<br />
     */
-   public function setDataComponent(GenericORRelationMapper &$orm) {
-      $this->dataComponent = & $orm;
+   public function setDataComponent(GenericORRelationMapper $orm) {
+      $this->dataComponent = $orm;
    }
 
    /**
@@ -190,7 +190,7 @@ class GenericDomainObject implements GenericORMapperDataObject {
     * @version
     * Version 0.1, 11.10.2009<br />
     */
-   public function &getDataComponent() {
+   public function getDataComponent() {
       return $this->dataComponent;
    }
 
@@ -347,14 +347,12 @@ class GenericDomainObject implements GenericORMapperDataObject {
     * @version
     * Version 0.1, 28.12.2008<br />
     */
-   public function &getRelatedObjects($relationName) {
+   public function getRelatedObjects($relationName) {
 
       if (isset($this->relatedObjects[$relationName])) {
          return $this->relatedObjects[$relationName];
       } else {
-         $null = null;
-
-         return $null;
+         return null;
       }
    }
 
@@ -369,7 +367,7 @@ class GenericDomainObject implements GenericORMapperDataObject {
     * @version
     * Version 0.1, 05.06.2010<br />
     */
-   public function &getAllRelatedObjects() {
+   public function getAllRelatedObjects() {
       return $this->relatedObjects;
    }
 
@@ -384,7 +382,7 @@ class GenericDomainObject implements GenericORMapperDataObject {
     * Version 0.1, 15.04.2008<br />
     * Version 0.2, 03.05.2009 (Added check for null objects. In null cases, the object is not added.)<br />
     */
-   public function addRelatedObject($relationName, GenericORMapperDataObject &$object) {
+   public function addRelatedObject($relationName, GenericORMapperDataObject $object) {
       if ($object !== null) {
          $this->relatedObjects[$relationName][] = $object;
       }

@@ -67,7 +67,7 @@ class TemplateTag extends Document {
     * @version
     * Version 0.1, 15.01.2012<br />
     */
-   public function &getLabel($name) {
+   public function getLabel($name) {
       try {
          return $this->getChildNode('name', $name, 'APF\core\pagecontroller\LanguageLabelTag');
       } catch (InvalidArgumentException $e) {
@@ -82,7 +82,7 @@ class TemplateTag extends Document {
     * Returns the content of the template. Can be used to generate the template output
     * within a document controller. Usage:
     * <pre>
-    * $template = &$this->getTemplate('MyTemplate');
+    * $template = $this->getTemplate('MyTemplate');
     * $template->setPlaceHolder('URL', 'http://adventure-php-framework.org');
     * echo $template->transformTemplate(); // or echo $template; using the __toString() implementation
     * </pre>

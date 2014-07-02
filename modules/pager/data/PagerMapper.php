@@ -59,8 +59,8 @@ final class PagerMapper extends APFObject {
    /**
     * @return AbstractDatabaseHandler The current database connection.
     */
-   private function &getConnection() {
-      $cM = & $this->getServiceObject('APF\core\database\ConnectionManager');
+   private function getConnection() {
+      $cM = $this->getServiceObject('APF\core\database\ConnectionManager');
 
       /* @var $cM ConnectionManager */
 
@@ -104,7 +104,7 @@ final class PagerMapper extends APFObject {
     */
    public function getEntriesCount($namespace, $statement, array $params = array(), $cache = true) {
 
-      $t = & Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+      $t = Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
       /* @var $t BenchmarkTimer */
       $t->start('PagerMapper::getEntriesCount()');
 
@@ -122,7 +122,7 @@ final class PagerMapper extends APFObject {
 
       // load from database if not in session
       if ($entriesCount === null) {
-         $conn = & $this->getConnection();
+         $conn = $this->getConnection();
          $result = $conn->executeStatement($namespace, $statement, $params);
          $data = $conn->fetchData($result);
          $entriesCount = $data['EntriesCount'];
@@ -158,7 +158,7 @@ final class PagerMapper extends APFObject {
     */
    public function loadEntries($namespace, $statement, array $params = array(), $cache = true) {
 
-      $t = & Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+      $t = Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
       /* @var $t BenchmarkTimer */
       $t->start('PagerMapper::loadEntries()');
 
@@ -178,7 +178,7 @@ final class PagerMapper extends APFObject {
       // load from database if not in session
       if ($entryIds === null) {
 
-         $conn = & $this->getConnection();
+         $conn = $this->getConnection();
          $result = $conn->executeStatement($namespace, $statement, $params);
 
          // map empty results to empty array
@@ -210,7 +210,7 @@ final class PagerMapper extends APFObject {
     * @return array The sanitized list of pager statement parameters.
     */
    private function sanitizeParameters(array $params = array()) {
-      $conn = & $this->getConnection();
+      $conn = $this->getConnection();
       foreach ($params as $key => $value) {
          $params[$conn->escapeValue($key)] = $conn->escapeValue($value);
       }

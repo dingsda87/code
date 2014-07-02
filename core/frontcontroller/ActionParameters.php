@@ -97,6 +97,6 @@ interface ActionParameters {
     * @version
     * Version 0.1, 20.06.2014<br />
     */
-   public function setAction(Action &$action);
+   public function setAction(Action $action);
 
 }

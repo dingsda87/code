@@ -95,7 +95,7 @@ interface Action extends APFDIService {
     * @version
     * Version 0.1, 20.02.2010<br />
     */
-   public function setFrontController(Frontcontroller &$frontController);
+   public function setFrontController(Frontcontroller $frontController);
 
    /**
     * Returns the name of the action, that is used to refer it within the

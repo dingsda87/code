@@ -122,7 +122,7 @@ class XmlConfigurationProvider extends BaseConfigurationProvider implements Conf
     * @version
     * Version 0.1, 28.10.2010<br />
     */
-   private function processSection(\SimpleXMLElement &$xml, Configuration $config, $name) {
+   private function processSection(\SimpleXMLElement $xml, Configuration $config, $name) {
 
       // create current section and append it to the parent node structure.
       $section = $xml->addChild('section');

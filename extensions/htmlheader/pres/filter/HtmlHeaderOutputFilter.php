@@ -40,7 +40,7 @@ use APF\extensions\htmlheader\pres\taglib\HtmlHeaderGetHeadTag;
  */
 class HtmlHeaderOutputFilter extends APFObject implements ChainedContentFilter {
 
-   public function filter(FilterChain &$chain, $input = null) {
+   public function filter(FilterChain $chain, $input = null) {
 
       $replacements = $this->getHeaderContent();
 
@@ -64,7 +64,7 @@ class HtmlHeaderOutputFilter extends APFObject implements ChainedContentFilter {
    private function getHeaderContent() {
 
       /* @var $iM HtmlHeaderManager */
-      $iM = & $this->getServiceObject('APF\extensions\htmlheader\biz\HtmlHeaderManager');
+      $iM = $this->getServiceObject('APF\extensions\htmlheader\biz\HtmlHeaderManager');
 
       $outputHead = '';
       $outputBody = '';

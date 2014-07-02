@@ -230,7 +230,7 @@ class GenericORMapper extends BaseMapper {
     * Version 0.6, 15.01.2011 (Added event handler calls)<br />
     * Version 0.7, 15.02.2011 (Moved eventhandler calls to GORM-function, because afterSave() was called before whole tree was saved)<br />
     */
-   public function saveObject(GenericORMapperDataObject &$object) {
+   public function saveObject(GenericORMapperDataObject $object) {
 
       // get information about object to load
       $objectName = $object->getObjectName();

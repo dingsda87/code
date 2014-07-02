@@ -246,7 +246,7 @@ class Frontcontroller extends APFObject {
     * Version 0.7, 08.06.2007<br />
     * Version 0.8, 08.11.2007 (Switched to new hash offsets)<br />
     */
-   public function &getActionByName($actionName) {
+   public function getActionByName($actionName) {
 
       foreach ($this->actionStack as $offset => $DUMMY) {
          if ($this->actionStack[$offset]->getActionName() == $actionName) {
@@ -269,7 +269,7 @@ class Frontcontroller extends APFObject {
     * @version
     * Version 0.1, 05.02.2007<br />
     */
-   public function &getActions() {
+   public function getActions() {
       return $this->actionStack;
    }
 
@@ -645,7 +645,7 @@ class Frontcontroller extends APFObject {
    protected function runActions($type = Action::TYPE_PRE_PAGE_CREATE) {
 
       /* @var $t BenchmarkTimer */
-      $t = & Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+      $t = Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
 
       foreach ($this->actionStack as $offset => $DUMMY) {
 

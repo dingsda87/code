@@ -42,6 +42,6 @@ interface ChainedContentFilter {
     *
     * @return string The result of the filter execution.
     */
-   public function filter(FilterChain &$chain, $input = null);
+   public function filter(FilterChain $chain, $input = null);
 
 }

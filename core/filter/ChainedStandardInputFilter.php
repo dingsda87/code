@@ -55,10 +55,10 @@ class ChainedStandardInputFilter implements ChainedContentFilter {
     */
    protected static $FC_ACTION_KEYWORD = '-action';
 
-   public function filter(FilterChain &$chain, $input = null) {
+   public function filter(FilterChain $chain, $input = null) {
 
       /* @var $t BenchmarkTimer */
-      $t = & Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+      $t = Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
 
       $id = get_class($this);
       $t->start($id);
@@ -112,7 +112,7 @@ class ChainedStandardInputFilter implements ChainedContentFilter {
    /**
     * @return Frontcontroller The current front controller instance.
     */
-   protected function &getFrontcontroller() {
+   protected function getFrontcontroller() {
       return Singleton::getInstance('APF\core\frontcontroller\Frontcontroller');
    }
 

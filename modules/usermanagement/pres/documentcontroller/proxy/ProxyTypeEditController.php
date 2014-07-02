@@ -33,13 +33,13 @@ use APF\tools\request\RequestHandler;
 class ProxyTypeEditController extends UmgtBaseController {
 
    public function transformContent() {
-      $form = & $this->getForm('add');
+      $form = $this->getForm('add');
       $proxyTypeId = RequestHandler::getValue('proxytypeid');
-      $uM = & $this->getManager();
+      $uM = $this->getManager();
 
       if ($form->isSent() && $form->isValid()) {
 
-         $proxyName = & $form->getFormElementByName('proxytypename');
+         $proxyName = $form->getFormElementByName('proxytypename');
          $proxyType = new UmgtVisibilityDefinitionType();
          $proxyType->setObjectId($proxyTypeId);
          $proxyType->setAppObjectName($proxyName->getAttribute('value'));
@@ -56,7 +56,7 @@ class ProxyTypeEditController extends UmgtBaseController {
 
       } else {
          $proxyType = $uM->loadVisibilityDefinitionTypeById($proxyTypeId);
-         $name = & $form->getFormElementByName('proxytypename');
+         $name = $form->getFormElementByName('proxytypename');
          $name->setAttribute('value', $proxyType->getAppObjectName());
       }
       $form->transformOnPlace();

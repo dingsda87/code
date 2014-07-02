@@ -37,12 +37,12 @@ class ProxyRemoveUsersController extends UmgtPermissionBaseController {
    public function transformContent() {
 
       $proxyId = RequestHandler::getValue('proxyid');
-      $form = & $this->getForm(self::$FORM_NAME);
+      $form = $this->getForm(self::$FORM_NAME);
 
       $proxyIdControl = $form->getFormElementByName('proxyid');
       $proxyIdControl->setAttribute('value', $proxyId);
 
-      $uM = & $this->getManager();
+      $uM = $this->getManager();
       $proxy = $uM->loadVisibilityDefinitionById($proxyId);
       $proxyType = $uM->loadVisibilityDefinitionType($proxy);
 
@@ -53,7 +53,7 @@ class ProxyRemoveUsersController extends UmgtPermissionBaseController {
       $users = $uM->loadUsersWithVisibilityDefinition($proxy);
 
       if (count($users) === 0) {
-         $tmpl = & $this->getTemplate('NoMoreUsers');
+         $tmpl = $this->getTemplate('NoMoreUsers');
          $tmpl->getLabel('message-1')
                ->setPlaceHolder('app-object-id', $proxy->getAppObjectId())
                ->setPlaceHolder('object-type', $proxyType->getObjectName());
@@ -64,7 +64,7 @@ class ProxyRemoveUsersController extends UmgtPermissionBaseController {
          return;
       }
 
-      $usersControl = & $form->getFormElementByName('users');
+      $usersControl = $form->getFormElementByName('users');
       /* @var $usersControl SelectBoxTag */
       foreach ($users as $id => $DUMMY) {
          $usersControl->addOption($users[$id]->getDisplayName(), $users[$id]->getObjectId());

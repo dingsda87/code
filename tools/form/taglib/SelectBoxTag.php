@@ -141,7 +141,7 @@ class SelectBoxTag extends AbstractFormControl {
       $this->isDynamicField = true;
 
       // retrieve or lazily create group
-      $group = & $this->getOrCreateGroup($groupLabel);
+      $group = $this->getOrCreateGroup($groupLabel);
 
       // add option to group
       $group->addOption($displayName, $value, $preSelected);
@@ -162,7 +162,7 @@ class SelectBoxTag extends AbstractFormControl {
       $this->isDynamicField = true;
 
       // retrieve or lazily create group
-      $group = & $this->getOrCreateGroup($groupLabel);
+      $group = $this->getOrCreateGroup($groupLabel);
 
       $group->addOptionTag($option);
    }
@@ -178,8 +178,8 @@ class SelectBoxTag extends AbstractFormControl {
     * @version
     * Version 0.1, 07.01.2014<br />
     */
-   public function &getOrCreateGroup($groupLabel) {
-      $group = & $this->getGroup($groupLabel);
+   public function getOrCreateGroup($groupLabel) {
+      $group = $this->getGroup($groupLabel);
       if ($group === null) {
 
          $objectId = XmlParser::generateUniqID();
@@ -199,7 +199,7 @@ class SelectBoxTag extends AbstractFormControl {
          $this->content .= '<' . $objectId . ' />';
 
          // make group available for the subsequent call
-         $group = & $this->children[$objectId];
+         $group = $this->children[$objectId];
       }
 
       return $group;
@@ -216,13 +216,13 @@ class SelectBoxTag extends AbstractFormControl {
     * @version
     * Version 0.1, 15.02.2010<br />
     */
-   public function &getGroup($label) {
+   public function getGroup($label) {
 
       $group = null;
 
       foreach ($this->children as $objectId => $DUMMY) {
          if ($this->children[$objectId]->getAttribute('label') == $label) {
-            $group = & $this->children[$objectId];
+            $group = $this->children[$objectId];
             break;
          }
       }
@@ -239,7 +239,7 @@ class SelectBoxTag extends AbstractFormControl {
     * @version
     * Version 0.1, 15.02.2010<br />
     */
-   public function &getSelectedOption() {
+   public function getSelectedOption() {
 
       // lazily do request presetting when not already done
       if ($this->isDynamicField === true) {
@@ -253,7 +253,7 @@ class SelectBoxTag extends AbstractFormControl {
       foreach ($this->children as $objectId => $DUMMY) {
 
          if ($this->children[$objectId] instanceof SelectBoxGroupTag) {
-            $selectedOption = & $this->children[$objectId]->getSelectedOption();
+            $selectedOption = $this->children[$objectId]->getSelectedOption();
 
             // Bug-436: exit at the first hit to not overwrite this hit with another miss!
             if ($selectedOption !== null) {
@@ -261,7 +261,7 @@ class SelectBoxTag extends AbstractFormControl {
             }
          } else {
             if ($this->children[$objectId]->getAttribute('selected') === 'selected') {
-               $selectedOption = & $this->children[$objectId];
+               $selectedOption = $this->children[$objectId];
                break;
             }
          }
@@ -371,7 +371,7 @@ class SelectBoxTag extends AbstractFormControl {
     * @version
     * Version 0.1, 29.08.2009<br />
     */
-   public function addValidator(AbstractFormValidator &$validator) {
+   public function addValidator(AbstractFormValidator$validator) {
 
       // ID#166: register validator for further usage.
       $this->validators[] = $validator;
@@ -383,7 +383,7 @@ class SelectBoxTag extends AbstractFormControl {
       // Check both for validator being active and for mandatory fields to allow optional
       // validation (means: field has a registered validator but is sent with empty value).
       if ($validator->isActive() && $this->isMandatory($value)) {
-         $option = & $this->getSelectedOption();
+         $option = $this->getSelectedOption();
          if ($option === null) {
             $value = null;
          } else {

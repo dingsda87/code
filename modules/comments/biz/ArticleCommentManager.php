@@ -59,8 +59,8 @@ class ArticleCommentManager extends APFObject {
     * Version 0.2, 01.09.2007 (Switched to PagerManager::loadEntriesByAppDataComponent())<br />
     */
    public function loadEntries() {
-      $pager = & $this->getPagerManager();
-      $m = & $this->getServiceObject('APF\modules\comments\data\ArticleCommentMapper');
+      $pager = $this->getPagerManager();
+      $m = $this->getServiceObject('APF\modules\comments\data\ArticleCommentMapper');
 
       return $pager->loadEntriesByAppDataComponent($m, 'loadArticleCommentByID', array('CategoryKey' => $this->categoryKey));
    }
@@ -79,7 +79,7 @@ class ArticleCommentManager extends APFObject {
     * Version 0.3, 24.01.2009 (Introduced the $anchorName parameter)<br />
     */
    public function getPager($anchorName = null) {
-      $pager = & $this->getPagerManager();
+      $pager = $this->getPagerManager();
       $pager->setAnchorName($anchorName);
 
       return $pager->getPager(array('CategoryKey' => $this->categoryKey));
@@ -112,7 +112,7 @@ class ArticleCommentManager extends APFObject {
    public function saveEntry(ArticleComment $articleComment) {
 
       /* @var $M ArticleCommentMapper */
-      $M = & $this->getServiceObject('APF\modules\comments\data\ArticleCommentMapper');
+      $M = $this->getServiceObject('APF\modules\comments\data\ArticleCommentMapper');
 
       $articleComment->setCategoryKey($this->categoryKey);
       $M->saveArticleComment($articleComment);
@@ -128,7 +128,7 @@ class ArticleCommentManager extends APFObject {
    /**
     * @return PagerManager
     */
-   private function &getPagerManager() {
+   private function getPagerManager() {
       return $this->getDIServiceObject('APF\modules\comments', 'CommentsPager');
    }
 

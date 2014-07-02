@@ -123,16 +123,16 @@ class DatabaseLogWriter extends APFObject implements LogWriter {
    /**
     * @return AbstractDatabaseHandler The configured database connection.
     */
-   private function &getDatabaseConnection() {
+   private function getDatabaseConnection() {
       /* @var $cM ConnectionManager */
-      $cM = & $this->getServiceObject('APF\core\database\ConnectionManager');
+      $cM = $this->getServiceObject('APF\core\database\ConnectionManager');
 
       return $cM->getConnection($this->connectionName);
    }
 
    public function writeLogEntries(array $entries) {
 
-      $conn = & $this->getDatabaseConnection();
+      $conn = $this->getDatabaseConnection();
 
       // flush log entries to the table
       foreach ($entries as $entry) {

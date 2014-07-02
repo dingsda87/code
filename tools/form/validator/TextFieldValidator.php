@@ -64,13 +64,13 @@ abstract class TextFieldValidator extends AbstractFormValidator {
     * Version 0.1, 30.08.2009<br />
     * Version 0.2, 12.02.2010 (Moved to TextFieldValidator and introduced special listener notification)<br />
     */
-   protected function notifyValidationListeners(&$control) {
+   protected function notifyValidationListeners($control) {
 
       /* @var $form HtmlFormTag */
       $form = $control->getParentObject();
 
       /* @var $listeners ValidationListenerTag[] */
-      $listeners = & $form->getFormElementsByTagName('form:listener');
+      $listeners = $form->getFormElementsByTagName('form:listener');
       $count = count($listeners);
       $controlName = $control->getAttribute('name');
       $validatorName = $this->getValidatorName();
@@ -120,7 +120,7 @@ abstract class TextFieldValidator extends AbstractFormValidator {
     * Version 0.1, 03.02.2010<br />
     * Version 0.2, 07.03.2011 (use control's appendCssClass() now)<br />
     */
-   protected function markControl(AbstractFormControl &$control) {
+   protected function markControl(AbstractFormControl $control) {
       $marker = $this->getCssMarkerClass($control);
       $control->appendCssClass($marker);
    }
@@ -138,7 +138,7 @@ abstract class TextFieldValidator extends AbstractFormValidator {
     * @version
     * Version 0.1, 06.02.2010<br />
     */
-   protected function getCssMarkerClass(AbstractFormControl &$control) {
+   protected function getCssMarkerClass(AbstractFormControl $control) {
       $marker = $control->getAttribute(self::$CUSTOM_MARKER_CLASS_ATTRIBUTE);
       if (empty($marker)) {
          $marker = self::$DEFAULT_MARKER_CLASS;

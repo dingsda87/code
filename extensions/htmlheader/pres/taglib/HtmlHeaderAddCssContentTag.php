@@ -41,7 +41,7 @@ class HtmlHeaderAddCssContentTag extends Document {
 
    public function transform() {
       /* @var $header HtmlHeaderManager */
-      $header = & $this->getServiceObject('APF\extensions\htmlheader\biz\HtmlHeaderManager');
+      $header = $this->getServiceObject('APF\extensions\htmlheader\biz\HtmlHeaderManager');
 
       $node = new CssContentNode($this->getContent(), $this->getAttribute('media'));
       $node->setPriority($this->getAttribute('priority'));

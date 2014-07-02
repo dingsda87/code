@@ -124,7 +124,7 @@ class LanguageLabelTag extends Document {
     * Version 0.1, 11.01.2012<br />
     * Version 0.2, 06.08.2013 (Added support for appending content to place holders)<br />
     */
-   public function &setPlaceHolder($name, $value, $append = false) {
+   public function setPlaceHolder($name, $value, $append = false) {
       // false handled first, since most usages don't append --> slightly faster
       if ($append === false) {
          $this->placeHolders[$name] = $value;
@@ -144,7 +144,7 @@ class LanguageLabelTag extends Document {
     * @version
     * Version 0.1, 05.05.2013<br />
     */
-   public function &clearPlaceHolders() {
+   public function clearPlaceHolders() {
       $this->placeHolders = array();
 
       return $this;

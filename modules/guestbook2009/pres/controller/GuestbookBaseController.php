@@ -35,7 +35,7 @@ abstract class GuestbookBaseController extends BaseDocumentController {
    /**
     * @return GuestbookService The instance of the guestbook service.
     */
-   protected function &getGuestbookService() {
+   protected function getGuestbookService() {
       return $this->getDIServiceObject('APF\modules\guestbook2009\biz', 'GuestbookService');
    }
 

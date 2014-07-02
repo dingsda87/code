@@ -146,7 +146,7 @@ class IniConfigurationProvider extends BaseConfigurationProvider implements Conf
     * @version
     * Version 0.1, 04.10.2010<br />
     */
-   private function parseSubSection(Configuration &$config, $name, $value) {
+   private function parseSubSection(Configuration $config, $name, $value) {
 
       $dot = strpos($name, self::$NAMESPACE_DELIMITER);
       if ($dot === false) {

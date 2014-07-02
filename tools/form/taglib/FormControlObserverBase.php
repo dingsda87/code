@@ -103,8 +103,8 @@ abstract class FormControlObserverBase extends AbstractFormControl {
          // retrieve elements to pass to the validator and validate them
          /* @var $form HtmlFormTag */
          $form = $this->getParentObject();
-         $control = & $form->getFormElementByName($controlName);
-         $button = & $form->getFormElementByName($buttonName);
+         $control = $form->getFormElementByName($controlName);
+         $button = $form->getFormElementByName($buttonName);
          $type = $this->getAttribute(self::$TYPE_ATTRIBUTE_NAME);
 
          if ($control === null || $button === null) {

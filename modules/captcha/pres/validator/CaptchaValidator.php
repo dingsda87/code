@@ -92,7 +92,7 @@ class CaptchaValidator extends TextFieldValidator {
 
       // add validation style to the text field
       /* @var $textField TextFieldTag */
-      $textField = & $this->control->getCaptchaTextField();
+      $textField = $this->control->getCaptchaTextField();
       $textField->markAsInvalid();
       $this->markControl($textField);
 

@@ -58,7 +58,7 @@ class UmgtAutoLoginAction extends AbstractFrontcontrollerAction {
    public function run() {
 
       /* @var $sessionStore UmgtUserSessionStore */
-      $sessionStore = & $this->getServiceObject('APF\modules\usermanagement\biz\UmgtUserSessionStore', APFService::SERVICE_TYPE_SESSION_SINGLETON);
+      $sessionStore = $this->getServiceObject('APF\modules\usermanagement\biz\UmgtUserSessionStore', APFService::SERVICE_TYPE_SESSION_SINGLETON);
 
       $appIdent = $this->getContext();
       $user = $sessionStore->getUser($appIdent);
@@ -67,7 +67,7 @@ class UmgtAutoLoginAction extends AbstractFrontcontrollerAction {
       if ($user === null) {
 
          /* @var $umgt UmgtManager */
-         $umgt = & $this->getDIServiceObject('APF\modules\usermanagement\biz', 'UmgtManager');
+         $umgt = $this->getDIServiceObject('APF\modules\usermanagement\biz', 'UmgtManager');
 
          $cookieLifeTime = $umgt->getAutoLoginCookieLifeTime();
          $cookie = new Cookie(self::AUTO_LOGIN_COOKIE_NAME, time() + $cookieLifeTime);

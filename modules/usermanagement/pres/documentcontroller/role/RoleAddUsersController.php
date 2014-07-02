@@ -42,17 +42,17 @@ class RoleAddUsersController extends UmgtBaseController {
       $roleId = RequestHandler::getValue('roleid');
 
       // initialize the form
-      $form = & $this->getForm('User');
-      $user = & $form->getFormElementByName('User');
+      $form = $this->getForm('User');
+      $user = $form->getFormElementByName('User');
       /* @var $user MultiSelectBoxTag */
-      $uM = & $this->getManager();
+      $uM = $this->getManager();
       $role = $uM->loadRoleById($roleId);
       $users = $uM->loadUsersNotWithRole($role);
       $count = count($users);
 
       // display a hint, if a role already assigned to all users
       if ($count == 0) {
-         $template = & $this->getTemplate('NoMoreUser');
+         $template = $this->getTemplate('NoMoreUser');
          $template->getLabel('message-1')->setPlaceHolder('display-name', $role->getDisplayName());
          $template->getLabel('message-2')->setPlaceHolder('role-view-link', $this->generateLink(array('mainview' => 'role', 'roleview' => null, 'roleid' => null)));
          $template->transformOnPlace();
@@ -68,7 +68,7 @@ class RoleAddUsersController extends UmgtBaseController {
       // assign role to the desired users
       if ($form->isSent() && $form->isValid()) {
 
-         $options = & $user->getSelectedOptions();
+         $options = $user->getSelectedOptions();
          $newUsers = array();
 
          for ($i = 0; $i < count($options); $i++) {
