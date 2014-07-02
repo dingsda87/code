@@ -61,10 +61,10 @@ class ChainedUrlRewritingOutputFilter implements ChainedContentFilter {
    private static $REWRITE_DEACTIVATE_PATTERN = '/linkrewrite="false"/i';
    private static $REWRITE_CONTROL_PATTERN = '/linkrewrite="([A-Za-z]+)"/i';
 
-   public function filter(FilterChain &$chain, $input = null) {
+   public function filter(FilterChain $chain, $input = null) {
 
       /* @var $t BenchmarkTimer */
-      $t = & Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+      $t = Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
 
       $id = get_class($this);
       $t->start($id);

@@ -163,9 +163,9 @@ class RandomStringManager extends APFObject {
          throw new InvalidArgumentException('[RandomStringManager::advancedCreateHash()] You must provide a ConnectionKey for the SQL Statement!', E_USER_ERROR);
       }
 
-      $cM = & $this->getServiceObject('APF\core\database\ConnectionManager');
+      $cM = $this->getServiceObject('APF\core\database\ConnectionManager');
       /* @var $cM \APF\core\database\ConnectionManager */
-      $conn = & $cM->getConnection($connectionKey);
+      $conn = $cM->getConnection($connectionKey);
       /* @var $conn \APF\core\database\AbstractDatabaseHandler */
 
       $hash = $this->createHash();

@@ -51,12 +51,12 @@ class HtmlIteratorItemTag extends Document {
     * @version
     * Version 0.1, 19.10.2009<br />
     */
-   public function &getPlaceHolders() {
+   public function getPlaceHolders() {
       $placeHolders = array();
       if (count($this->children) > 0) {
          foreach ($this->children as $objectId => $DUMMY) {
             if ($this->children[$objectId] instanceof PlaceHolderTag) {
-               $placeHolders[] = & $this->children[$objectId];
+               $placeHolders[] = $this->children[$objectId];
             }
          }
       }

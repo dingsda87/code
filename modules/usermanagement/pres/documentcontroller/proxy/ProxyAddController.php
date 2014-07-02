@@ -41,8 +41,8 @@ class ProxyAddController extends UmgtBaseController {
 
    public function transformContent() {
 
-      $uM = & $this->getManager();
-      $form = & $this->getForm('visibilitydef');
+      $uM = $this->getManager();
+      $form = $this->getForm('visibilitydef');
 
       // pre-fill mode if "proxytypeid" and "appobjectid" are given
       $proxyTypeId = RequestHandler::getValue('proxytypeid');
@@ -61,7 +61,7 @@ class ProxyAddController extends UmgtBaseController {
       $proxyTypes = $uM->loadVisibilityDefinitionTypes();
 
       /* @var $typeElement SelectBoxTag */
-      $typeElement = & $form->getFormElementByName('proxytypeid');
+      $typeElement = $form->getFormElementByName('proxytypeid');
 
       foreach ($proxyTypes as $proxyType) {
          $typeElement->addOption(
@@ -74,7 +74,7 @@ class ProxyAddController extends UmgtBaseController {
       $userList = $uM->getPagedUserList();
 
       /* @var $usersElement MultiSelectBoxTag */
-      $usersElement = & $form->getFormElementByName('users');
+      $usersElement = $form->getFormElementByName('users');
       foreach ($userList as $user) {
          $usersElement->addOption(
                $user->getDisplayName(),
@@ -89,7 +89,7 @@ class ProxyAddController extends UmgtBaseController {
       $groups = $uM->getPagedGroupList();
 
       /* @var $groupsElement MultiSelectBoxTag */
-      $groupsElement = & $form->getFormElementByName('groups');
+      $groupsElement = $form->getFormElementByName('groups');
       foreach ($groups as $group) {
          $groupsElement->addOption(
                $group->getDisplayName(),

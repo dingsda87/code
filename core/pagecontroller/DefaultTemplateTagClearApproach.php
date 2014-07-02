@@ -36,8 +36,8 @@ namespace APF\core\pagecontroller;
  */
 class DefaultTemplateTagClearApproach implements TemplateTagClearApproach {
 
-   public function clear(TemplateTag &$node) {
-      $children = & $node->getChildren();
+   public function clear(TemplateTag $node) {
+      $children = $node->getChildren();
       foreach ($children as $objectId => $DUMMY) {
          if ($children[$objectId] instanceof PlaceHolderTag) {
             $children[$objectId]->setContent('');

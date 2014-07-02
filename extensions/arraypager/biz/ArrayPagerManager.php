@@ -100,7 +100,7 @@ final class ArrayPagerManager extends APFObject {
     * @version
     * Version 0.1, 21.12.2009<br />
     */
-   protected function &getDataMapper() {
+   protected function getDataMapper() {
       return $this->getServiceObject('APF\extensions\arraypager\data\ArrayPagerMapper');
    }
 
@@ -265,14 +265,11 @@ final class ArrayPagerManager extends APFObject {
     * Version 0.1, 21.12.2009<br />
     * Version 0.2, 23.12.2009 Check whether $arrayData is an array or not<br />
     */
-   public function registerPager($stringPager, &$arrayData
-   ) {
+   public function registerPager($stringPager, $arrayData) {
       if (is_array($arrayData) === true) {
          $objectArrayPagerMapper = $this->getDataMapper();
 
-         $objectArrayPagerMapper->registerEntries($stringPager,
-               $arrayData
-         );
+         $objectArrayPagerMapper->registerEntries($stringPager, $arrayData );
       } else {
          throw new Exception('[ArrayPagerManager->registerPager()] Can not register pager named "'
                . $stringPager . '" because the given data is not an array!', E_USER_WARNING);

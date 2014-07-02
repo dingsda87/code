@@ -27,8 +27,8 @@ use APF\core\service\APFService;
  * Implements the factory of the pager manager. Initializes concrete PagerManager
  * instances and caches them for further usage.
  * Application sample:
- * <pre>$pMF = &$this->getServiceObject('APF\modules\pager\biz\PagerManagerFabric');
- * $pM = &$pMF->getPagerManager('{ConfigSection}',{AdditionalParamArray});</pre>
+ * <pre>$pMF = $this->getServiceObject('APF\modules\pager\biz\PagerManagerFabric');
+ * $pM = $pMF->getPagerManager('{ConfigSection}',{AdditionalParamArray});</pre>
  *
  * @deprecated Please use initialization of the PagerManager via the DIServiceManager instead.
  *
@@ -57,7 +57,7 @@ final class PagerManagerFabric extends APFObject {
     * Version 0.1, 13.04.2007<br />
     * Version 0.2, 24.01.2009 (Moved the additional params to the loadEntries() method. Refactored the method.)<br />
     */
-   public function &getPagerManager($configString) {
+   public function getPagerManager($configString) {
 
       // create cache key
       $pagerHash = md5($configString);

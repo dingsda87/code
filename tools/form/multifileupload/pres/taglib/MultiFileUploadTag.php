@@ -74,7 +74,7 @@ class MultiFileUploadTag extends AbstractFormControl {
       $maxFileSize = $this->getAttribute('max-file-size');
       $MimeTypes = $this->getAttribute('allowed-mime-types');
 
-      $this->manager = & $this->getAndInitServiceObject(
+      $this->manager = $this->getAndInitServiceObject(
             'APF\tools\form\multifileupload\biz\MultiFileUploadManager',
             array('formname' => $this->formName, 'name' => $this->uploadFieldName),
             APFService::SERVICE_TYPE_SINGLETON
@@ -195,7 +195,7 @@ class MultiFileUploadTag extends AbstractFormControl {
     * @version 1.0, 14.3.2011<br>
     */
    public function uploadFiles() {
-      $name = & $this->uploadFieldName;
+      $name = $this->uploadFieldName;
       if (isset($_FILES[$name]) && $_FILES[$name]['name'] != '') {
          $addfile = $this->manager->addFile($_FILES[$name], false);
          unset($_FILES[$name]);

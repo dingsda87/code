@@ -77,7 +77,7 @@ abstract class AbstractMessageChannel extends GenericDomainObject {
     *
     * @return AbstractMessageChannel Returns itself (fluent-interface)
     */
-   public function setUnreadForUser(GenericORMapperDataObject &$User) {
+   public function setUnreadForUser(GenericORMapperDataObject $User) {
       if (!$this->isUnreadForUser($User)) {
          $this->createAssociation('User2UnreadMessageChannel', $User);
       }
@@ -92,7 +92,7 @@ abstract class AbstractMessageChannel extends GenericDomainObject {
     *
     * @return AbstractMessageChannel Returns itself (fluent-interface)
     */
-   public function setReadForUser(GenericORMapperDataObject &$User) {
+   public function setReadForUser(GenericORMapperDataObject $User) {
       /* @var $DBDriver MySQLxHandler */
       $DBDriver = $this->getDataComponent()->getDbDriver();
       $DBDriver->executeStatement(
@@ -115,7 +115,7 @@ abstract class AbstractMessageChannel extends GenericDomainObject {
     *
     * @return bool Returns true if the given user has not read at least 1 message in the channel.
     */
-   public function isUnreadForUser(GenericORMapperDataObject &$User) {
+   public function isUnreadForUser(GenericORMapperDataObject $User) {
       return $this->getDataComponent()->isAssociated('User2UnreadMessageChannel', $User, $this);
    }
 
@@ -125,12 +125,12 @@ abstract class AbstractMessageChannel extends GenericDomainObject {
     * If a user is already a reader, nothing will be done for him.
     *
     *
-    * @param array $Readers A list of User-objects which should be added as reader.
+    * @param GenericORMapperDataObject $Readers A list of User-objects which should be added as reader.
     *
     * @return AbstractMessageChannel Returns itself (fluent-interface)
     */
    public function addReaders(array $Readers) {
-      foreach ($Readers as &$Reader) {
+      foreach ($Readers as $Reader) {
          $this->addReader($Reader);
       }
 
@@ -146,7 +146,7 @@ abstract class AbstractMessageChannel extends GenericDomainObject {
     * @return AbstractMessageChannel Returns itself (fluent-interface)
     * @throws \BadFunctionCallException
     */
-   public function addReader(GenericORMapperDataObject &$Reader) {
+   public function addReader(GenericORMapperDataObject $Reader) {
       if ($this->getDataComponent() === null) {
          throw new \BadFunctionCallException('[MessageChannel::addReader()] DataComponent is not set, if the object was not loaded by ORM, you need to set it manually!');
       }
@@ -169,7 +169,7 @@ abstract class AbstractMessageChannel extends GenericDomainObject {
 
       // set all messages in channel as unread for the new reader
       $Messages = $this->getMessages();
-      foreach ($Messages as &$Message) {
+      foreach ($Messages as $Message) {
          // don't use the Message::setUnreadForUser()-method, because they wouldn't get saved...
          $this->getDataComponent()->createAssociation('User2UnreadMessage', $Reader, $Message);
       }
@@ -184,7 +184,7 @@ abstract class AbstractMessageChannel extends GenericDomainObject {
     *
     * @return AbstractMessageChannel Returns itself (fluent-interface)
     */
-   public function addMessage(Message &$Message) {
+   public function addMessage(Message $Message) {
       $this->addRelatedObject('MessageChannel2Message', $Message);
 
       // set the new message unread for all channel readers except the author of the message
@@ -242,7 +242,7 @@ abstract class AbstractMessageChannel extends GenericDomainObject {
     * @return AbstractMessageChannel Returns itself (fluent-interface)
     * @throws \BadFunctionCallException
     */
-   public function removeReader(GenericORMapperDataObject &$User) {
+   public function removeReader(GenericORMapperDataObject $User) {
       if ($this->getDataComponent() === null) {
          throw new \BadFunctionCallException('[MessageChannel::removeReader()] DataComponent is not set, if the object was not loaded by ORM, you need to set it manually!');
       }

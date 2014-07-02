@@ -146,7 +146,7 @@ class AbstractPostboxFolder extends GenericDomainObject {
       $channels = $this->loadRelatedObjects('PostboxFolder2MessageChannel');
       if (count($channels) !== 0) {
          if ($moveChannelsToPostbox === true) {
-            foreach ($channels as &$channel) {
+            foreach ($channels as $channel) {
                $this->removeChannel($channel);
             }
          } else {

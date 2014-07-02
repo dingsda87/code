@@ -42,7 +42,7 @@ class DBCacheProvider extends CacheBase implements CacheProvider {
       $tableName = $this->getConfigAttribute('Table');
 
       // initialize database connection
-      $db = & $this->getDatabaseConnection();
+      $db = $this->getDatabaseConnection();
 
       // read from the database
       $select = 'SELECT `value` FROM `' . $tableName . '`
@@ -64,7 +64,7 @@ class DBCacheProvider extends CacheBase implements CacheProvider {
       $tableName = $this->getConfigAttribute('Table');
 
       // initialize database connection
-      $db = & $this->getDatabaseConnection();
+      $db = $this->getDatabaseConnection();
 
       // insert into the the database
       $select = 'SELECT `value` FROM `' . $tableName . '`
@@ -102,7 +102,7 @@ class DBCacheProvider extends CacheBase implements CacheProvider {
       $tableName = $this->getConfigAttribute('Table');
 
       // initialize database connection
-      $db = & $this->getDatabaseConnection();
+      $db = $this->getDatabaseConnection();
 
       if ($cacheKey === null) {
          $delete = 'DELETE FROM `' . $tableName . '`
@@ -129,10 +129,10 @@ class DBCacheProvider extends CacheBase implements CacheProvider {
     * @version
     * Version 0.1, 24.11.2008<br />
     */
-   protected function &getDatabaseConnection() {
+   protected function getDatabaseConnection() {
       $connectionKey = $this->getConfigAttribute('Connection');
       /* @var $cM ConnectionManager */
-      $cM = & $this->getServiceObject('APF\core\database\ConnectionManager');
+      $cM = $this->getServiceObject('APF\core\database\ConnectionManager');
 
       return $cM->getConnection($connectionKey);
    }

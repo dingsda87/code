@@ -49,7 +49,7 @@ abstract class AbstractRecipientList extends GenericDomainObject {
     *
     * @return AbstractRecipientList Returns itself (fluent-interface)
     */
-   public function addRecipient(GenericORMapperDataObject &$User) {
+   public function addRecipient(GenericORMapperDataObject $User) {
       $this->addRelatedObject('RecipientList2Recipient', $User);
 
       return $this;
@@ -59,12 +59,12 @@ abstract class AbstractRecipientList extends GenericDomainObject {
     * Adds a list of recipients to the list.
     * Does NOT save the list.
     *
-    * @param array $Users
+    * @param GenericORMapperDataObject[] $Users
     *
     * @return AbstractRecipientList Returns itself (fluent-interface)
     */
-   public function addRecipients(array &$Users) {
-      foreach ($Users as &$User) {
+   public function addRecipients(array $Users) {
+      foreach ($Users as $User) {
          $this->addRecipient($User);
       }
 
@@ -78,7 +78,7 @@ abstract class AbstractRecipientList extends GenericDomainObject {
     *
     * @return AbstractRecipientList Returns itself (fluent-interface)
     */
-   public function removeRecipient(GenericORMapperDataObject &$User) {
+   public function removeRecipient(GenericORMapperDataObject $User) {
       $this->getDataComponent()->deleteAssociation('RecipientList2Recipient', $this, $User);
 
       return $this;

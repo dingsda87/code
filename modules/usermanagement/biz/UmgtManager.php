@@ -202,7 +202,7 @@ class UmgtManager extends APFObject {
     * @version
     * Version 0.1, 21.06.2011 <br />
     */
-   public function comparePasswordHash($password, UmgtUser &$user) {
+   public function comparePasswordHash($password, UmgtUser $user) {
       // check if current default hash provider matches
       $defaultHashedPassword = $this->createPasswordHash($password, $user);
       if ($user->getPassword() === $defaultHashedPassword) {
@@ -248,7 +248,7 @@ class UmgtManager extends APFObject {
     * @version
     * Version 0.1, 05.04.2011<br />
     */
-   public function getDynamicSalt(UmgtUser &$user) {
+   public function getDynamicSalt(UmgtUser $user) {
 
       $dynamicSalt = $user->getDynamicSalt();
       $dynamicSalt = ($dynamicSalt === null) ? '' : trim($dynamicSalt);
@@ -277,7 +277,7 @@ class UmgtManager extends APFObject {
     * @version
     * Version 0.1, 21.06.2011<br />
     */
-   public function createPasswordHash($password, UmgtUser &$user) {
+   public function createPasswordHash($password, UmgtUser $user) {
       return $this->passwordHashProviders[0]->createPasswordHash($password, $this->getDynamicSalt($user));
    }
 
@@ -312,7 +312,7 @@ class UmgtManager extends APFObject {
     * Version 0.2, 16.03.2010 (Bugfix 299: moved the service type to the GORM factory call)<br />
     * Version 0.1, 25.08.2011 (Switched to DI configuration)<br />
     */
-   public function &getORMapper() {
+   public function getORMapper() {
       return $this->orm;
    }
 
@@ -325,8 +325,8 @@ class UmgtManager extends APFObject {
     * @version
     * Version 0.1, 25.08.2011<br />
     */
-   public function setORMapper(GenericORRelationMapper &$orm) {
-      $this->orm = & $orm;
+   public function setORMapper(GenericORRelationMapper $orm) {
+      $this->orm = $orm;
    }
 
    /**
@@ -343,9 +343,9 @@ class UmgtManager extends APFObject {
     * Version 0.3, 20.09.2009 (Bugfix for bug 202. Password was hased twice on update.)<br />
     * Version 0.4, 27.09.2009 (Bugfix for bug related to 202. Password for new user was not hashed.)<br />
     */
-   public function saveUser(UmgtUser &$user) {
+   public function saveUser(UmgtUser $user) {
 
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
 
       // check, whether user is an existing user, and yes, resolve the
       // password conflict, described under http://forum.adventure-php-framework.org/viewtopic.php?f=8&t=202
@@ -394,7 +394,7 @@ class UmgtManager extends APFObject {
     * @version
     * Version 0.1, 07.07.2010<br />
     */
-   public function saveApplication(UmgtApplication &$app) {
+   public function saveApplication(UmgtApplication $app) {
       return $this->getORMapper()->saveObject($app);
    }
 
@@ -409,7 +409,7 @@ class UmgtManager extends APFObject {
     * @version
     * Version 0.1, 15.06.2008<br />
     */
-   public function saveGroup(UmgtGroup &$group) {
+   public function saveGroup(UmgtGroup $group) {
       $app = $this->getCurrentApplication();
       $group->addRelatedObject('Application2Group', $app);
 
@@ -427,7 +427,7 @@ class UmgtManager extends APFObject {
     * @version
     * Version 0.1, 15.06.2008<br />
     */
-   public function saveRole(UmgtRole &$role) {
+   public function saveRole(UmgtRole $role) {
       $app = $this->getCurrentApplication();
       $role->addRelatedObject('Application2Role', $app);
 
@@ -447,7 +447,7 @@ class UmgtManager extends APFObject {
     * Version 0.2, 16.06.2008 (The permission set is lazy loaded when not present)<br />
     * Version 0.3, 28.12.2008 (Changed the API concerning the new UML diagram)<br />
     */
-   public function savePermission(UmgtPermission &$permission) {
+   public function savePermission(UmgtPermission $permission) {
       $app = $this->getCurrentApplication();
       $permission->addRelatedObject('Application2Permission', $app);
 
@@ -599,14 +599,14 @@ class UmgtManager extends APFObject {
     */
    public function loadUserByDisplayName($displayName) {
 
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
 
       if (UserFieldEncryptionProvider::propertyHasEncryptionEnabled('DisplayName')) {
          $displayName = UserFieldEncryptionProvider::encrypt($displayName);
       }
 
       // escape the input values
-      $dbDriver = & $orm->getDbDriver();
+      $dbDriver = $orm->getDbDriver();
       $displayName = $dbDriver->escapeValue($displayName);
 
       // create the statement and select user
@@ -650,14 +650,14 @@ class UmgtManager extends APFObject {
     */
    public function loadUserByFirstName($firstName) {
 
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
 
       if (UserFieldEncryptionProvider::propertyHasEncryptionEnabled('FirstName')) {
          $firstName = UserFieldEncryptionProvider::encrypt($firstName);
       }
 
       // escape the input values
-      $dbDriver = & $orm->getDbDriver();
+      $dbDriver = $orm->getDbDriver();
       $firstName = $dbDriver->escapeValue($firstName);
 
       // create the statement and select user
@@ -680,14 +680,14 @@ class UmgtManager extends APFObject {
     */
    public function loadUserByLastName($lastName) {
 
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
 
       if (UserFieldEncryptionProvider::propertyHasEncryptionEnabled('LastName')) {
          $lastName = UserFieldEncryptionProvider::encrypt($lastName);
       }
 
       // escape the input values
-      $dbDriver = & $orm->getDbDriver();
+      $dbDriver = $orm->getDbDriver();
       $lastName = $dbDriver->escapeValue($lastName);
 
       // create the statement and select user
@@ -710,14 +710,14 @@ class UmgtManager extends APFObject {
     */
    public function loadUserByEMail($email) {
 
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
 
       if (UserFieldEncryptionProvider::propertyHasEncryptionEnabled('EMail')) {
          $email = UserFieldEncryptionProvider::encrypt($email);
       }
 
       // escape the input values
-      $dbDriver = & $orm->getDbDriver();
+      $dbDriver = $orm->getDbDriver();
       $email = $dbDriver->escapeValue($email);
 
       // create the statement and select user
@@ -741,7 +741,7 @@ class UmgtManager extends APFObject {
     */
    public function loadUserByFirstNameAndLastName($firstName, $lastName) {
 
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
 
       if (UserFieldEncryptionProvider::propertyHasEncryptionEnabled('FirstName')) {
          $firstName = UserFieldEncryptionProvider::encrypt($firstName);
@@ -751,7 +751,7 @@ class UmgtManager extends APFObject {
       }
 
       // escape the input values
-      $dbDriver = & $orm->getDbDriver();
+      $dbDriver = $orm->getDbDriver();
       $firstName = $dbDriver->escapeValue($firstName);
       $lastName = $dbDriver->escapeValue($lastName);
 
@@ -775,14 +775,14 @@ class UmgtManager extends APFObject {
     */
    public function loadUserByUserName($username) {
 
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
 
       if (UserFieldEncryptionProvider::propertyHasEncryptionEnabled('Username')) {
          $username = UserFieldEncryptionProvider::encrypt($username);
       }
 
       // escape the input values
-      $dbDriver = & $orm->getDbDriver();
+      $dbDriver = $orm->getDbDriver();
       $username = $dbDriver->escapeValue($username);
 
       // create the statement and select user
@@ -851,7 +851,7 @@ class UmgtManager extends APFObject {
     */
    public function loadUserPermissions(UmgtUser $user) {
 
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
 
       // load all roles by the user itself and it's groups
       $select = 'SELECT DISTINCT `ent_role`.`RoleID`
@@ -1034,7 +1034,7 @@ class UmgtManager extends APFObject {
     */
    public function attachUser2Groups(UmgtUser $user, array $groups) {
 
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
 
       // create associations
       for ($i = 0; $i < count($groups); $i++) {
@@ -1071,7 +1071,7 @@ class UmgtManager extends APFObject {
     * Version 0.1, 29.12.2008<br />
     */
    public function attachUsersToRole(array $users, UmgtRole $role) {
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
       foreach ($users as $user) {
          $orm->createAssociation('Role2User', $role, $user);
       }
@@ -1105,7 +1105,7 @@ class UmgtManager extends APFObject {
     * Version 0.1, 29.12.2008<br />
     * Version 02, 05.09.2009 (Now using the GORM to load the related objects, to allow serialized objects to be used as arguments)<br />
     */
-   public function loadGroupsWithUser(UmgtUser &$user) {
+   public function loadGroupsWithUser(UmgtUser $user) {
       return $this->getORMapper()->loadRelatedObjects($user, 'Group2User');
    }
 
@@ -1152,7 +1152,7 @@ class UmgtManager extends APFObject {
     * @param UmgtGroup[] $groups
     */
    public function attachRoleToGroups(UmgtRole $role, array $groups) {
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
       foreach ($groups as $group) {
          $orm->createAssociation('Role2Group', $role, $group);
       }
@@ -1163,7 +1163,7 @@ class UmgtManager extends APFObject {
     * @param UmgtGroup[] $groups
     */
    public function detachRoleToGroups(UmgtRole $role, array $groups) {
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
       foreach ($groups as $group) {
          $orm->deleteAssociation('Role2Group', $role, $group);
       }
@@ -1180,7 +1180,7 @@ class UmgtManager extends APFObject {
     * @version
     * Version 0.1, 29.12.2008<br />
     */
-   public function loadGroupsNotWithUser(UmgtUser &$user) {
+   public function loadGroupsNotWithUser(UmgtUser $user) {
       $crit = new GenericCriterionObject();
       $app = $this->getCurrentApplication();
       $crit->addRelationIndicator('Application2Group', $app);
@@ -1200,7 +1200,7 @@ class UmgtManager extends APFObject {
     * Version 0.1, 29.12.2008<br />
     * Version 0.2, 30.12.2008 (Removed null pointer typo)<br />
     */
-   public function loadUsersWithGroup(UmgtGroup &$group) {
+   public function loadUsersWithGroup(UmgtGroup $group) {
       $crit = new GenericCriterionObject();
       $app = $this->getCurrentApplication();
       $crit->addRelationIndicator('Application2User', $app);
@@ -1523,7 +1523,7 @@ class UmgtManager extends APFObject {
     */
    public function attachPermission2Roles(UmgtPermission $permission, array $roles) {
 
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
 
       foreach ($roles as $role) {
          $orm->createAssociation('Role2Permission', $role, $permission);
@@ -1537,7 +1537,7 @@ class UmgtManager extends APFObject {
     */
    public function detachPermissionFromRoles(UmgtPermission $permission, array $roles) {
 
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
 
       foreach ($roles as $role) {
          $orm->deleteAssociation('Role2Permission', $role, $permission);
@@ -1549,7 +1549,7 @@ class UmgtManager extends APFObject {
     * @param UmgtRole $role The role to add the permissions to.
     */
    public function attachPermissions2Role(array $permissions, UmgtRole $role) {
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
       foreach ($permissions as $permission) {
          $orm->createAssociation('Role2Permission', $role, $permission);
       }
@@ -1560,7 +1560,7 @@ class UmgtManager extends APFObject {
     * @param UmgtRole $role The role to remove the permissions from.
     */
    public function detachPermissionsFromRole(array $permissions, UmgtRole $role) {
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
       foreach ($permissions as $permission) {
          $orm->deleteAssociation('Role2Permission', $role, $permission);
       }
@@ -1577,7 +1577,7 @@ class UmgtManager extends APFObject {
     * Version 0.1, 07.09.2011<br />
     */
    public function attachGroupToRoles(UmgtGroup $group, array $roles) {
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
       foreach ($roles as $role) {
          $orm->createAssociation('Role2Group', $role, $group);
       }
@@ -1594,7 +1594,7 @@ class UmgtManager extends APFObject {
     * Version 0.1, 07.09.2011<br />
     */
    public function detachGroupFromRoles(UmgtGroup $group, array $roles) {
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
       foreach ($roles as $role) {
          $orm->deleteAssociation('Role2Group', $role, $group);
       }
@@ -1617,7 +1617,7 @@ class UmgtManager extends APFObject {
     */
    public function createVisibilityDefinition(UmgtVisibilityDefinitionType $type, UmgtVisibilityDefinition $definition, array $users = array(), array $groups = array()) {
 
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
 
       // try to reuse existing visibility definitions having the same
       // combination of proxy + type!
@@ -1680,7 +1680,7 @@ class UmgtManager extends APFObject {
     * Version 0.1, 05.06.2010<br />
     */
    public function detachUsersFromVisibilityDefinition(UmgtVisibilityDefinition $definition, array $users) {
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
       foreach ($users as $user) {
          $orm->deleteAssociation('AppProxy2User', $definition, $user);
       }
@@ -1697,7 +1697,7 @@ class UmgtManager extends APFObject {
     * Version 0.1, 05.06.2010<br />
     */
    public function detachGroupsFromVisibilityDefinition(UmgtVisibilityDefinition $definition, array $groups) {
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
       foreach ($groups as $group) {
          $orm->deleteAssociation('AppProxy2Group', $definition, $group);
       }
@@ -1714,7 +1714,7 @@ class UmgtManager extends APFObject {
     * Version 0.1, 05.06.2010<br />
     */
    public function attachUsers2VisibilityDefinition(UmgtVisibilityDefinition $definition, array $users) {
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
       foreach ($users as $user) {
          $orm->createAssociation('AppProxy2User', $definition, $user);
       }
@@ -1731,7 +1731,7 @@ class UmgtManager extends APFObject {
     * Version 0.1, 05.06.2010<br />
     */
    public function attachGroups2VisibilityDefinition(UmgtVisibilityDefinition $definition, array $groups) {
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
       foreach ($groups as $group) {
          $orm->createAssociation('AppProxy2Group', $definition, $group);
       }
@@ -1987,7 +1987,7 @@ class UmgtManager extends APFObject {
     * @version
     * Version 0.1, 30.04.2010<br />
     */
-   public function saveVisibilityDefinitionType(UmgtVisibilityDefinitionType &$proxyType) {
+   public function saveVisibilityDefinitionType(UmgtVisibilityDefinitionType $proxyType) {
       $app = $this->getCurrentApplication();
       $proxyType->addRelatedObject('Application2AppProxyType', $app);
 
@@ -2003,9 +2003,9 @@ class UmgtManager extends APFObject {
     * @version
     * Version 0.1, 08.05.2010<br />
     */
-   public function deleteVisibilityDefinitionType(UmgtVisibilityDefinitionType &$proxyType) {
+   public function deleteVisibilityDefinitionType(UmgtVisibilityDefinitionType $proxyType) {
       $proxies = $this->loadVisibilityDefinitionsByType($proxyType);
-      $orm = & $this->getORMapper();
+      $orm = $this->getORMapper();
       foreach ($proxies as $proxy) {
          $orm->deleteObject($proxy);
       }

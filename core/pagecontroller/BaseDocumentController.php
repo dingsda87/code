@@ -50,11 +50,11 @@ abstract class BaseDocumentController extends APFObject implements DocumentContr
     */
    protected $document;
 
-   public function setDocument(Document &$document) {
-      $this->document = & $document;
+   public function setDocument(Document $document) {
+      $this->document = $document;
    }
 
-   public function &getDocument() {
+   public function getDocument() {
       return $this->document;
    }
 
@@ -161,7 +161,7 @@ abstract class BaseDocumentController extends APFObject implements DocumentContr
       try {
          $this->setPlaceHolder($name, $value, $append);
       } catch (Exception $e) {
-         $log = & Singleton::getInstance('APF\core\logging\Logger');
+         $log = Singleton::getInstance('APF\core\logging\Logger');
          /* @var $log Logger */
          $log->addEntry(
                new SimpleLogEntry(
@@ -209,7 +209,7 @@ abstract class BaseDocumentController extends APFObject implements DocumentContr
     * Version 0.1, 12.01.2007<br />
     * Version 0.2, 14.06.2008 (Improved error handling.)<br />
     */
-   protected function &getForm($formName) {
+   protected function getForm($formName) {
       try {
          return $this->getDocument()->getChildNode('name', $formName, 'APF\tools\form\taglib\HtmlFormTag');
       } catch (InvalidArgumentException $e) {
@@ -235,7 +235,7 @@ abstract class BaseDocumentController extends APFObject implements DocumentContr
     * Version 0.3, 12.01.2006 (Renamed from "__getContentTemplate" to "__getTemplate" due to the introduction of "__getForm")<br />
     * Version 0.4, 23.04.2009 (Corrected PHP4 style object access)<br />
     */
-   protected function &getTemplate($name) {
+   protected function getTemplate($name) {
       try {
          return $this->getDocument()->getChildNode('name', $name, 'APF\core\pagecontroller\TemplateTag');
       } catch (InvalidArgumentException $e) {
@@ -254,7 +254,7 @@ abstract class BaseDocumentController extends APFObject implements DocumentContr
     * @return LanguageLabelTag The instance of the desired label node.
     * @throws InvalidArgumentException In case no label node can be found.
     */
-   protected function &getLabel($name) {
+   protected function getLabel($name) {
       try {
          return $this->getDocument()->getChildNode('name', $name, 'APF\core\pagecontroller\LanguageLabelTag');
       } catch (InvalidArgumentException $e) {
@@ -301,7 +301,7 @@ abstract class BaseDocumentController extends APFObject implements DocumentContr
     * Version 0.2, 23.04.2009 (Corrected PHP4 style object access)<br />
     * Version 0.3, 02.07.2011 (Renaming to fit the APF naming convention)<br />
     */
-   protected function templatePlaceHolderExists(TemplateTag &$template, $name) {
+   protected function templatePlaceHolderExists(TemplateTag $template, $name) {
       try {
          $template->getChildNode('name', $name, 'APF\core\pagecontroller\PlaceHolderTag');
 
@@ -324,7 +324,7 @@ abstract class BaseDocumentController extends APFObject implements DocumentContr
     * @version
     * Version 0.1, 02.06.2008<br />
     */
-   protected function &getIterator($name) {
+   protected function getIterator($name) {
       try {
          return $this->getDocument()->getChildNode('name', $name, 'APF\tools\html\taglib\HtmlIteratorTag');
       } catch (InvalidArgumentException $e) {

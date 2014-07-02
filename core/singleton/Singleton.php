@@ -32,7 +32,7 @@ use Exception;
  * new request.
  * <p/>
  * Usage:
- * <pre>$myObject = &Singleton::getInstance('VENDOR\..\Class');</pre>
+ * <pre>$myObject = Singleton::getInstance('VENDOR\..\Class');</pre>
  *
  * @author Christian Achatz
  * @version
@@ -72,7 +72,7 @@ class Singleton {
     * Version 0.1, 12.04.2006<br />
     * Version 0.2, 21.08.2007 (Added check, if the class exists.)<br />
     */
-   public static function &getInstance($class, $instanceId = null) {
+   public static function getInstance($class, $instanceId = null) {
 
       // the cache key is set to the class name for "normal" singleton instances.
       // in case an instance id is given, more than one singleton instance can

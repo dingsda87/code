@@ -128,13 +128,13 @@ class SelectBoxGroupTag extends AbstractFormControl {
     * @version
     * Version 0.1, 28.08.2010<br />
     */
-   public function &getSelectedOption() {
+   public function getSelectedOption() {
 
       $selectedOption = null;
 
       foreach ($this->children as $objectId => $DUMMY) {
          if ($this->children[$objectId]->getAttribute('selected') === 'selected') {
-            $selectedOption = & $this->children[$objectId];
+            $selectedOption = $this->children[$objectId];
             break;
          }
       }
@@ -151,13 +151,13 @@ class SelectBoxGroupTag extends AbstractFormControl {
     * @version
     * Version 0.1, 15.02.2010<br />
     */
-   public function &getSelectedOptions() {
+   public function getSelectedOptions() {
 
       $selectedOptions = array();
 
       foreach ($this->children as $objectId => $DUMMY) {
          if ($this->children[$objectId]->getAttribute('selected') === 'selected') {
-            $selectedOptions[] = & $this->children[$objectId];
+            $selectedOptions[] = $this->children[$objectId];
          }
       }
 

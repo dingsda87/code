@@ -316,7 +316,7 @@ abstract class AbstractFormControl extends Document implements FormControl {
     * Version 0.1, 24.08.2009<br />
     * Version 0.2, 27.03.2014 (Filters are now collected internally to allow retrieval for e.g. client validation rule generation. See ID#166.)<br />
     */
-   public function addFilter(AbstractFormFilter &$filter) {
+   public function addFilter(AbstractFormFilter $filter) {
 
       // ID#166: register filter for further usage.
       $this->filters[] = $filter;
@@ -342,7 +342,7 @@ abstract class AbstractFormControl extends Document implements FormControl {
     * Version 0.2, 01.11.2010 (Added support for optional validators)<br />
     * Version 0.3, 27.03.2014 (Filters are now collected internally to allow retrieval for e.g. client validation rule generation. See ID#166.)<br />
     */
-   public function addValidator(AbstractFormValidator &$validator) {
+   public function addValidator(AbstractFormValidator $validator) {
 
       // ID#166: register validator for further usage.
       $this->validators[] = $validator;
@@ -545,7 +545,7 @@ abstract class AbstractFormControl extends Document implements FormControl {
     * @version
     * Version 16.12.2012<br />
     */
-   public function &hide() {
+   public function hide() {
       $this->isVisible = false;
 
       // hide all dependent fields
@@ -571,7 +571,7 @@ abstract class AbstractFormControl extends Document implements FormControl {
     * @version
     * Version 16.12.2012<br />
     */
-   public function &show() {
+   public function show() {
       $this->isVisible = true;
 
       // show all dependent fields
@@ -608,7 +608,7 @@ abstract class AbstractFormControl extends Document implements FormControl {
     * @version
     * Version 16.12.2012<br />
     */
-   protected function &getDependentFields() {
+   protected function getDependentFields() {
       $dependentFields = $this->getAttribute('dependent-controls');
       if ($dependentFields === null) {
          $fields = array();
@@ -617,12 +617,12 @@ abstract class AbstractFormControl extends Document implements FormControl {
       }
 
       /* @var $form HtmlFormTag */
-      $form = & $this->getParentObject();
+      $form = $this->getParentObject();
 
       $fields = array();
 
       foreach (explode('|', $dependentFields) as $fieldName) {
-         $fields[] = & $form->getFormElementByName(trim($fieldName));
+         $fields[] = $form->getFormElementByName(trim($fieldName));
       }
 
       return $fields;

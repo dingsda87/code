@@ -51,7 +51,7 @@ abstract class AbstractMessage extends GenericDomainObject {
     *
     * @return AbstractMessage Returns itself (fluent-interface)
     */
-   public function setUnreadForUser(GenericORMapperDataObject &$User) {
+   public function setUnreadForUser(GenericORMapperDataObject $User) {
       $this->addRelatedObject('User2UnreadMessage', $User);
 
       return $this;
@@ -64,7 +64,7 @@ abstract class AbstractMessage extends GenericDomainObject {
     *
     * @return AbstractMessage Returns itself (fluent-interface)
     */
-   public function setAuthor(GenericORMapperDataObject &$User) {
+   public function setAuthor(GenericORMapperDataObject $User) {
       $this->Author = $User;
       $this->addRelatedObject('Author2Message', $User);
       $this->setAuthorNameFallback($User->getProperty('Username'));

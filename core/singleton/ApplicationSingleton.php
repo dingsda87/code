@@ -37,7 +37,7 @@ register_shutdown_function(function () {
  * their validity when the web server is restarted.
  * <p/>
  * Usage:
- * <pre>$instance = &ApplicationSingleton::getInstance('VENDOR\..\Class');</pre>
+ * <pre>$instance = ApplicationSingleton::getInstance('VENDOR\..\Class');</pre>
  *
  * @author Christian Achatz
  * @version
@@ -75,7 +75,7 @@ class ApplicationSingleton {
     * @version
     * Version 0.1, 17.07.2013<br />
     */
-   public static function &getInstance($class, $instanceId = null) {
+   public static function getInstance($class, $instanceId = null) {
 
       // the cache key is set to the class name for "normal" application singleton
       // instances. in case an instance id is given, more than one application

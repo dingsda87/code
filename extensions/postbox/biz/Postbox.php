@@ -56,7 +56,7 @@ class Postbox extends APFObject {
     *
     * @return Postbox Returns itself.
     */
-   public function setORM(GenericORRelationMapper &$ORM) {
+   public function setORM(GenericORRelationMapper$ORM) {
       $this->ORM = $ORM;
 
       return $this;
@@ -69,7 +69,7 @@ class Postbox extends APFObject {
     *
     * @return Postbox Returns itself.
     */
-   public function setUser(GenericORMapperDataObject &$User) {
+   public function setUser(GenericORMapperDataObject$User) {
       if ($User->getDataComponent() === null) {
          $User->setDataComponent($this->ORM);
       }
@@ -175,7 +175,7 @@ class Postbox extends APFObject {
       $Channel->addRelatedObject('User2MessageChannel', $this->User);
       // we do not use the channel's addReaders() function here, because this would only work for an existing channel!
       $RealReadersPresent = false;
-      foreach ($Readers as &$Reader) {
+      foreach ($Readers as$Reader) {
          // author could have been added as reader as well, let's filter this possibility
          // and check if reader is blocking the current user
          if (
@@ -316,7 +316,7 @@ class Postbox extends APFObject {
     *
     * @return Postbox Returns itself.
     */
-   public function addUserToBlacklist(GenericORMapperDataObject &$User) {
+   public function addUserToBlacklist(GenericORMapperDataObject$User) {
       if (!$this->hasUserOnBlacklist($User)) {
          $this->ORM->createAssociation('User2BlockedUser', $this->User, $User);
       }
@@ -331,7 +331,7 @@ class Postbox extends APFObject {
     *
     * @return bool
     */
-   public function hasUserOnBlacklist(GenericORMapperDataObject &$User) {
+   public function hasUserOnBlacklist(GenericORMapperDataObject$User) {
       return $this->ORM->isAssociated('User2BlockedUser', $this->User, $User);
    }
 
@@ -342,7 +342,7 @@ class Postbox extends APFObject {
     *
     * @return bool
     */
-   public function isOnUsersBlacklist(GenericORMapperDataObject &$User) {
+   public function isOnUsersBlacklist(GenericORMapperDataObject$User) {
       return $this->ORM->isAssociated('User2BlockedUser', $User, $this->User);
    }
 

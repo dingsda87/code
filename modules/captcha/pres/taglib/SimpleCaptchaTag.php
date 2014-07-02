@@ -74,7 +74,7 @@ class SimpleCaptchaTag extends AbstractFormControl {
     * @version
     * Version 0.1, 30.08.2009<br />
     */
-   public function addValidator(AbstractFormValidator &$validator) {
+   public function addValidator(AbstractFormValidator$validator) {
       $this->textField->addValidator($validator);
    }
 
@@ -91,7 +91,7 @@ class SimpleCaptchaTag extends AbstractFormControl {
     * @version
     * Version 0.1, 30.08.2009<br />
     */
-   public function addFilter(AbstractFormFilter &$filter) {
+   public function addFilter(AbstractFormFilter$filter) {
       $this->textField->addFilter($filter);
    }
 
@@ -187,7 +187,7 @@ class SimpleCaptchaTag extends AbstractFormControl {
     * @version
     * Version 0.1, 30.08.2009<br />
     */
-   public function &getCaptchaTextField() {
+   public function getCaptchaTextField() {
       return $this->textField;
    }
 

@@ -230,9 +230,9 @@ class BaseMapper extends APFObject {
     * Version 0.1, 16.03.2010 (Introduced due to bug 299)<br />
     */
    protected function createDatabaseConnection() {
-      $cM = & $this->getServiceObject('APF\core\database\ConnectionManager');
+      $cM = $this->getServiceObject('APF\core\database\ConnectionManager');
       /* @var $cM ConnectionManager */
-      $this->dbDriver = & $cM->getConnection($this->connectionName);
+      $this->dbDriver = $cM->getConnection($this->connectionName);
    }
 
    /**
@@ -285,7 +285,7 @@ class BaseMapper extends APFObject {
     * @version
     * Version 0.1, 20.02.2010<br />
     */
-   public function &getDbDriver() {
+   public function getDbDriver() {
       return $this->dbDriver;
    }
 
@@ -315,8 +315,8 @@ class BaseMapper extends APFObject {
     */
    public function addMappingConfiguration($configNamespace, $configNameAffix) {
 
-      $t = & Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
-      /* @var $t BenchmarkTimer */
+      $t = Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+      /* @var BenchmarkTimer $t */
       $t->start('BaseMapper::addMappingConfiguration()');
 
       // add config, if not already included
@@ -393,7 +393,7 @@ class BaseMapper extends APFObject {
     */
    public function addRelationConfiguration($configNamespace, $configNameAffix) {
 
-      $t = & Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+      $t = Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
       /* @var $t BenchmarkTimer */
       $t->start('BaseMapper::addRelationConfiguration()');
 
@@ -460,7 +460,7 @@ class BaseMapper extends APFObject {
     */
    public function addDomainObjectsConfiguration($configNamespace, $configNameAffix) {
 
-      $t = & Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+      $t = Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
       /* @var $t BenchmarkTimer */
       $t->start('BaseMapper::addDomainObjectsConfiguration()');
 

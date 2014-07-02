@@ -38,7 +38,7 @@ register_shutdown_function(function () {
  * sessions. They loose their validity when the session ends.
  * <p/>
  * Usage:
- * <pre>$myObject = &SessionSingleton::getInstance('VENDOR\..\Class');</pre>
+ * <pre>$myObject = SessionSingleton::getInstance('VENDOR\..\Class');</pre>
  *
  * @author Christian Schäfer
  * @version
@@ -84,7 +84,7 @@ class SessionSingleton extends Singleton {
     * @version
     * Version 0.1, 24.02.2008<br />
     */
-   public static function &getInstance($class, $instanceId = null) {
+   public static function getInstance($class, $instanceId = null) {
 
       // the cache key is set to the class name for "normal" singleton instances.
       // in case an instance id is given, more than one singleton instance can

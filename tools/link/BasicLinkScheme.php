@@ -99,14 +99,14 @@ abstract class BasicLinkScheme {
     * @version
     * Version 0.1, 29.12.2011<br />
     */
-   protected function &getFrontcontrollerActions() {
+   protected function getFrontcontrollerActions() {
       return $this->getFrontController()->getActions();
    }
 
    /**
     * @return Frontcontroller
     */
-   protected function &getFrontController() {
+   protected function getFrontController() {
       return Singleton::getInstance('APF\core\frontcontroller\Frontcontroller');
    }
 
@@ -142,7 +142,7 @@ abstract class BasicLinkScheme {
    protected function getActionsUrlRepresentation(array $query, $urlRewriting) {
 
       // retrieve actions from internal method (to enable testing)
-      $actions = & $this->getFrontcontrollerActions();
+      $actions = $this->getFrontcontrollerActions();
 
       $actionUrlRepresentation = array();
       foreach ($actions as $action) {

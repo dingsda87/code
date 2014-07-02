@@ -37,13 +37,13 @@ class RoleDeleteController extends UmgtBaseController {
    public function transformContent() {
 
       $roleId = RequestHandler::getValue('roleid');
-      $uM = & $this->getManager();
+      $uM = $this->getManager();
 
       $role = $uM->loadRoleById($roleId);
       $this->getLabel('display-name')->setPlaceHolder('display-name', $role->getDisplayName());
 
-      $formNo = & $this->getForm('RoleDelNo');
-      $formYes = & $this->getForm('RoleDelYes');
+      $formNo = $this->getForm('RoleDelNo');
+      $formYes = $this->getForm('RoleDelYes');
 
       if ($formYes->isSent()) {
 

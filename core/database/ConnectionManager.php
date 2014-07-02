@@ -33,8 +33,8 @@ use InvalidArgumentException;
  * must be created as a service object.
  * <p/>
  * <pre>
- * $connMgr = &$this->getServiceObject('APF\core\database\ConnectionManager');
- * $dBConn = &$connMgr->getConnection('{ConnectionKey}');
+ * $connMgr = $this->getServiceObject('APF\core\database\ConnectionManager');
+ * $dBConn = $connMgr->getConnection('{ConnectionKey}');
  * </pre>
  * The appropriate configuration file must reside under the <em>core::database</em> namespace
  * and the current application's context and environment. The content of the file is as follows:
@@ -110,7 +110,7 @@ final class ConnectionManager extends APFObject {
     * Version 0.8, 20.09.2009 (Removed check for MySQLHandler usage, due to removal of the MySQLHandler)<br />
     * Version 0.9, 07.05.2012 (Introduced connection identifier to enable multiple connections for the same connection key)<br />
     */
-   public function &getConnection($connectionKey, $instanceId = 'default') {
+   public function getConnection($connectionKey, $instanceId = 'default') {
 
       // check, if connection was already created
       $cacheKey = $connectionKey . $instanceId;

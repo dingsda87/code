@@ -95,7 +95,7 @@ class AppendNodeTag extends Document {
 
       // get parent children list
       /* @var $parentChildren Document[] */
-      $parentChildren = & $this->parentObject->getChildren();
+      $parentChildren = $this->parentObject->getChildren();
       $parentContent = $this->parentObject->getContent();
       $currentObjectId = $this->getObjectId();
 
@@ -107,7 +107,7 @@ class AppendNodeTag extends Document {
          foreach ($this->children as $objectId => $DUMMY) {
 
             // append node to parent object's children list
-            $parentChildren[$objectId] = & $this->children[$objectId];
+            $parentChildren[$objectId] = $this->children[$objectId];
 
             // correct the parent object reference
             $parentChildren[$objectId]->setParentObject($this->parentObject);
@@ -126,7 +126,7 @@ class AppendNodeTag extends Document {
          foreach ($this->children as $objectId => $DUMMY) {
 
             // append node to parent object's children list
-            $parentChildren[$objectId] = & $this->children[$objectId];
+            $parentChildren[$objectId] = $this->children[$objectId];
 
             // correct the parent object reference
             $parentChildren[$objectId]->setParentObject($this->parentObject);

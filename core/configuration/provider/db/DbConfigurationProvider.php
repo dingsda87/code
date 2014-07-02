@@ -85,7 +85,7 @@ class DbConfigurationProvider extends BaseConfigurationProvider implements Confi
 
       $table = 'config_' . $this->getTableNameSuffix($namespace);
 
-      $conn = & $this->getConnection($context, $language);
+      $conn = $this->getConnection($context, $language);
       $select = 'SELECT `section`, `key`, `value` FROM `' . $table . '`
                            WHERE
                               `context` = \'' . $context . '\' AND
@@ -128,7 +128,7 @@ class DbConfigurationProvider extends BaseConfigurationProvider implements Confi
       $table = 'config_' . $this->getTableNameSuffix($namespace);
 
       // resolve entries by section since we have a flat structure only
-      $conn = & $this->getConnection($context, $language);
+      $conn = $this->getConnection($context, $language);
       $configName = $this->getConfigName($name);
 
       foreach ($config->getSectionNames() as $sectionName) {
@@ -196,9 +196,9 @@ class DbConfigurationProvider extends BaseConfigurationProvider implements Confi
     * @version
     * Version 0.1, 29.10.2010<br />
     */
-   private function &getConnection($context, $language) {
+   private function getConnection($context, $language) {
       // create service "manually", since we have no convenience method
-      $connMgr = & ServiceManager::getServiceObject('APF\core\database\ConnectionManager', $context, $language);
+      $connMgr = ServiceManager::getServiceObject('APF\core\database\ConnectionManager', $context, $language);
 
       /* @var $connMgr ConnectionManager */
 
@@ -223,7 +223,7 @@ class DbConfigurationProvider extends BaseConfigurationProvider implements Confi
    public function deleteConfiguration($namespace, $context, $language, $environment, $name) {
       $table = 'config_' . $this->getTableNameSuffix($namespace);
 
-      $conn = & $this->getConnection($context, $language);
+      $conn = $this->getConnection($context, $language);
       $textStatement = "DELETE FROM `" . $table . "`
                           WHERE
                             `context` = '" . $context . "',

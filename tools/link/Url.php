@@ -123,7 +123,7 @@ final class Url {
     * @version
     * Version 0.1, 04.04.2011<br />
     */
-   public function &setScheme($scheme) {
+   public function setScheme($scheme) {
       $this->scheme = $scheme;
 
       return $this;
@@ -140,7 +140,7 @@ final class Url {
     * @version
     * Version 0.1, 04.04.2011<br />
     */
-   public function &setHost($host) {
+   public function setHost($host) {
       $this->host = $host;
 
       return $this;
@@ -157,7 +157,7 @@ final class Url {
     * @version
     * Version 0.1, 04.04.2011<br />
     */
-   public function &setPort($port) {
+   public function setPort($port) {
       $this->port = $port;
 
       return $this;
@@ -174,7 +174,7 @@ final class Url {
     * @version
     * Version 0.1, 04.04.2011<br />
     */
-   public function &setPath($path) {
+   public function setPath($path) {
       $this->path = $path;
 
       return $this;
@@ -191,7 +191,7 @@ final class Url {
     * @version
     * Version 0.1, 04.04.2011<br />
     */
-   public function &setQuery(array $query) {
+   public function setQuery(array $query) {
       $this->query = $query;
 
       return $this;
@@ -210,7 +210,7 @@ final class Url {
     * @version
     * Version 0.1, 04.04.2011<br />
     */
-   public function &mergeQuery(array $query) {
+   public function mergeQuery(array $query) {
       foreach ($query as $name => $value) {
          $this->query[$name] = $value;
       }
@@ -229,7 +229,7 @@ final class Url {
     * @version
     * Version 0.1, 04.04.2011<br />
     */
-   public function &setAnchor($anchor) {
+   public function setAnchor($anchor) {
       $this->anchor = $anchor;
 
       return $this;
@@ -264,7 +264,7 @@ final class Url {
     * @version
     * Version 0.1, 04.04.2011<br />
     */
-   public function &setQueryParameter($name, $value) {
+   public function setQueryParameter($name, $value) {
       $this->query[$name] = $value;
 
       return $this;

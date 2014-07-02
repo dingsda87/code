@@ -35,21 +35,21 @@ class UserAddController extends UmgtBaseController {
 
    public function transformContent() {
 
-      $form = & $this->getForm('UserForm');
+      $form = $this->getForm('UserForm');
       if ($form->isSent() == true && $form->isValid() == true) {
 
-         $firstName = & $form->getFormElementByName('FirstName');
-         $lastName = & $form->getFormElementByName('LastName');
-         $streetName = & $form->getFormElementByName('StreetName');
-         $streetNumber = & $form->getFormElementByName('StreetNumber');
-         $zipCode = & $form->getFormElementByName('ZIPCode');
-         $city = & $form->getFormElementByName('City');
-         $email = & $form->getFormElementByName('EMail');
-         $mobile = & $form->getFormElementByName('Mobile');
-         $username = & $form->getFormElementByName('Username');
-         $password = & $form->getFormElementByName('Password');
+         $firstName = $form->getFormElementByName('FirstName');
+         $lastName = $form->getFormElementByName('LastName');
+         $streetName = $form->getFormElementByName('StreetName');
+         $streetNumber = $form->getFormElementByName('StreetNumber');
+         $zipCode = $form->getFormElementByName('ZIPCode');
+         $city = $form->getFormElementByName('City');
+         $email = $form->getFormElementByName('EMail');
+         $mobile = $form->getFormElementByName('Mobile');
+         $username = $form->getFormElementByName('Username');
+         $password = $form->getFormElementByName('Password');
 
-         $uM = & $this->getManager();
+         $uM = $this->getManager();
          $user = new UmgtUser();
 
          $user->setFirstName($firstName->getValue());

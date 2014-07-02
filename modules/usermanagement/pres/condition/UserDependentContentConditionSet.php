@@ -34,12 +34,12 @@ use Exception;
  * as follows:
  * <pre>
  * // add condition
- * $condSet = &$this->getServiceObject('APF\modules\usermanagement\pres\condition',
+ * $condSet = $this->getServiceObject('APF\modules\usermanagement\pres\condition',
  *                   'UserDependentContentConditionSet');
  * $condSet->addCondition(new FooCondition());
  *
  * // initialize with custom condition
- * $condSet = &$this->getServiceObject('APF\modules\usermanagement\pres\condition',
+ * $condSet = $this->getServiceObject('APF\modules\usermanagement\pres\condition',
  *                   'UserDependentContentConditionSet');
  * $condSet
  *         ->resetConditionList()
@@ -86,7 +86,7 @@ class UserDependentContentConditionSet extends APFObject {
     *
     * @return UserDependentContentConditionSet This instance for further usage.
     */
-   public function &addCondition(UserDependentContentCondition $condition) {
+   public function addCondition(UserDependentContentCondition $condition) {
       $this->conditions[] = $condition;
 
       return $this;
@@ -141,7 +141,7 @@ class UserDependentContentConditionSet extends APFObject {
    /**
     * @return UmgtManager
     */
-   private function &getUmgtManager() {
+   private function getUmgtManager() {
       return $this->getDIServiceObject('APF\modules\usermanagement\biz', 'UmgtManager');
    }
 
@@ -180,7 +180,7 @@ class UserDependentContentConditionSet extends APFObject {
    /**
     * @return UmgtUserSessionStore The session store of the umgt module.
     */
-   private function &getUserSessionStore() {
+   private function getUserSessionStore() {
       return $this->getServiceObject('APF\modules\usermanagement\biz\UmgtUserSessionStore', APFService::SERVICE_TYPE_SESSION_SINGLETON);
    }
 

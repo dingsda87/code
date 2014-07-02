@@ -312,7 +312,7 @@ class DateSelectorTag extends AbstractFormControl {
     * @version
     * Version 0.1, 29.08.2009<br />
     */
-   public function &getDayControl() {
+   public function getDayControl() {
       return $this->children['d'];
    }
 
@@ -325,7 +325,7 @@ class DateSelectorTag extends AbstractFormControl {
     * @version
     * Version 0.1, 29.08.2009<br />
     */
-   public function &getMonthControl() {
+   public function getMonthControl() {
       return $this->children['m'];
    }
 
@@ -338,7 +338,7 @@ class DateSelectorTag extends AbstractFormControl {
     * @version
     * Version 0.1, 29.08.2009<br />
     */
-   public function &getYearControl() {
+   public function getYearControl() {
       return $this->children['y'];
    }
 

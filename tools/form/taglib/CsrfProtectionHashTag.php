@@ -71,7 +71,7 @@ class CsrfProtectionHashTag extends AbstractFormControl {
       }
 
       /* @var $provider CSRFHashProvider */
-      $provider = & $this->getServiceObject($class);
+      $provider = $this->getServiceObject($class);
       $this->hash = $provider->generateHash($salt);
 
       // preset the value to make it available for the validator

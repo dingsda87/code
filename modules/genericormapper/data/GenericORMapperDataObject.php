@@ -43,12 +43,12 @@ interface GenericORMapperDataObject {
    /**
     * @param GenericORRelationMapper $orm The instance of the o/r mapper to use.
     */
-   public function setDataComponent(GenericORRelationMapper &$orm);
+   public function setDataComponent(GenericORRelationMapper $orm);
 
    /**
     * @return GenericORRelationMapper The instance of the o/r mapper.
     */
-   public function &getDataComponent();
+   public function getDataComponent();
 
    /**
     * @param string $relationName The name of the relation to load the objects with.
@@ -77,14 +77,14 @@ interface GenericORMapperDataObject {
     *
     * @return GenericORMapperDataObject[] The list of related objects.
     */
-   public function &getRelatedObjects($relationName);
+   public function getRelatedObjects($relationName);
 
    /**
     * @return GenericORMapperDataObject[]
     */
-   public function &getAllRelatedObjects();
+   public function getAllRelatedObjects();
 
-   public function addRelatedObject($relationName, GenericORMapperDataObject &$object);
+   public function addRelatedObject($relationName, GenericORMapperDataObject $object);
 
    public function setProperty($name, $value);
 

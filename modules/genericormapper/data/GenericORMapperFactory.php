@@ -34,9 +34,9 @@ use APF\core\service\APFService;
  * relation table only once per session.
  * <p/>
  * Further, the factory must be created using the service manager. Sample:
- * <pre>$gormFact = &$this->getServiceObject('APF\modules\genericormapper\data\GenericORMapperFactory');
- * $gormFact = &$this->getServiceObject('APF\modules\genericormapper\data\GenericORMapperFactory', APFService::SERVICE_TYPE_NORMAL);
- * $gormFact = &$this->getServiceObject('APF\modules\genericormapper\data\GenericORMapperFactory', APFService::SERVICE_TYPE_SESSION_SINGLETON);</pre>
+ * <pre>$gormFact = $this->getServiceObject('APF\modules\genericormapper\data\GenericORMapperFactory');
+ * $gormFact = $this->getServiceObject('APF\modules\genericormapper\data\GenericORMapperFactory', APFService::SERVICE_TYPE_NORMAL);
+ * $gormFact = $this->getServiceObject('APF\modules\genericormapper\data\GenericORMapperFactory', APFService::SERVICE_TYPE_SESSION_SINGLETON);</pre>
  *
  * @deprecated Please use the GORM with the DIServiceManager instead of this factory to initialize the desired instance!
  *
@@ -85,8 +85,8 @@ final class GenericORMapperFactory extends APFObject {
     * environment!
     * <p/>
     * As of 1.12, this method has to be used as follows:
-    * <pre>$gormFact = &$this->getServiceObject('APF\modules\genericormapper\data\GenericORMapperFactory');
-    * $orm = &$gormFact->getGenericORMapper('VENDOR\my\namespace', 'config_sub_key', 'db_connection'[, true|false]);</pre>
+    * <pre>$gormFact = $this->getServiceObject('APF\modules\genericormapper\data\GenericORMapperFactory');
+    * $orm = $gormFact->getGenericORMapper('VENDOR\my\namespace', 'config_sub_key', 'db_connection'[, true|false]);</pre>
     *
     * @param string $configNamespace namespace, where the desired mapper configuration is located
     * @param string $configNameAffix name affix of the object and relation definition files
@@ -104,7 +104,7 @@ final class GenericORMapperFactory extends APFObject {
     * Version 0.5, 16.03.2010 (Bug-fix 299: removed the type to prevent identical mapper objects)<br />
     * Version 0.6, 19.03.2011 (Added the $debugMode parameter to the cache key to allow different application cases for the same GORM config)<br />
     */
-   public function &getGenericORMapper($configNamespace, $configNameAffix, $connectionName, $debugMode = false) {
+   public function getGenericORMapper($configNamespace, $configNameAffix, $connectionName, $debugMode = false) {
 
       // calculate cache key
       $cacheKey = md5($configNamespace . $configNameAffix . $connectionName . $debugMode);

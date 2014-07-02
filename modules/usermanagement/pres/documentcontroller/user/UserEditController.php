@@ -48,22 +48,22 @@ class UserEditController extends UmgtBaseController {
       $userId = RequestHandler::getValue('userid');
 
       // setup the form
-      $form = & $this->getForm('UserForm');
-      $fieldUserId = & $form->getFormElementByName('userid');
+      $form = $this->getForm('UserForm');
+      $fieldUserId = $form->getFormElementByName('userid');
       $fieldUserId->setAttribute('value', $userId);
 
-      $firstName = & $form->getFormElementByName('FirstName');
-      $lastName = & $form->getFormElementByName('LastName');
-      $streetName = & $form->getFormElementByName('StreetName');
-      $streetNumber = & $form->getFormElementByName('StreetNumber');
-      $zipCode = & $form->getFormElementByName('ZIPCode');
-      $city = & $form->getFormElementByName('City');
-      $email = & $form->getFormElementByName('EMail');
-      $mobile = & $form->getFormElementByName('Mobile');
-      $username = & $form->getFormElementByName('Username');
+      $firstName = $form->getFormElementByName('FirstName');
+      $lastName = $form->getFormElementByName('LastName');
+      $streetName = $form->getFormElementByName('StreetName');
+      $streetNumber = $form->getFormElementByName('StreetNumber');
+      $zipCode = $form->getFormElementByName('ZIPCode');
+      $city = $form->getFormElementByName('City');
+      $email = $form->getFormElementByName('EMail');
+      $mobile = $form->getFormElementByName('Mobile');
+      $username = $form->getFormElementByName('Username');
 
       // get the manager
-      $uM = & $this->getManager();
+      $uM = $this->getManager();
 
       if ($form->isSent() == true) {
 
@@ -85,8 +85,8 @@ class UserEditController extends UmgtBaseController {
             $user->setUsername($username->getValue());
 
             // read the password field
-            $passField1 = & $form->getFormElementByName('Password');
-            $passField2 = & $form->getFormElementByName('Password2');
+            $passField1 = $form->getFormElementByName('Password');
+            $passField2 = $form->getFormElementByName('Password2');
             $pass1 = $passField1->getAttribute('value');
             $pass2 = $passField2->getAttribute('value');
 

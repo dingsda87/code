@@ -27,7 +27,7 @@ use InvalidArgumentException;
  * and your software. Must be used as a singleton to guarantee, that all benchmark tags
  * are included within the report. Usage (for each time!):
  * <pre>
- * $t = &Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+ * $t =Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
  * $t->start('my_tag');
  * ...
  * $t->stop('my_tag');
@@ -35,7 +35,7 @@ use InvalidArgumentException;
  * In order to create a benchmark report (typically at the end of your bootstrap file,
  * please note the following:
  * <pre>
- * $t = &Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+ * $t =Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
  * echo $t->createReport();
  * </pre>
  *
@@ -107,7 +107,7 @@ final class BenchmarkTimer {
     * Version 0.1, 31.12.2006<br />
     */
    public function __construct() {
-      $rootProcess = & $this->createRootProcess();
+      $rootProcess = $this->createRootProcess();
       $this->addRunningProcess($rootProcess);
       $this->setCurrentParent($rootProcess);
    }
@@ -191,9 +191,9 @@ final class BenchmarkTimer {
 
       if ($this->getRunningProcessByName($name) === null) {
 
-         $parent = & $this->getCurrentParent();
+         $parent = $this->getCurrentParent();
          $process = $this->createProcess($name, $startTime, $parent);
-         $newProcess = & $process; // note process as reference to have the same process instance!
+         $newProcess = $process; // note process as reference to have the same process instance!
          $parent->appendProcess($newProcess);
          $this->setCurrentParent($newProcess);
          $this->addRunningProcess($newProcess);
@@ -225,7 +225,7 @@ final class BenchmarkTimer {
       $stopTime = $this->generateMicroTime();
 
       if (isset($this->runningProcesses[$name])) {
-         $currentProcess = & $this->getRunningProcessByName($name);
+         $currentProcess = $this->getRunningProcessByName($name);
          $currentProcess->setProcessStopTime($stopTime);
          $this->setCurrentParent($currentProcess->getParentProcess());
          $this->removeRunningProcess($name);
@@ -277,7 +277,7 @@ final class BenchmarkTimer {
     * @version
     * Version 0.1, 31.12.2006<br />
     */
-   private function createProcess($name, $startTime, &$parent) {
+   private function createProcess($name, $startTime, $parent) {
 
       $process = new BenchmarkProcess();
       $process->setProcessId($this->getID());
@@ -299,7 +299,7 @@ final class BenchmarkTimer {
     * @version
     * Version 0.1, 31.12.2006<br />
     */
-   private function &createRootProcess() {
+   private function createRootProcess() {
 
       $startTime = $this->generateMicroTime();
       $rootProcess = new BenchmarkProcess();
@@ -307,7 +307,7 @@ final class BenchmarkTimer {
       $rootProcess->setProcessName('Root');
       $rootProcess->setProcessLevel(0);
       $rootProcess->setProcessStartTime($startTime);
-      $this->rootProcess = & $rootProcess;
+      $this->rootProcess = $rootProcess;
 
       return $rootProcess;
 
@@ -322,9 +322,9 @@ final class BenchmarkTimer {
     * @version
     * Version 0.1, 31.12.2006<br />
     */
-   private function &getRootProcess() {
+   private function getRootProcess() {
 
-      $rootProcess = & $this->rootProcess;
+      $rootProcess = $this->rootProcess;
       $rootProcess->setProcessStopTime($this->generateMicroTime());
 
       return $rootProcess;
@@ -340,7 +340,7 @@ final class BenchmarkTimer {
     * @version
     * Version 0.1, 31.12.2006<br />
     */
-   private function addRunningProcess(&$process) {
+   private function addRunningProcess($process) {
       $name = $process->getProcessName();
       $this->runningProcesses[$name] = $process;
    }
@@ -369,7 +369,7 @@ final class BenchmarkTimer {
     * @version
     * Version 0.1, 31.12.2006<br />
     */
-   private function &getRunningProcessByName($name) {
+   private function getRunningProcessByName($name) {
 
       if (isset($this->runningProcesses[$name])) {
          return $this->runningProcesses[$name];
@@ -390,8 +390,8 @@ final class BenchmarkTimer {
     * @version
     * Version 0.1, 31.12.2006<br />
     */
-   private function setCurrentParent(&$process) {
-      $this->currentParent = & $process;
+   private function setCurrentParent($process) {
+      $this->currentParent = $process;
    }
 
    /**
@@ -403,7 +403,7 @@ final class BenchmarkTimer {
     * @version
     * Version 0.1, 31.12.2006<br />
     */
-   private function &getCurrentParent() {
+   private function getCurrentParent() {
       return $this->currentParent;
    }
 
@@ -421,7 +421,7 @@ final class BenchmarkTimer {
       // return, if benchmarker is disabled
       if ($this->enabled === false) {
          return 'Benchmarker is currently disabled. To generate a detailed report, please '
-         . 'enable it calling <em>$t = &Singleton::getInstance(\'BenchmarkTimer\'); '
+               . 'enable it calling <em>$t = Singleton::getInstance(\'BenchmarkTimer\'); '
          . '$t->enable();</em>!';
       }
 
@@ -479,7 +479,7 @@ final class BenchmarkTimer {
     * Version 0.1, 01.01.2007<br />
     * Version 0.2, 29.12.2009 (Refactored markup)<br />
     */
-   private function createReport4Process(&$process) {
+   private function createReport4Process($process) {
 
       $buffer = (string) '';
       $level = $process->getProcessLevel();

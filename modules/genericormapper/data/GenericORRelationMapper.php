@@ -413,7 +413,7 @@ class GenericORRelationMapper extends GenericORMapper {
     * @version
     * Version 0.1, 09.09.2010<br />
     */
-   public function loadRelatedObject(GenericORMapperDataObject &$object, $relationName, GenericCriterionObject $criterion = null) {
+   public function loadRelatedObject(GenericORMapperDataObject$object, $relationName, GenericCriterionObject $criterion = null) {
       // create an empty criterion if the argument was null
       if ($criterion === null) {
          $criterion = new GenericCriterionObject();
@@ -450,7 +450,7 @@ class GenericORRelationMapper extends GenericORMapper {
     * Version 0.7, 24.03.2011 (Added support for relations between the same table)<br />
     * Version 0.8, 27.04.2011 (Sourced out criterion statement creation into an extra method)<br />
     */
-   public function loadRelatedObjects(GenericORMapperDataObject &$object, $relationName, GenericCriterionObject $criterion = null) {
+   public function loadRelatedObjects(GenericORMapperDataObject$object, $relationName, GenericCriterionObject $criterion = null) {
 
       // check if object is present
       if ($object === null) {
@@ -562,7 +562,7 @@ class GenericORRelationMapper extends GenericORMapper {
     * Version 0.4, 24.03.2011 (Added support for relations between the same table)<br />
     * Version 0.5, 27.04.2011 (Sourced out criterion statement creation into an extra method)<br />
     */
-   public function loadNotRelatedObjects(GenericORMapperDataObject &$object, $relationName, GenericCriterionObject $criterion = null) {
+   public function loadNotRelatedObjects(GenericORMapperDataObject$object, $relationName, GenericCriterionObject $criterion = null) {
 
       // check if object is present
       if ($object === null) {
@@ -661,7 +661,7 @@ class GenericORRelationMapper extends GenericORMapper {
     * Version 0.1, 16.12.2008<br />
     * Version 0.2, 24.03.2011 (Added support for relations between the same table)<br />
     */
-   public function loadRelationMultiplicity(GenericORMapperDataObject &$object, $relationName) {
+   public function loadRelationMultiplicity(GenericORMapperDataObject$object, $relationName) {
 
       if (!isset($this->relationTable[$relationName])) {
          throw new GenericORMapperException('[GenericORRelationMapper::loadRelationMultiplicity()] '
@@ -711,7 +711,7 @@ class GenericORRelationMapper extends GenericORMapper {
     * Version 0.6, 15.02.2011 (Moved event handler calls from parent function to this one, because afterSave() was called before whole tree was saved)<br />
     * Version 0.7, 24.03.2011 (Added support for relations between the same table)<br />
     */
-   public function saveObject(GenericORMapperDataObject &$object, $saveEntireTree = true) {
+   public function saveObject(GenericORMapperDataObject$object, $saveEntireTree = true) {
 
       // inject o/r mapper into the object to be able
       // to execute custom operations (e.g. create/remove relations)!
@@ -732,7 +732,7 @@ class GenericORRelationMapper extends GenericORMapper {
       }
 
       // check if object has related objects in it
-      $relatedObjects = & $object->getAllRelatedObjects();
+      $relatedObjects = $object->getAllRelatedObjects();
       if (count($relatedObjects) > 0) {
 
          foreach ($relatedObjects as $relationKey => $DUMMY) {
@@ -1136,7 +1136,7 @@ class GenericORRelationMapper extends GenericORMapper {
     * Version 0.1, 30.05.2008<br />
     * Version 0.2, 28.12.2008 (Bug-fix: only associations are returned, where the object is involved)<br />
     */
-   protected function &getAssociationsByObjectName($objectName) {
+   protected function getAssociationsByObjectName($objectName) {
 
       // initialize list
       $relationList = array();
@@ -1149,7 +1149,7 @@ class GenericORRelationMapper extends GenericORMapper {
 
             // only add, if the current object is involved in the association
             if ($attributes['SourceObject'] === $objectName || $attributes['TargetObject'] === $objectName) {
-               $relationList[] = & $this->relationTable[$sectionName];
+               $relationList[] = $this->relationTable[$sectionName];
             }
          }
       }
@@ -1189,7 +1189,7 @@ class GenericORRelationMapper extends GenericORMapper {
       foreach ($this->relationTable as $sectionName => $attributes) {
 
          if ($attributes['Type'] == 'COMPOSITION' && $attributes[$directionAttribute] == $objectName) {
-            $relationList[] = & $this->relationTable[$sectionName];
+            $relationList[] = $this->relationTable[$sectionName];
          }
       }
 
@@ -1587,7 +1587,7 @@ class GenericORRelationMapper extends GenericORMapper {
     */
    protected function extractRelationTimestamps(array $objects, $prefix) {
       if ($prefix !== null) {
-         foreach ($objects AS &$object) {
+         foreach ($objects AS$object) {
             $object->extractRelationTimestamps($prefix);
          }
       }

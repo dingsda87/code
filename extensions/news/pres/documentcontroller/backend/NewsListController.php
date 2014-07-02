@@ -55,7 +55,7 @@ class NewsListController extends NewsBaseController {
       // retrieve the charset from the registry to guarantee interoperability!
       $charset = Registry::retrieve('APF\core', 'Charset');
 
-      foreach ($NewsList as &$News) {
+      foreach ($NewsList as$News) {
          $DataArray[] = array(
                'Title'      => htmlentities($News->getTitle(), ENT_QUOTES, $charset, false),
                'Date'       => $News->getProperty('CreationTimestamp'),

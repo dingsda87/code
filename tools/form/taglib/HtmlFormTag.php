@@ -226,7 +226,7 @@ class HtmlFormTag extends Document {
    public function addFormContentBeforeMarker($markerName, $content) {
 
       // get desired marker
-      $marker = & $this->getMarker($markerName);
+      $marker = $this->getMarker($markerName);
 
       // get the object id
       $objectId = $marker->getObjectId();
@@ -248,7 +248,7 @@ class HtmlFormTag extends Document {
    public function addFormContentAfterMarker($markerName, $content) {
 
       // get desired marker
-      $marker = & $this->getMarker($markerName);
+      $marker = $this->getMarker($markerName);
 
       // get the object id
       $objectId = $marker->getObjectId();
@@ -285,7 +285,7 @@ class HtmlFormTag extends Document {
       }
 
       // get desired marker
-      $marker = & $this->getMarker($markerName);
+      $marker = $this->getMarker($markerName);
 
       // add the position place holder to the content
       $markerId = $marker->getObjectId();
@@ -323,7 +323,7 @@ class HtmlFormTag extends Document {
       }
 
       // get desired marker
-      $marker = & $this->getMarker($markerName);
+      $marker = $this->getMarker($markerName);
 
       // add the position place holder to the content
       $markerId = $marker->getObjectId();
@@ -399,7 +399,7 @@ class HtmlFormTag extends Document {
     * @version
     * Version 0.1, 03.09.2008<br />
     */
-   protected function &getMarker($markerName) {
+   protected function getMarker($markerName) {
       try {
          return $this->getChildNode('name', $markerName, 'APF\tools\form\taglib\DynamicFormElementMarkerTag');
       } catch (InvalidArgumentException $e) {
@@ -452,7 +452,7 @@ class HtmlFormTag extends Document {
     * Version 0.1, 07.01.2007<br />
     * Version 0.2, 12.09.2009 (Corrected debug message)<br />
     */
-   public function &getFormElementByName($name) {
+   public function getFormElementByName($name) {
 
       if (count($this->children) > 0) {
          foreach ($this->children as $objectId => $DUMMY) {
@@ -463,7 +463,7 @@ class HtmlFormTag extends Document {
       }
 
       // display extended debug message in case no form element was found
-      $parent = & $this->getParentObject();
+      $parent = $this->getParentObject();
       $docCon = $parent->getDocumentController();
       throw new FormException('[HtmlFormTag::getFormElementByName()] No form element with name "'
             . $name . '" composed in current form "' . $this->getAttribute('name')
@@ -483,12 +483,12 @@ class HtmlFormTag extends Document {
     * @version
     * Version 0.1, 16.08.2010<br />
     */
-   public function &getFormElementsByName($name) {
+   public function getFormElementsByName($name) {
       $elements = array();
       if (count($this->children) > 0) {
          foreach ($this->children as $objectId => $DUMMY) {
             if ($this->children[$objectId]->getAttribute('name') == $name) {
-               $elements[] = & $this->children[$objectId];
+               $elements[] = $this->children[$objectId];
             }
          }
       }
@@ -508,7 +508,7 @@ class HtmlFormTag extends Document {
     * @version
     * Version 0.1, 21.01.2007<br />
     */
-   public function &getFormElementByID($id) {
+   public function getFormElementByID($id) {
 
       if (count($this->children) > 0) {
          foreach ($this->children as $objectId => $DUMMY) {
@@ -519,7 +519,7 @@ class HtmlFormTag extends Document {
       }
 
       // display extended debug message in case no form element was found
-      $parent = & $this->getParentObject();
+      $parent = $this->getParentObject();
       $documentController = $parent->getDocumentController();
       throw new FormException('[HtmlFormTag::getFormElementByID()] No form element with id "'
             . $id . '" composed in current form "' . $this->getAttribute('name')
@@ -540,14 +540,14 @@ class HtmlFormTag extends Document {
     * Version 0.2, 12.01.2007 (Corrected error message)<br />
     * Version 0.3, 06.09.2008 (Corrected error message again)<br />
     */
-   public function &getFormElementByObjectID($objectId) {
+   public function getFormElementByObjectID($objectId) {
 
       if (isset($this->children[$objectId])) {
          return $this->children[$objectId];
       }
 
       // note, that no suitable child has been found
-      $parent = & $this->getParentObject();
+      $parent = $this->getParentObject();
       $documentController = $parent->getDocumentController();
       throw new FormException('[HtmlFormTag::getFormElementByObjectID()] No form element with id "'
             . $objectId . '" composed in current form "' . $this->getAttribute('name')
@@ -567,7 +567,7 @@ class HtmlFormTag extends Document {
     * Version 0.1, 14.06.2008 (API change: do use this function instead of getFormElementsByType()!)<br />
     * Version 0.2, 12.12.2012 (Refactoring due to tag renaming)<br />
     */
-   public function &getFormElementsByTagName($tagName) {
+   public function getFormElementsByTagName($tagName) {
 
       $tagClassName = $this->getTagClass($tagName);
 
@@ -577,7 +577,7 @@ class HtmlFormTag extends Document {
          foreach ($this->children as $objectId => $DUMMY) {
 
             if ($this->children[$objectId] instanceof $tagClassName) {
-               $formElements[] = & $this->children[$objectId];
+               $formElements[] = $this->children[$objectId];
             }
          }
 
@@ -585,7 +585,7 @@ class HtmlFormTag extends Document {
       }
 
       // display extended debug message in case no form elements were found
-      $parent = & $this->getParentObject();
+      $parent = $this->getParentObject();
       $documentController = $parent->getDocumentController();
       throw new FormException('[HtmlFormTag::getFormElementsByType()] No form elements composed in ' .
             'current form "' . $this->getAttribute('name') . '" in document controller "'
@@ -613,7 +613,7 @@ class HtmlFormTag extends Document {
 
       $class = $this->getTagLibClass($prefix, $name);
       if ($class === null) {
-         $parent = & $this->getParentObject();
+         $parent = $this->getParentObject();
          $documentController = $parent->getDocumentController();
          throw new FormException('[HtmlFormTag::getTagClass()] No tag with name "' . $tagName
                . '" registered in form with name "' . $this->getAttribute('name') . '" in document controller '
@@ -636,7 +636,7 @@ class HtmlFormTag extends Document {
     * @version
     * Version 0.1, 17.01.2012<br />
     */
-   public function &getLabel($name) {
+   public function getLabel($name) {
       try {
          return $this->getChildNode('name', $name, 'APF\core\pagecontroller\LanguageLabelTag');
       } catch (InvalidArgumentException $e) {
@@ -659,7 +659,7 @@ class HtmlFormTag extends Document {
     */
    public function transformForm() {
 
-      $t = & Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+      $t = Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
       /* @var $t BenchmarkTimer */
       $id = '(HtmlFormTag) ' . $this->getObjectId() . '::transformForm()';
       $t->start($id);

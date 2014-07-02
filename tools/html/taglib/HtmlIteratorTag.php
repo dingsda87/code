@@ -197,14 +197,14 @@ class HtmlIteratorTag extends Document {
       // the iterator item must not always be the first child
       // of the current node!
       $itemObjectId = $this->getIteratorItemObjectId();
-      $iteratorItem = & $this->children[$itemObjectId];
+      $iteratorItem = $this->children[$itemObjectId];
       /* @var $iteratorItem HtmlIteratorItemTag */
 
       // define the dynamic getter.
       $getter = $iteratorItem->getAttribute('getter');
 
       // get the place holders
-      $placeHolders = & $iteratorItem->getPlaceHolders();
+      $placeHolders = $iteratorItem->getPlaceHolders();
 
       $itemCount = count($this->dataContainer);
 
@@ -393,7 +393,7 @@ class HtmlIteratorTag extends Document {
     * @version
     * Version 0.1, 06.05.2014<br />
     */
-   public function &getFallbackContent() {
+   public function getFallbackContent() {
 
       $fallbackObjectId = $this->getFallbackContentItemObjectId();
 

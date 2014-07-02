@@ -295,7 +295,7 @@ final class PagerManager extends APFObject {
     * Version 0.4, 24.01.2009 (Changed the API of the method. Moved the additional param handling to this method)<br />
     */
    public function loadEntries($addStmtParams = array()) {
-      $m = & $this->getMapper();
+      $m = $this->getMapper();
 
       return $m->loadEntries(
             $this->statementNamespace,
@@ -308,7 +308,7 @@ final class PagerManager extends APFObject {
    /**
     * @return PagerMapper
     */
-   protected function &getMapper() {
+   protected function getMapper() {
       return $this->getAndInitServiceObject('APF\modules\pager\data\PagerMapper', $this->databaseConnectionName);
    }
 
@@ -330,7 +330,7 @@ final class PagerManager extends APFObject {
     * Version 0.4, 25.01.2009 (Refactored the function. Now uses the $this->loadEntries() to load the ids)<br />
     * Version 0.5, 27.12.2010 (Bug-fix: In case of empty results, no empty objects are returned any more.)<br />
     */
-   public function loadEntriesByAppDataComponent(&$dataComponent, $loadMethod, $addStmtParams = array()) {
+   public function loadEntriesByAppDataComponent($dataComponent, $loadMethod, $addStmtParams = array()) {
 
       // check, if the load method exists
       if (in_array($loadMethod, get_class_methods($dataComponent))) {
@@ -381,7 +381,7 @@ final class PagerManager extends APFObject {
       $pager->loadDesign($this->pagerUiNamespace, $this->pagerUiTemplate);
 
       // add the necessary config params and pages
-      $document = & $pager->getRootDocument();
+      $document = $pager->getRootDocument();
       $document->setAttribute('Pages', $this->createPages4PagerDisplay($addStmtParams));
       $document->setAttribute('PageUrlParameterName', $this->pageUrlParameterName);
       $document->setAttribute('CountUrlParameterName', $this->countUrlParameterName);
@@ -437,7 +437,7 @@ final class PagerManager extends APFObject {
    private function createPages4PagerDisplay($addStmtParams = array()) {
 
       /* @var $t BenchmarkTimer */
-      $t = & Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
+      $t = Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
       $t->start('PagerManager::createPages4PagerDisplay()');
 
       // initialize start params
@@ -447,7 +447,7 @@ final class PagerManager extends APFObject {
       $currentStart = (int) RequestHandler::getValue($this->pageUrlParameterName, 1) * $countPerPage;
 
       // initialize page delimiter params
-      $m = & $this->getMapper();
+      $m = $this->getMapper();
       $entriesCount = $m->getEntriesCount(
             $this->statementNamespace,
             $this->countStatementFile,
@@ -550,7 +550,7 @@ final class PagerManager extends APFObject {
       $countPerPage = $this->getCountPerPage();
 
       // initialize page delimiter params
-      $m = & $this->getMapper();
+      $m = $this->getMapper();
       $entriesCount = $m->getEntriesCount(
             $this->statementNamespace,
             $this->countStatementFile,

@@ -48,7 +48,7 @@ class ArticleCommentMapper extends APFObject {
     */
    public function loadArticleCommentByID($commentId) {
 
-      $SQL = & $this->getConnection();
+      $SQL = $this->getConnection();
       $select = 'SELECT ArticleCommentID, Name, EMail, Comment, Date, Time
                     FROM article_comments
                     WHERE ArticleCommentID = \'' . $commentId . '\';';
@@ -68,7 +68,7 @@ class ArticleCommentMapper extends APFObject {
     */
    public function saveArticleComment(ArticleComment $comment) {
 
-      $conn = & $this->getConnection();
+      $conn = $this->getConnection();
       if ($comment->getId() == null) {
          $insert = 'INSERT INTO article_comments
                        (Name, EMail, Comment, Date, Time, CategoryKey)
@@ -89,10 +89,10 @@ class ArticleCommentMapper extends APFObject {
     * @version
     * Version 0.1, 09.06.2008<br />
     */
-   private function &getConnection() {
+   private function getConnection() {
 
       /* @var $cM ConnectionManager */
-      $cM = & $this->getServiceObject('APF\core\database\ConnectionManager');
+      $cM = $this->getServiceObject('APF\core\database\ConnectionManager');
       $config = $this->getConfiguration('APF\modules\comments', 'comments.ini');
       $connectionKey = $config->getSection('Default')->getValue('Database.ConnectionKey');
       if ($connectionKey == null) {

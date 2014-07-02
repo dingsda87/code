@@ -105,7 +105,7 @@ ConfigurationManager::registerProvider('ini', new IniConfigurationProvider());
 // configure logger (outside namespace'd file! otherwise initialization will not work)
 register_shutdown_function(function () {
    /* @var $logger Logger */
-   $logger = & Singleton::getInstance('APF\core\logging\Logger');
+   $logger =Singleton::getInstance('APF\core\logging\Logger');
    $logger->flushLogBuffer();
 });
 

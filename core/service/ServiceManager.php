@@ -64,7 +64,7 @@ final class ServiceManager {
     * Version 0.8, 07.07.2012 Jan Wiese <jw-lighting@ewetel.net> (Corrected service retrieval to respect context and language each time.)<br />
     * Version 0.9, 23.07.2013 (Added "APPLICATIONSINGLETON" object creation mechanism.)<br />
     */
-   public static function &getServiceObject($class, $context, $language, $type = APFService::SERVICE_TYPE_SINGLETON, $instanceId = null) {
+   public static function getServiceObject($class, $context, $language, $type = APFService::SERVICE_TYPE_SINGLETON, $instanceId = null) {
 
       // Introduce generated instance key to create services with respect to the context.
       // In 1.15, creating instances of the same service implementation within different contexts
@@ -78,13 +78,13 @@ final class ServiceManager {
       $service = null;
       switch ($type) {
          case APFService::SERVICE_TYPE_SINGLETON:
-            $service = & Singleton::getInstance($class, $instanceId);
+            $service = Singleton::getInstance($class, $instanceId);
             break;
          case APFService::SERVICE_TYPE_SESSION_SINGLETON:
-            $service = & SessionSingleton::getInstance($class, $instanceId);
+            $service = SessionSingleton::getInstance($class, $instanceId);
             break;
          case APFService::SERVICE_TYPE_APPLICATION_SINGLETON:
-            $service = & ApplicationSingleton::getInstance($class, $instanceId);
+            $service = ApplicationSingleton::getInstance($class, $instanceId);
             break;
          case APFService::SERVICE_TYPE_NORMAL:
             $service = new $class();
@@ -133,8 +133,8 @@ final class ServiceManager {
     * Version 0.2, 16.05.2009 (Added check for non existing service object returned by getServiceObject()))<br />
     * Version 0.3, 04.03.2011 (Refactored to static method)<br />
     */
-   public static function &getAndInitServiceObject($class, $context, $language, $initParam, $type = APFService::SERVICE_TYPE_SINGLETON, $instanceId = null) {
-      $service = & self::getServiceObject($class, $context, $language, $type, $instanceId);
+   public static function getAndInitServiceObject($class, $context, $language, $initParam, $type = APFService::SERVICE_TYPE_SINGLETON, $instanceId = null) {
+      $service = self::getServiceObject($class, $context, $language, $type, $instanceId);
       $service->init($initParam);
 
       return $service;
