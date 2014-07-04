@@ -93,9 +93,6 @@ class AppendNodeTag extends Document {
       // ID#191: extract "static" expressions (e.g. place holders)
       $this->extractExpressionTags();
 
-      // get parent children list
-      /* @var $parentChildren Document[] */
-      $parentChildren = $this->parentObject->getChildren();
       $parentContent = $this->parentObject->getContent();
       $currentObjectId = $this->getObjectId();
 
@@ -107,10 +104,11 @@ class AppendNodeTag extends Document {
          foreach ($this->children as $objectId => $DUMMY) {
 
             // append node to parent object's children list
-            $parentChildren[$objectId] = $this->children[$objectId];
+            $this->parentObject->children[$objectId] = $this->children[$objectId];
 
             // correct the parent object reference
-            $parentChildren[$objectId]->setParentObject($this->parentObject);
+            $this->parentObject->children[$objectId]->setParentObject($this->parentObject);
+
          }
 
          // include complete content of the current document and append it to
@@ -126,10 +124,10 @@ class AppendNodeTag extends Document {
          foreach ($this->children as $objectId => $DUMMY) {
 
             // append node to parent object's children list
-            $parentChildren[$objectId] = $this->children[$objectId];
+            $this->parentObject->children[$objectId] = $this->children[$objectId];
 
             // correct the parent object reference
-            $parentChildren[$objectId]->setParentObject($this->parentObject);
+            $this->parentObject->children[$objectId]->setParentObject($this->parentObject);
 
             // add a marker tag to the parent object after the tag's marker
             $parentContent = str_replace('<' . $currentObjectId . ' />', '<' . $currentObjectId . ' /><' . $objectId . ' />', $parentContent);
