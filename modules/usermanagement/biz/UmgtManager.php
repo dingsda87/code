@@ -1645,11 +1645,11 @@ class UmgtManager extends APFObject {
       // create domain structure
       $definition->addRelatedObject('AppProxy2AppProxyType', $type);
 
-      foreach ($users as $id => $DUMMY) {
-         $definition->addRelatedObject('AppProxy2User', $users[$id]);
+      foreach ($users as $id => $user) {
+         $definition->addRelatedObject('AppProxy2User', $user);
       }
       foreach ($groups as $id => $group) {
-         $definition->addRelatedObject('AppProxy2Group', $groups[$id]);
+         $definition->addRelatedObject('AppProxy2Group', $group);
       }
 
       // save domain structure
@@ -1883,8 +1883,8 @@ class UmgtManager extends APFObject {
       $visDefs = $this->loadVisibilityDefinitionsByUser($user, $type);
 
       $groups = $this->loadGroupsWithUser($user);
-      foreach ($groups as $id => $DUMMY) {
-         $visDefs = array_merge($visDefs, $this->loadVisibilityDefinitionsByGroup($groups[$id], $type));
+      foreach ($groups as $id => $group) {
+         $visDefs = array_merge($visDefs, $this->loadVisibilityDefinitionsByGroup($group, $type));
       }
 
       return array_slice(array_unique($visDefs), 0); // array_slice is used to re-order the array efficiently

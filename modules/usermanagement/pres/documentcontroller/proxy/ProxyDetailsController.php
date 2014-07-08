@@ -46,9 +46,9 @@ class ProxyDetailsController extends UmgtBaseController {
 
       // sort list with respect to the display name of the current element
       $sortedList = array();
-      foreach ($list as $offset => $DUMMY) {
-         $key = $list[$offset]->getDisplayName() . '-' . $list[$offset]->getObjectId();
-         $sortedList[$key] = $list[$offset];
+      foreach ($list as $umgtUserOrGroup) {
+         $key = $umgtUserOrGroup->getDisplayName() . '-' . $umgtUserOrGroup->getObjectId();
+         $sortedList[$key] = $umgtUserOrGroup;
       }
       ksort($sortedList);
 

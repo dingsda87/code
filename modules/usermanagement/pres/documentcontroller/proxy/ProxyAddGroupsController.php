@@ -20,10 +20,11 @@
  */
 namespace APF\modules\usermanagement\pres\documentcontroller\proxy;
 
-use APF\modules\usermanagement\biz\model\UmgtVisibilityDefinition;
+use APF\modules\usermanagement\biz\model;
 use APF\tools\form\taglib\MultiSelectBoxTag;
 use APF\tools\http\HeaderManager;
 use APF\tools\request\RequestHandler;
+
 
 class ProxyAddGroupsController extends UmgtPermissionBaseController {
 
@@ -43,9 +44,9 @@ class ProxyAddGroupsController extends UmgtPermissionBaseController {
             ->setPlaceHolder('app-object-id', $proxy->getAppObjectId())
             ->setPlaceHolder('proxy-type', $proxyType->getAppObjectName());
 
-      $users = $uM->loadGroupsNotWithVisibilityDefinition($proxy);
+      $groups = $uM->loadGroupsNotWithVisibilityDefinition($proxy);
 
-      if (count($users) === 0) {
+      if (count($groups) === 0) {
          $tmpl = $this->getTemplate('NoMoreGroups');
          $tmpl->getLabel('message-1')
                ->setPlaceHolder('app-object-id', $proxy->getAppObjectId())
@@ -57,10 +58,11 @@ class ProxyAddGroupsController extends UmgtPermissionBaseController {
          return;
       }
 
-      $usersControl = $form->getFormElementByName('groups');
-      /* @var $usersControl MultiSelectBoxTag */
-      foreach ($users as $id => $DUMMY) {
-         $usersControl->addOption($users[$id]->getDisplayName(), $users[$id]->getObjectId());
+      /** @var MultiSelectBoxTag $groupsControl */
+      $groupsControl = $form->getFormElementByName('groups');
+
+      foreach ($groups as $group) {
+         $groupsControl->addOption($group->getDisplayName(), $group->getObjectId());
       }
 
       if ($form->isSent() && $form->isValid()) {

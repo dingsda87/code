@@ -101,13 +101,13 @@ class AppendNodeTag extends Document {
       $includeStatic = $this->getAttribute(self::$INCLUDE_STATIC_CONTENT_ATTRIBUTE_NAME);
       if ($includeStatic === 'true') {
 
-         foreach ($this->children as $objectId => $DUMMY) {
+         foreach ($this->children as $objectId => $child) {
 
             // append node to parent object's children list
-            $this->parentObject->children[$objectId] = $this->children[$objectId];
+            $this->parentObject->children[$objectId] = $child;
 
             // correct the parent object reference
-            $this->parentObject->children[$objectId]->setParentObject($this->parentObject);
+            $child->setParentObject($this->parentObject);
 
          }
 
@@ -121,13 +121,13 @@ class AppendNodeTag extends Document {
 
       } else {
 
-         foreach ($this->children as $objectId => $DUMMY) {
+         foreach ($this->children as $objectId => $child) {
 
             // append node to parent object's children list
-            $this->parentObject->children[$objectId] = $this->children[$objectId];
+            $this->parentObject->children[$objectId] = $child;
 
             // correct the parent object reference
-            $this->parentObject->children[$objectId]->setParentObject($this->parentObject);
+            $child->setParentObject($this->parentObject);
 
             // add a marker tag to the parent object after the tag's marker
             $parentContent = str_replace('<' . $currentObjectId . ' />', '<' . $currentObjectId . ' /><' . $objectId . ' />', $parentContent);

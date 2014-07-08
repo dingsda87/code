@@ -61,11 +61,9 @@ class HtmlListTag extends Document {
     * @throws InvalidArgumentException In case no list can be found.
     */
    public function getListById($id) {
-      if (count($this->children) > 0) {
-         foreach ($this->children as $objectID => $DUMMY) {
-            if ($this->children[$objectID]->getAttribute('id') == $id) {
-               return $this->children[$objectID];
-            }
+      foreach ($this->children as $objectID => $child) {
+         if ($child->getAttribute('id') == $id) {
+            return $child;
          }
       }
 

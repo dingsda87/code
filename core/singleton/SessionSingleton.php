@@ -131,8 +131,8 @@ class SessionSingleton extends Singleton {
    public static function saveObjects() {
       if (count(self::$CACHE) > 0) {
          $session = self::getSession();
-         foreach (self::$CACHE as $key => $DUMMY) {
-            $session->save($key, serialize(self::$CACHE[$key]));
+         foreach (self::$CACHE as $key => $object) {
+            $session->save($key, serialize($object));
          }
       }
    }

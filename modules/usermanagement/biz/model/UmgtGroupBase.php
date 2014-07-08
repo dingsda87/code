@@ -20,12 +20,6 @@
  */
 namespace APF\modules\usermanagement\biz\model;
 
-//<*UmgtGroupBase:start*> DO NOT CHANGE THIS COMMENT!
-/**
- * Automatically generated BaseObject for UmgtGroup. !!DO NOT CHANGE THIS BASE-CLASS!!
- * CHANGES WILL BE OVERWRITTEN WHEN UPDATING!!
- * You can change class "UmgtGroup" which extends this base-class.
- */
 use APF\modules\genericormapper\data\GenericDomainObject;
 
 /**

@@ -248,9 +248,9 @@ class Frontcontroller extends APFObject {
     */
    public function getActionByName($actionName) {
 
-      foreach ($this->actionStack as $offset => $DUMMY) {
-         if ($this->actionStack[$offset]->getActionName() == $actionName) {
-            return $this->actionStack[$offset];
+      foreach ($this->actionStack as $action) {
+         if ($action->getActionName() == $actionName) {
+            return $action;
          }
       }
 
@@ -647,17 +647,15 @@ class Frontcontroller extends APFObject {
       /* @var $t BenchmarkTimer */
       $t = Singleton::getInstance('APF\core\benchmark\BenchmarkTimer');
 
-      foreach ($this->actionStack as $offset => $DUMMY) {
+      foreach ($this->actionStack as $action) {
 
          // only execute, when the current action has a suitable type
-         if ($this->actionStack[$offset]->getType() == $type
-               && $this->actionStack[$offset]->isActive()
-         ) {
+         if ($action->getType() == $type && $action->isActive()) {
 
-            $id = get_class($this->actionStack[$offset]) . '::run()';
+            $id = get_class($action) . '::run()';
             $t->start($id);
 
-            $this->actionStack[$offset]->run();
+            $action->run();
 
             $t->stop($id);
          }

@@ -48,7 +48,7 @@ class ApplicationSingleton {
    /**
     * Stores the objects, that are requested as singletons.
     *
-    * @var string[] $CACHE
+    * @var object[] $CACHE
     */
    private static $CACHE = array();
 
@@ -109,12 +109,11 @@ class ApplicationSingleton {
     * Version 0.1, 25.07.2013<br />
     */
    public static function saveObjects() {
-      if (count(self::$CACHE) > 0) {
-         foreach (self::$CACHE as $key => $DUMMY) {
-            // storage includes serialization to hide object storage mechanisms for users
-            apc_store($key, serialize(self::$CACHE[$key]));
-         }
+      foreach (self::$CACHE as $key => $object) {
+         // storage includes serialization to hide object storage mechanisms for users
+         apc_store($key, serialize($object));
       }
+
    }
 
 }

@@ -241,8 +241,8 @@ class DateSelectorTag extends AbstractFormControl {
             $buffer .= ' class="' . $class . '"';
          }
          $buffer .= '>';
-         foreach ($this->children as $section => $DUMMY) {
-            $buffer .= $this->children[$section]->transform();
+         foreach ($this->children as $child) {
+            $buffer .= $child->transform();
          }
 
          return $buffer . '</span>';

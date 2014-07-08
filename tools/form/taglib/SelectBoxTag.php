@@ -218,16 +218,11 @@ class SelectBoxTag extends AbstractFormControl {
     */
    public function getGroup($label) {
 
-      $group = null;
-
-      foreach ($this->children as $objectId => $DUMMY) {
-         if ($this->children[$objectId]->getAttribute('label') == $label) {
-            $group = $this->children[$objectId];
-            break;
+      foreach ($this->children as $child) {
+         if ($child->getAttribute('label') == $label) {
+            return $child;
          }
       }
-
-      return $group;
    }
 
    /**
@@ -250,18 +245,18 @@ class SelectBoxTag extends AbstractFormControl {
       }
 
       $selectedOption = null;
-      foreach ($this->children as $objectId => $DUMMY) {
+      foreach ($this->children as $child) {
 
-         if ($this->children[$objectId] instanceof SelectBoxGroupTag) {
-            $selectedOption = $this->children[$objectId]->getSelectedOption();
+         if ($child instanceof SelectBoxGroupTag) {
+            $selectedOption = $child->getSelectedOption();
 
             // Bug-436: exit at the first hit to not overwrite this hit with another miss!
             if ($selectedOption !== null) {
                break;
             }
          } else {
-            if ($this->children[$objectId]->getAttribute('selected') === 'selected') {
-               $selectedOption = $this->children[$objectId];
+            if ($child->getAttribute('selected') === 'selected') {
+               $selectedOption = $child;
                break;
             }
          }
@@ -285,17 +280,17 @@ class SelectBoxTag extends AbstractFormControl {
       $this->isDynamicField = false;
 
       $selectedObjectId = null;
-      foreach ($this->children as $objectId => $DUMMY) {
+      foreach ($this->children as $objectId => $child) {
 
          // treat groups as a special case, because a group has more options in it!
-         if ($this->children[$objectId] instanceof SelectBoxGroupTag) {
-            $this->children[$objectId]->setOption2Selected($displayNameOrValue);
+         if ($child instanceof SelectBoxGroupTag) {
+            $child->setOption2Selected($displayNameOrValue);
          } else {
             // bug 981: introduced string-based comparison to avoid pre-select issues with "0".
-            if ($this->children[$objectId]->getAttribute('value') == (string) $displayNameOrValue
-                  || $this->children[$objectId]->getContent() == (string) $displayNameOrValue
+            if ($child->getAttribute('value') == (string) $displayNameOrValue
+                  || $child->getContent() == (string) $displayNameOrValue
             ) {
-               $this->children[$objectId]->setAttribute('selected', 'selected');
+               $child->setAttribute('selected', 'selected');
                $selectedObjectId = $objectId;
             }
          }
@@ -315,13 +310,16 @@ class SelectBoxTag extends AbstractFormControl {
     * Version 0.1, 22.03.2013<br />
     */
    protected function removeSelectedOptions($selectedObjectId) {
-      if ($selectedObjectId !== null) {
-         foreach ($this->children as $objectId => $DUMMY) {
-            if ($objectId != $selectedObjectId) {
-               $this->children[$objectId]->deleteAttribute('selected');
-            }
+      if($selectedObjectId === null){
+         return;
+      }
+
+      foreach ($this->children as $objectId => $child) {
+         if ($objectId != $selectedObjectId) {
+            $child->deleteAttribute('selected');
          }
       }
+
    }
 
    /**

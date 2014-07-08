@@ -371,18 +371,18 @@ class Document extends APFObject {
     */
    public function getChildNode($attributeName, $value, $tagLibClass) {
       $children = $this->getChildren();
-      if (count($children) > 0) {
-         foreach ($children as $objectId => $DUMMY) {
-            if ($children[$objectId] instanceof $tagLibClass) {
-               if ($children[$objectId]->getAttribute($attributeName) == $value) {
-                  return $children[$objectId];
-               }
-            }
-         }
-      } else {
+
+      if(empty($children)){
          throw new InvalidArgumentException('[' . get_class($this) . '::getChildNode()] Current node has no children!',
                E_USER_ERROR);
       }
+
+      foreach ($children as $child) {
+         if ($child instanceof $tagLibClass && $child->getAttribute($attributeName) == $value) {
+               return $child;
+         }
+      }
+
       throw new InvalidArgumentException('[' . get_class($this) . '::getChildNode()] No child node with type "'
             . $tagLibClass . '" and attribute selector ' . $attributeName . '="' . $value . '" composed in current '
             . 'document!', E_USER_ERROR);
@@ -406,27 +406,31 @@ class Document extends APFObject {
     * Version 0.2, 09.02.2013 (Now public access since DocumentController is now derived from APFObject instead of Document)<br />
     */
    public function getChildNodes($attributeName, $value, $tagLibClass) {
+      $result = array();
+
       $children = $this->getChildren();
 
-      if (count($children) > 0) {
-         $result = array();
-         foreach ($children as $objectId => $DUMMY) {
-            if ($children[$objectId] instanceof $tagLibClass) {
-               if ($children[$objectId]->getAttribute($attributeName) == $value) {
-                  $result[] = $children[$objectId];
-               }
-            }
-         }
-         if (count($result) == 0) {
-            throw new InvalidArgumentException('[' . get_class($this) . '::getChildNodes()] No child nodes with type "'
-                  . $tagLibClass . '" and attribute selector ' . $attributeName . '="' . $value . '" composed in current '
-                  . 'document!', E_USER_ERROR);
-         } else {
-            return $result;
+      if(empty($children)){
+         throw new InvalidArgumentException('[' . get_class($this) . '::getChildNodes()] Current node has no children!', E_USER_ERROR);
+      }
+
+
+      foreach ($children as $objectId => $child) {
+         if ($child instanceof $tagLibClass && $child->getAttribute($attributeName) == $value) {
+               $result[] = $child;
          }
       }
 
-      throw new InvalidArgumentException('[' . get_class($this) . '::getChildNodes()] Current node has no children!', E_USER_ERROR);
+      if (empty($result)) {
+         throw new InvalidArgumentException('[' . get_class($this) . '::getChildNodes()] No child nodes with type "'
+               . $tagLibClass . '" and attribute selector ' . $attributeName . '="' . $value . '" composed in current '
+               . 'document!', E_USER_ERROR);
+      }
+
+      return $result;
+
+
+
    }
 
    /**
@@ -448,41 +452,39 @@ class Document extends APFObject {
     */
    public function setPlaceHolder($name, $value, $append = false) {
       $count = 0;
-      foreach ($this->children as $objectId => $DUMMY) {
-         if ($this->children[$objectId] instanceof PlaceHolderTag
-               && $this->children[$objectId]->getAttribute('name') === $name
-         ) {
+      foreach ($this->children as $objectId => $child) {
+         if ($child instanceof PlaceHolderTag && $child->getAttribute('name') === $name) {
             // false handled first, since most usages don't append --> slightly faster
             if ($append === false) {
-               $this->children[$objectId]->setContent($value);
+               $child->setContent($value);
             } else {
-               $this->children[$objectId]->setContent(
-                     $this->children[$objectId]->getContent() . $value
-               );
+               $child->setContent( $child->getContent() . $value);
             }
             $count++;
          }
       }
 
-      if ($count == 0) {
-
-         // Since this method is used within all derived classes the exception message is
-         // rather generic unfortunately. In order to be more precise, the convenience methods
-         // within BaseDocumentController catch and rethrow the exception enriched with further
-         // information.
-         $message = '[' . get_class($this) . '::setPlaceHolder()] No place holder with name "' . $name
-               . '" found within document with ';
-
-         $nodeName = $this->getAttribute('name');
-         if (!empty($nodeName)) {
-            $message .= 'name "' . $nodeName . '" and ';
-         }
-         $message .= 'node type "' . get_class($this) . '"! Please check your template code: ' . $this->getContent() . '.';
-
-         throw new InvalidArgumentException($message, E_USER_ERROR);
+      if($count > 0){
+         return $this;
       }
 
-      return $this;
+      // Since this method is used within all derived classes the exception message is
+      // rather generic unfortunately. In order to be more precise, the convenience methods
+      // within BaseDocumentController catch and rethrow the exception enriched with further
+      // information.
+      $message = '[' . get_class($this) . '::setPlaceHolder()] No place holder with name "' . $name
+            . '" found within document with ';
+
+      $nodeName = $this->getAttribute('name');
+      if (!empty($nodeName)) {
+         $message .= 'name "' . $nodeName . '" and ';
+      }
+      $message .= 'node type "' . get_class($this) . '"! Please check your template code: ' . $this->getContent() . '.';
+
+      throw new InvalidArgumentException($message, E_USER_ERROR);
+
+
+
    }
 
    /**
@@ -991,8 +993,8 @@ class Document extends APFObject {
          $benchId = '(' . get_class($this) . ') ' . $this->getObjectId() . '::children[]::onAfterAppend()';
          $t->start($benchId);
 
-         foreach ($this->children as $objectId => $DUMMY) {
-            $this->children[$objectId]->onAfterAppend();
+         foreach ($this->children as $child) {
+            $child->onAfterAppend();
          }
 
          $t->stop($benchId);
@@ -1249,10 +1251,8 @@ class Document extends APFObject {
       }
 
       // transform child nodes and replace XML marker to place the output at the right position
-      if (count($this->children) > 0) {
-         foreach ($this->children as $objectId => $DUMMY) {
-            $content = str_replace('<' . $objectId . ' />', $this->children[$objectId]->transform(), $content);
-         }
+      foreach ($this->children as $objectId => $child) {
+         $content = str_replace('<' . $objectId . ' />', $child->transform(), $content);
       }
 
       $t->stop('(' . get_class($this) . ') ' . $this->getObjectId() . '::transform()');
@@ -1272,9 +1272,9 @@ class Document extends APFObject {
     * Version 0.1, 23.10.2012<br />
     */
    protected function transformChildren() {
-      foreach ($this->children as $objectId => $DUMMY) {
+      foreach ($this->children as $objectId => $child) {
          $this->content = str_replace(
-               '<' . $objectId . ' />', $this->children[$objectId]->transform(), $this->content
+               '<' . $objectId . ' />', $child->transform(), $this->content
          );
       }
    }
@@ -1292,9 +1292,9 @@ class Document extends APFObject {
     */
    protected function transformChildrenAndPreserveContent() {
       $content = $this->getContent();
-      foreach ($this->children as $objectId => $DUMMY) {
+      foreach ($this->children as $objectId => $child) {
          $content = str_replace(
-               '<' . $objectId . ' />', $this->children[$objectId]->transform(), $content
+               '<' . $objectId . ' />', $child->transform(), $content
          );
       }
 

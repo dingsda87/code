@@ -67,8 +67,8 @@ class ProxyRemoveGroupsController extends UmgtPermissionBaseController {
       $groupsControl = $form->getFormElementByName('groups');
 
       /* @var $groupsControl MultiSelectBoxTag */
-      foreach ($groups as $id => $DUMMY) {
-         $groupsControl->addOption($groups[$id]->getDisplayName(), $groups[$id]->getObjectId());
+      foreach ($groups as $group) {
+         $groupsControl->addOption($group->getDisplayName(), $group->getObjectId());
       }
 
       if ($form->isSent() && $form->isValid()) {

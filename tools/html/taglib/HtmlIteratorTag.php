@@ -254,34 +254,34 @@ class HtmlIteratorTag extends Document {
 
             if (is_array($this->dataContainer[$i])) {
 
-               foreach ($placeHolders as $objectId => $DUMMY) {
+               foreach ($placeHolders as $placeHolder) {
 
                   // if we find a place holder with IterationNumber as name-Attribute-Value set Iteration number
-                  if ($placeHolders[$objectId]->getAttribute('name') == 'IterationNumber') {
-                     $placeHolders[$objectId]->setContent($this->iterationNumber);
+                  if ($placeHolder->getAttribute('name') == 'IterationNumber') {
+                     $placeHolder->setContent($this->iterationNumber);
                      continue;
                   }
 
-                  $placeHolders[$objectId]->setContent($this->dataContainer[$i][$placeHolders[$objectId]->getAttribute('name')]);
+                  $placeHolder->setContent($this->dataContainer[$i][$placeHolder->getAttribute('name')]);
                }
 
                $buffer .= $iteratorItem->transform();
 
             } elseif (is_object($this->dataContainer[$i])) {
 
-               foreach ($placeHolders as $objectId => $DUMMY) {
+               foreach ($placeHolders as $placeHolder) {
 
                   // if we find a place holder with IterationNumber as name-Attribute-Value set Iteration number
-                  if ($placeHolders[$objectId]->getAttribute('name') == 'IterationNumber') {
-                     $placeHolders[$objectId]->setContent($this->iterationNumber);
+                  if ($placeHolder->getAttribute('name') == 'IterationNumber') {
+                     $placeHolder->setContent($this->iterationNumber);
                      continue;
                   }
 
                   // use getter defined with <iterator:item /> to retrieve appropriate value
-                  $placeHolders[$objectId]->setContent($this->dataContainer[$i]->{
+                     $placeHolder->setContent($this->dataContainer[$i]->{
                               $getter
                               }(
-                                    $placeHolders[$objectId]->getAttribute('name'))
+                                       $placeHolder->getAttribute('name'))
                   );
 
                }
@@ -306,11 +306,13 @@ class HtmlIteratorTag extends Document {
 
       // Transform all other child tags except the iterator item(s).
       // ID#105: this also includes the default content in case no items available (case: mode=normal)
-      foreach ($this->children as $objectId => $DUMMY) {
+      foreach ($this->children as $objectId => $child) {
 
-         if (!($this->children[$objectId] instanceof HtmlIteratorItemTag)) {
-            $html = str_replace('<' . $objectId . ' />', $this->children[$objectId]->transform(), $html);
+         if($child instanceof HtmlIteratorItemTag){
+            continue;
          }
+
+         $html = str_replace('<' . $objectId . ' />', $child->transform(), $html);
 
       }
 
@@ -348,8 +350,8 @@ class HtmlIteratorTag extends Document {
     */
    protected function getIteratorItemObjectId() {
 
-      foreach ($this->children as $objectId => $DUMMY) {
-         if ($this->children[$objectId] instanceof HtmlIteratorItemTag) {
+      foreach ($this->children as $objectId => $child) {
+         if ($child instanceof HtmlIteratorItemTag) {
             return $objectId;
          }
       }
@@ -375,8 +377,8 @@ class HtmlIteratorTag extends Document {
     */
    protected function getFallbackContentItemObjectId() {
 
-      foreach ($this->children as $objectId => $DUMMY) {
-         if ($this->children[$objectId] instanceof TemplateTag) {
+      foreach ($this->children as $objectId => $child) {
+         if ($child instanceof TemplateTag) {
             return $objectId;
          }
       }

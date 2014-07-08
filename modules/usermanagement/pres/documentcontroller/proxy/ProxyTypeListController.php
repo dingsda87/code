@@ -40,10 +40,10 @@ class ProxyTypeListController extends UmgtBaseController {
       $template = $this->getTemplate('Type');
 
       $list = $uM->loadVisibilityDefinitionTypes();
-      foreach ($list as $id => $DUMMY) {
-         $template->setPlaceHolder('AppObjectName', $list[$id]->getAppObjectName());
+      foreach ($list as $proxyType) {
+         $template->setPlaceHolder('AppObjectName', $proxyType->getAppObjectName());
 
-         $proxyTypeId = $list[$id]->getObjectId();
+         $proxyTypeId = $proxyType->getObjectId();
          $template->setPlaceHolder('type_edit', $this->generateLink(array('mainview' => 'proxy', 'proxyview' => 'typeedit', 'proxytypeid' => $proxyTypeId)));
          $template->setPlaceHolder('type_delete', $this->generateLink(array('mainview' => 'proxy', 'proxyview' => 'typedelete', 'proxytypeid' => $proxyTypeId)));
 

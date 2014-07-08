@@ -114,6 +114,7 @@ class Logger {
     * Version 0.5, 12.01.2013 (Moved log dir initialization to log writer)<br />
     */
    public function __construct() {
+
       $this->logThreshold = self::$LOGGER_THRESHOLD_WARN;
 
       // By default, a file-based log writer is initialized.

@@ -121,16 +121,14 @@ class HtmlFormTag extends Document {
     */
    public function isSent() {
 
-      foreach ($this->children as $objectId => $DUMMY) {
+      foreach ($this->children as $child) {
          // Only include real form elements to avoid unnecessary
          // implementation overhead for elements that just want to
          // be used within forms but do not act as form elements!
          // See http://forum.adventure-php-framework.org/viewtopic.php?f=6&t=1387
          // for details.
-         if ($this->children[$objectId] instanceof FormControl) {
-            if ($this->children[$objectId]->isSent() === true) {
+         if ($child instanceof FormControl && $child->isSent()) {
                return true;
-            }
          }
       }
 
@@ -149,16 +147,14 @@ class HtmlFormTag extends Document {
     */
    public function isValid() {
 
-      foreach ($this->children as $objectId => $DUMMY) {
+      foreach ($this->children as $child) {
          // Only include real form elements to avoid unnecessary
          // implementation overhead for elements that just want to
          // be used within forms but do not act as form elements!
          // See http://forum.adventure-php-framework.org/viewtopic.php?f=6&t=1387
          // for details.
-         if ($this->children[$objectId] instanceof FormControl) {
-            if ($this->children[$objectId]->isValid() === false) {
+         if ($child instanceof FormControl && !$child->isValid()) {
                return false;
-            }
          }
       }
 
@@ -454,11 +450,9 @@ class HtmlFormTag extends Document {
     */
    public function getFormElementByName($name) {
 
-      if (count($this->children) > 0) {
-         foreach ($this->children as $objectId => $DUMMY) {
-            if ($this->children[$objectId]->getAttribute('name') == $name) {
-               return $this->children[$objectId];
-            }
+      foreach ($this->children as $child) {
+         if ($child->getAttribute('name') == $name) {
+            return $child;
          }
       }
 
@@ -485,11 +479,9 @@ class HtmlFormTag extends Document {
     */
    public function getFormElementsByName($name) {
       $elements = array();
-      if (count($this->children) > 0) {
-         foreach ($this->children as $objectId => $DUMMY) {
-            if ($this->children[$objectId]->getAttribute('name') == $name) {
-               $elements[] = $this->children[$objectId];
-            }
+      foreach ($this->children as $child) {
+         if ($child->getAttribute('name') == $name) {
+            $elements[] = $child;
          }
       }
 
@@ -510,13 +502,12 @@ class HtmlFormTag extends Document {
     */
    public function getFormElementByID($id) {
 
-      if (count($this->children) > 0) {
-         foreach ($this->children as $objectId => $DUMMY) {
-            if ($this->children[$objectId]->getAttribute('id') == $id) {
-               return $this->children[$objectId];
-            }
+      foreach ($this->children as $child) {
+         if ($child->getAttribute('id') == $id) {
+            return $child;
          }
       }
+
 
       // display extended debug message in case no form element was found
       $parent = $this->getParentObject();
@@ -571,18 +562,18 @@ class HtmlFormTag extends Document {
 
       $tagClassName = $this->getTagClass($tagName);
 
-      if (count($this->children) > 0) {
+      $formElements = array();
+      foreach ($this->children as $child) {
 
-         $formElements = array();
-         foreach ($this->children as $objectId => $DUMMY) {
-
-            if ($this->children[$objectId] instanceof $tagClassName) {
-               $formElements[] = $this->children[$objectId];
-            }
+         if ($child instanceof $tagClassName) {
+            $formElements[] = $child;
          }
+      }
 
+      if(!empty($formElements)){
          return $formElements;
       }
+
 
       // display extended debug message in case no form elements were found
       $parent = $this->getParentObject();
@@ -676,18 +667,17 @@ class HtmlFormTag extends Document {
       $htmlCode .= $this->getAttributesAsString($this->attributes, $this->attributeWhiteList);
       $htmlCode .= '>';
 
-      if (count($this->children) > 0) {
 
-         foreach ($this->children as $objectId => $DUMMY) {
-            $childId = '(' . get_class($this->children[$objectId]) . ') ' . $objectId . '::transform()';
-            $t->start($childId);
+      foreach ($this->children as $objectId => $child) {
+         $childId = '(' . get_class($child) . ') ' . $objectId . '::transform()';
+         $t->start($childId);
 
-            $this->content = str_replace('<' . $objectId . ' />',
-                  $this->children[$objectId]->transform(), $this->content);
+         $this->content = str_replace('<' . $objectId . ' />',
+               $child->transform(), $this->content);
 
-            $t->stop($childId);
-         }
+         $t->stop($childId);
       }
+
 
       $htmlCode .= $this->content;
       $htmlCode .= '</form>';

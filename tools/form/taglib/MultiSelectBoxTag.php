@@ -102,25 +102,23 @@ class MultiSelectBoxTag extends SelectBoxTag {
          $this->presetValue();
       }
 
-      if ($this->isVisible) {
-         // add brackets for the "name" attribute to ensure multi select capability!
-         $name = array('name' => $this->getAttribute('name') . '[]');
-         $select = '<select ' . $this->getSanitizedAttributesAsString(array_merge($this->attributes, $name)) . '>';
-         $select .= $this->content . '</select>';
-
-         if (count($this->children) > 0) {
-            foreach ($this->children as $objectId => $DUMMY) {
-               $select = str_replace('<' . $objectId . ' />',
-                     $this->children[$objectId]->transform(),
-                     $select
-               );
-            }
-         }
-
-         return $select;
+      if(!$this->isVisible()){
+         return '';
       }
 
-      return '';
+      // add brackets for the "name" attribute to ensure multi select capability!
+      $name = array('name' => $this->getAttribute('name') . '[]');
+      $select = '<select ' . $this->getSanitizedAttributesAsString(array_merge($this->attributes, $name)) . '>';
+      $select .= $this->content . '</select>';
+
+      foreach ($this->children as $objectId => $child) {
+         $select = str_replace('<' . $objectId . ' />',
+               $child->transform(),
+               $select
+         );
+      }
+
+      return $select;
    }
 
    /**
@@ -140,16 +138,15 @@ class MultiSelectBoxTag extends SelectBoxTag {
       }
 
       $selectedOptions = array();
-      foreach ($this->children as $objectId => $DUMMY) {
+      foreach ($this->children as $child) {
 
-         if ($this->children[$objectId] instanceof SelectBoxGroupTag) {
-            $options = $this->children[$objectId]->getSelectedOptions();
-            foreach ($options as $id => $INNER_DUMMY) {
-               $selectedOptions[] = $options[$id];
+         if ($child instanceof SelectBoxGroupTag) {
+            foreach ($child->getSelectedOptions() as $option) {
+               $selectedOptions[] = $option;
             }
          } else {
-            if ($this->children[$objectId]->getAttribute('selected') === 'selected') {
-               $selectedOptions[] = $this->children[$objectId];
+            if ($child->getAttribute('selected') === 'selected') {
+               $selectedOptions[] = $child;
             }
          }
 

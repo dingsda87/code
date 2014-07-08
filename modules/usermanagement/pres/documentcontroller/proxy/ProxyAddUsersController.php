@@ -59,8 +59,8 @@ class ProxyAddUsersController extends UmgtPermissionBaseController {
 
       $usersControl = $form->getFormElementByName('users');
       /* @var $usersControl MultiSelectBoxTag */
-      foreach ($users as $id => $DUMMY) {
-         $usersControl->addOption($users[$id]->getDisplayName(), $users[$id]->getObjectId());
+      foreach ($users as $user) {
+         $usersControl->addOption($user->getDisplayName(), $user->getObjectId());
       }
 
       if ($form->isSent() && $form->isValid()) {
