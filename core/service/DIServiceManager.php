@@ -180,7 +180,7 @@ final class DIServiceManager {
 
       // Check if configuration section was complete. If not throw an exception to fail fast.
       if ($serviceType === null || $class === null) {
-         throw new InvalidArgumentException('[DIServiceManager::getServiceObject()] Initialization of the service object "' .
+         throw new \InvalidArgumentException('[DIServiceManager::getServiceObject()] Initialization of the service object "' .
                $sectionName . '" from namespace "' . $configNamespace . '" cannot be accomplished, due to missing
                or incorrect configuration! Please revise the configuration file and consult the manual!',
                E_USER_ERROR);
@@ -193,7 +193,7 @@ final class DIServiceManager {
       // and the DIServiceManager caches the created service objects within a singleton cache,
       // this is no problem. Hence, the injected instance is then only one time constructed.
 
-      /* @var $serviceObject APFDIService */
+      /** @var APFDIService $serviceObject */
       $serviceObject = & ServiceManager::getServiceObject($class, $context, $language, $serviceType, $cacheKey);
 
       // do param injection (static configuration)
@@ -206,22 +206,45 @@ final class DIServiceManager {
 
             // be aware of the params needed for injection
             $method = $directive->getValue('method');
-            $value = $directive->getValue('value');
-            if ($method === null || $value === null) {
-               throw new InvalidArgumentException('[DIServiceManager::getServiceObject()] Initialization of the'
+            if ($method === null) {
+
+               throw new \InvalidArgumentException('[DIServiceManager::getServiceObject()] Initialization of the'
                      . ' service object "' . $sectionName . '" cannot be accomplished, due to'
                      . ' incorrect configuration! Please revise the "' . $initKey . '" sub section and'
                      . ' consult the manual!', E_USER_ERROR);
             }
 
             // check, if method exists to avoid fatal errors
-            if (method_exists($serviceObject, $method)) {
-               $serviceObject->$method($value);
-            } else {
-               throw new InvalidArgumentException('[DIServiceManager::getServiceObject()] Injection of'
+            if (!method_exists($serviceObject, $method)) {
+               throw new \InvalidArgumentException('[DIServiceManager::getServiceObject()] Injection of'
                      . ' configuration value "' . $directive->getValue('value') . '" cannot be accomplished'
                      . ' to service object "' . $class . '"! Method ' . $method . '() is not implemented!',
                      E_USER_ERROR);
+            }
+
+            if (($value = $directive->getValue('value')) !== null) {
+               $serviceObject->$method($value);
+            } else {
+               if (($cfSubSection = $directive->getSection('value')) === null) {
+                  throw new \InvalidArgumentException('[DIServiceManager::getServiceObject()] Initialization of the'
+                        . ' service object "' . $sectionName . '" cannot be accomplished, due to'
+                        . ' missing value(s) for method' . $method . '! Please revise the "' . $initKey . '" sub section and'
+                        . ' consult the manual!', E_USER_ERROR);
+               }
+
+               $valueNames = $cfSubSection->getValueNames();
+               if (empty($valueNames)) {
+                  throw new \InvalidArgumentException('[DIServiceManager::getServiceObject()] Initialization of the'
+                        . ' service object "' . $sectionName . '" cannot be accomplished, due to'
+                        . ' missing value(s) for method' . $method . '! Please revise the "' . $initKey . '" sub section and'
+                        . ' consult the manual!', E_USER_ERROR);
+               }
+
+               $values = array();
+               foreach ($valueNames as $valueName) {
+                  $values[] = $cfSubSection->getValue($valueName);
+               }
+               call_user_func_array(array($serviceObject, $method), $values);
             }
          }
       }
@@ -239,7 +262,7 @@ final class DIServiceManager {
             $namespace = $directive->getValue('namespace');
             $name = $directive->getValue('name');
             if ($method === null || $namespace === null || $name === null) {
-               throw new InvalidArgumentException('[DIServiceManager::getServiceObject()] Initialization of the service object "' .
+               throw new \InvalidArgumentException('[DIServiceManager::getServiceObject()] Initialization of the service object "' .
                      $sectionName . '" cannot be accomplished, due to incorrect configuration! Please revise the "' . $initKey .
                      '" sub section and consult the manual!',
                      E_USER_ERROR);
@@ -287,7 +310,7 @@ final class DIServiceManager {
                if (method_exists($serviceObject, $method)) {
                   $serviceObject->$method($miObject);
                } else {
-                  throw new InvalidArgumentException('[DIServiceManager::getServiceObject()] Injection of service object "' . $name .
+                  throw new \InvalidArgumentException('[DIServiceManager::getServiceObject()] Injection of service object "' . $name .
                         '" from namespace "' . $namespace . '" cannot be accomplished to service object "' .
                         $class . '" from namespace "' . $namespace . '"! Method ' . $method . '() is not implemented!',
                         E_USER_ERROR);
@@ -311,7 +334,7 @@ final class DIServiceManager {
             if (method_exists($serviceObject, $setupMethod)) {
                $serviceObject->$setupMethod();
             } else {
-               throw new InvalidArgumentException('[DIServiceManager::getServiceObject()] Custom service object setup '
+               throw new \InvalidArgumentException('[DIServiceManager::getServiceObject()] Custom service object setup '
                      . 'method "' . $setupMethod . '()" is not implemented for given type "'
                      . get_class($serviceObject) . '"! Please double-check your configuration '
                      . 'for service "' . $sectionName . '" from namespace "' . $configNamespace . '."',
