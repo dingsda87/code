@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/dingsda87/code.png?label=ready&title=Ready)](https://waffle.io/dingsda87/code)
 Purpose
 =======
 
