@@ -4,12 +4,12 @@ class="APF\extensions\news\pres\documentcontroller\backend\NewsEditController"
 <html:form name="edit" id="news-edit">
    <form:success>
       <div class="news-edit-success">
-         <html:getstring namespace="APF\extensions\news" config="labels.ini" entry="Form.Success" delimiter="."/>
+         <html:getstring namespace="APF\extensions\news" config="labels.ini" entry="Form.Success"/>
       </div>
    </form:success>
    <form:error>
       <div class="news-edit-error">
-         <html:getstring namespace="APF\extensions\news" config="labels.ini" entry="Form.Error" delimiter="."/>
+         <html:getstring namespace="APF\extensions\news" config="labels.ini" entry="Form.Error"/>
       </div>
    </form:error>
    <fieldset>
@@ -18,7 +18,6 @@ class="APF\extensions\news\pres\documentcontroller\backend\NewsEditController"
                namespace="APF\extensions\news"
                config="labels.ini"
                entry="Form.Title"
-               delimiter="."
                />
          :
       </label>
@@ -30,7 +29,6 @@ class="APF\extensions\news\pres\documentcontroller\backend\NewsEditController"
                namespace="APF\extensions\news"
                config="labels.ini"
                entry="Form.User"
-               delimiter="."
                />
          :
       </label>
@@ -42,7 +40,6 @@ class="APF\extensions\news\pres\documentcontroller\backend\NewsEditController"
                namespace="APF\extensions\news"
                config="labels.ini"
                entry="Form.Text"
-               delimiter="."
                />
          :
       </label><br/>
@@ -66,6 +63,6 @@ class="APF\extensions\news\pres\documentcontroller\backend\NewsEditController"
 
 <html:template name="notfound">
    <div class="news-edit-error">
-      <html:getstring namespace="APF\extensions\news" config="labels.ini" entry="Form.NotFound" delimiter="."/>
+      <html:getstring namespace="APF\extensions\news" config="labels.ini" entry="Form.NotFound"/>
    </div>
 </html:template>

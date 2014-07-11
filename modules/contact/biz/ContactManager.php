@@ -163,8 +163,8 @@ class ContactManager extends APFObject {
 
       return $this->fillPlaceHolders(
             $this->getEmailTemplateContent(
-                  $section->getValue('notification.namespace', null, '.'),
-                  $section->getValue('notification.template', null, '.')
+                  $section->getValue('notification.namespace'),
+                  $section->getValue('notification.template')
             ),
             $values
       );
@@ -201,8 +201,8 @@ class ContactManager extends APFObject {
 
       return $this->fillPlaceHolders(
             $this->getEmailTemplateContent(
-                  $section->getValue('confirmation.namespace', null, '.'),
-                  $section->getValue('confirmation.template', null, '.')
+                  $section->getValue('confirmation.namespace'),
+                  $section->getValue('confirmation.template')
             ),
             $values
       );

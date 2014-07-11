@@ -221,30 +221,30 @@ final class PagerManager extends APFObject {
       }
 
       // translate entries per page
-      $this->entriesPerPage = (int) $section->getValue('Pager.EntriesPerPage', '10', '.');
+      $this->entriesPerPage = (int) $section->getValue('Pager.EntriesPerPage', '10');
 
       // translate url parameters
-      $this->pageUrlParameterName = $section->getValue('Pager.ParameterPageName', 'page', '.');
-      $this->countUrlParameterName = $section->getValue('Pager.ParameterCountName', 'count', '.');
+      $this->pageUrlParameterName = $section->getValue('Pager.ParameterPageName', 'page');
+      $this->countUrlParameterName = $section->getValue('Pager.ParameterCountName', 'count');
 
       // translate statement related parameters
-      $this->statementNamespace = $section->getValue('Pager.StatementNamespace', null, '.');
-      $this->countStatementFile = $section->getValue('Pager.CountStatement', null, '.');
-      $this->entriesStatementFile = $section->getValue('Pager.EntriesStatement', null, '.');
-      $this->statementParameters = $section->getValue('Pager.StatementParameters', null, '.');
+      $this->statementNamespace = $section->getValue('Pager.StatementNamespace');
+      $this->countStatementFile = $section->getValue('Pager.CountStatement');
+      $this->entriesStatementFile = $section->getValue('Pager.EntriesStatement');
+      $this->statementParameters = $section->getValue('Pager.StatementParameters');
 
       // UI component configuration
-      $this->pagerUiNamespace = $section->getValue('Pager.DesignNamespace', null, '.');
-      $this->pagerUiTemplate = $section->getValue('Pager.DesignTemplate', null, '.');
+      $this->pagerUiNamespace = $section->getValue('Pager.DesignNamespace');
+      $this->pagerUiTemplate = $section->getValue('Pager.DesignTemplate');
 
       // translate database connection
-      $this->databaseConnectionName = $section->getValue('Pager.DatabaseConnection', null, '.');
+      $this->databaseConnectionName = $section->getValue('Pager.DatabaseConnection');
 
       // translate dynamic page size
-      $this->allowDynamicEntriesPerPage = $section->getValue('Pager.AllowDynamicEntriesPerPage', 'false', '.');
+      $this->allowDynamicEntriesPerPage = $section->getValue('Pager.AllowDynamicEntriesPerPage', 'false');
 
       // translate caching settings
-      $this->cacheInSession = $section->getValue('Pager.CacheInSession', 'false', '.');
+      $this->cacheInSession = $section->getValue('Pager.CacheInSession', 'false');
    }
 
    /**
