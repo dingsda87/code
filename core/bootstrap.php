@@ -128,6 +128,9 @@ InputFilterChain::getInstance()->appendFilter(new ChainedStandardInputFilter());
 // but also registration at a central place (bootstrap file). The following section registers all APF tags
 // shipped with the release to have them available for custom tags. Tags are grouped per namespace.
 
+// getstring
+Document::addTagLib('APF\core\pagecontroller\LanguageLabelExpressionTag','getstring','expression');
+
 // APF\core
 Document::addTagLib('APF\core\pagecontroller\AddTaglibTag', 'core', 'addtaglib');
 Document::addTagLib('APF\core\pagecontroller\AppendNodeTag', 'core', 'appendnode');

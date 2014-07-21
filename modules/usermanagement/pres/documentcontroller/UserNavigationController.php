@@ -30,8 +30,10 @@ namespace APF\modules\usermanagement\pres\documentcontroller;
 class UserNavigationController extends UmgtBaseController {
 
    public function transformContent() {
-      $this->setPlaceHolder('manage_user', $this->generateLink(array('mainview' => 'user', 'userview' => '', 'userid' => '')));
-      $this->setPlaceHolder('user_add', $this->generateLink(array('mainview' => 'user', 'userview' => 'add', 'userid' => '')));
+      $tag=($this->getDocument()->getChildNode('name','test','APF\core\pagecontroller\LanguageLabelExpressionTag'));
+
+      $tag->setPlaceHolder('manage_user', $this->generateLink(array('mainview' => 'user', 'userview' => '', 'userid' => '')));
+      $tag->setPlaceHolder('user_add', $this->generateLink(array('mainview' => 'user', 'userview' => 'add', 'userid' => '')));
    }
 
 }

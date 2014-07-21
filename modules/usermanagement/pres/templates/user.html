@@ -1,26 +1,19 @@
 <@controller
 class="APF\modules\usermanagement\pres\documentcontroller\UserNavigationController"
 @>
-<div class="umgt-menu">
-   <a href="${manage_user}" title="<html:getstring
-            namespace="APF\modules\usermanagement\pres"
-   config="labels.ini"
-   entry="frontend.user.navi.list.label"/>">
-   <html:getstring
-         namespace="APF\modules\usermanagement\pres"
-         config="labels.ini"
-         entry="frontend.user.navi.list.label"/>
-   </a>
-   &nbsp;|&nbsp;
-   <a href="${user_add}" title="<html:getstring
-               namespace="APF\modules\usermanagement\pres"
-   config="labels.ini"
-   entry="frontend.user.navi.add.label"/>">
-   <html:getstring
-         namespace="APF\modules\usermanagement\pres"
-         config="labels.ini"
-         entry="frontend.user.navi.add.label"/>
-   </a>
-</div>
-<core:importdesign namespace="APF\modules\usermanagement\pres\templates\user" template="[userview = list]"
-                   incparam="userview"/>
+<getstring:expression namespace="APF\modules\usermanagement\pres" config="labels.ini" name="test">
+   <div class="umgt-menu">
+      <a href="${manage_user}" title="${getstring->getValue('frontend.user.navi.list.label')}">
+         ${getstring->getValue('frontend.user.navi.list.label')}
+      </a>
+      &nbsp;|&nbsp;
+      <a href="${user_add}" title="${getstring->getValue('frontend.user.navi.add.label')}">
+         ${getstring->getValue('frontend.user.navi.add.label')}
+      </a>
+   </div>
+</getstring:expression>
+
+<core:importdesign namespace="APF\modules\usermanagement\pres\templates\user"
+                   template="[userview = list]"
+                   incparam="userview"
+      />
