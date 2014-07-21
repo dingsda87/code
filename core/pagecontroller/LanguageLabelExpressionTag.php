@@ -90,7 +90,7 @@ class LanguageLabelExpressionTag extends Document {
                . $this->getContext() . '"!', E_USER_ERROR);
       }
 
-      $this->setData('getstring',$section);
+      $this->parent->setData('getstring',$section);
 
       $this->extractTagLibTags();
    }

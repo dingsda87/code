@@ -1,7 +1,10 @@
 <@controller
 class="APF\modules\usermanagement\pres\documentcontroller\UserNavigationController"
 @>
-<getstring:expression namespace="APF\modules\usermanagement\pres" config="labels.ini" name="test">
+<getstring:expression
+      namespace="APF\modules\usermanagement\pres"
+      config="labels.ini"
+      />
    <div class="umgt-menu">
       <a href="${manage_user}" title="${getstring->getValue('frontend.user.navi.list.label')}">
          ${getstring->getValue('frontend.user.navi.list.label')}
@@ -11,7 +14,6 @@ class="APF\modules\usermanagement\pres\documentcontroller\UserNavigationControll
          ${getstring->getValue('frontend.user.navi.add.label')}
       </a>
    </div>
-</getstring:expression>
 
 <core:importdesign namespace="APF\modules\usermanagement\pres\templates\user"
                    template="[userview = list]"
